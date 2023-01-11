@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "yyjson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ibireme/yyjson.git",
+      "state" : {
+        "revision" : "7b210d66cb73536f351e8a82a63508bc77bffd20",
+        "version" : "0.6.0"
+      }
+    }
+  ],
+  "version" : 2
+}
