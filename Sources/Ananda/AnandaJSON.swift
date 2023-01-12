@@ -3,7 +3,7 @@ import yyjson
 
 @dynamicMemberLookup
 public struct AnandaJSON {
-    public let pointer: UnsafeMutablePointer<yyjson_val>?
+    private let pointer: UnsafeMutablePointer<yyjson_val>?
 
     public init(pointer: UnsafeMutablePointer<yyjson_val>?) {
         self.pointer = pointer
