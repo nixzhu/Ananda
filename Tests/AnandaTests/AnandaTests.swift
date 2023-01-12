@@ -11,7 +11,9 @@ final class AnandaTests: XCTestCase {
                 "mastodon": {
                     "profile": {
                         "username": "@nixzhu@mastodon.social",
-                        "nickname": "NIX"
+                        "nickname": "NIX",
+                        "extra_info": {},
+                        "extra_list": []
                     },
                     "toots": [
                         {
@@ -72,6 +74,18 @@ struct User: AnandaModel {
         mastodon = .init(json: json.mastodon)
 
         assert(json.unknown.isNull)
+        assert(!json.name.isNull)
+        assert(!json.mastodon.isNull)
+        assert(!json.mastodon.profile.isNull)
+        assert(!json.mastodon.profile.extra_info.isNull)
+        assert(!json.mastodon.profile.extra_list.isNull)
+
+        assert(json.unknown.isEmpty)
+        assert(!json.name.isEmpty)
+        assert(!json.mastodon.isEmpty)
+        assert(!json.mastodon.profile.isEmpty)
+        assert(json.mastodon.profile.extra_info.isEmpty)
+        assert(json.mastodon.profile.extra_list.isEmpty)
 
         let dictionary = json.mastodon.dictionaryValue
         assert(dictionary["profile"]?.username.stringValue == "@nixzhu@mastodon.social")

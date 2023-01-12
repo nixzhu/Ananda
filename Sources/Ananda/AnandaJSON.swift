@@ -47,6 +47,24 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
+    public var isEmpty: Bool {
+        if isNull {
+            return true
+        }
+
+        if yyjson_is_obj(pointer) {
+            return yyjson_obj_size(pointer) == 0
+        }
+
+        if yyjson_is_arr(pointer) {
+            return yyjson_arr_size(pointer) == 0
+        }
+
+        return false
+    }
+}
+
+extension AnandaJSON {
     public var bool: Bool? {
         pointer.flatMap {
             yyjson_is_bool($0) ? yyjson_get_bool($0) : nil
