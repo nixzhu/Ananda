@@ -1,8 +1,8 @@
 import Foundation
 import yyjson
 
-@dynamicMemberLookup
-public struct AnandaJSON {
+/// Container of pointer to`yyjson_val`, provides some convenient APIs to access JSON values.
+@dynamicMemberLookup public struct AnandaJSON {
     private let pointer: UnsafeMutablePointer<yyjson_val>?
 
     public init(pointer: UnsafeMutablePointer<yyjson_val>?) {
@@ -37,6 +37,7 @@ public struct AnandaJSON {
 }
 
 extension AnandaJSON {
+    /// `true` if the value is null or has not value, otherwise `false`.
     public var isNull: Bool {
         guard let pointer else {
             return true
@@ -47,16 +48,31 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
+    /// `true` if the value is object, otherwise `false`.
+    public var isObject: Bool {
+        yyjson_is_obj(pointer)
+    }
+}
+
+extension AnandaJSON {
+    /// `true` if the value is array, otherwise `false`.
+    public var isArray: Bool {
+        yyjson_is_arr(pointer)
+    }
+}
+
+extension AnandaJSON {
+    /// `true` if the value is null or is object but size is empty or is array but size is empty, otherwise `false`.
     public var isEmpty: Bool {
         if isNull {
             return true
         }
 
-        if yyjson_is_obj(pointer) {
+        if isObject {
             return yyjson_obj_size(pointer) == 0
         }
 
-        if yyjson_is_arr(pointer) {
+        if isArray {
             return yyjson_arr_size(pointer) == 0
         }
 
@@ -65,43 +81,50 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    public var bool: Bool? {
+    /// Bool or `nil`.
+    public var optionalBool: Bool? {
         pointer.flatMap {
             yyjson_is_bool($0) ? yyjson_get_bool($0) : nil
         }
     }
 
-    public var boolValue: Bool {
-        bool ?? false
+    /// Bool or `false`.
+    public var bool: Bool {
+        optionalBool ?? false
     }
 }
 
 extension AnandaJSON {
-    public var int: Int? {
+    /// Int or `nil`.
+    public var optionalInt: Int? {
         pointer.flatMap {
             yyjson_is_int($0) ? Int(yyjson_get_sint($0)) : nil
         }
     }
 
-    public var intValue: Int {
-        int ?? 0
+    /// Int or `0`.
+    public var int: Int {
+        optionalInt ?? 0
     }
 }
 
 extension AnandaJSON {
-    public var double: Double? {
+    /// Double or `nil`.
+    public var optionalDouble: Double? {
         pointer.flatMap {
             yyjson_is_real($0) ? yyjson_get_real($0) : nil
         }
     }
 
-    public var doubleValue: Double {
-        double ?? 0
+    /// Double or`0`.
+    public var double: Double {
+        optionalDouble ?? 0
     }
 }
 
 extension AnandaJSON {
-    public var string: String? {
+    /// String or `nil`.
+    public var optionalString: String? {
         pointer.flatMap {
             yyjson_get_str($0).flatMap {
                 .init(cString: $0)
@@ -109,44 +132,52 @@ extension AnandaJSON {
         }
     }
 
-    public var stringValue: String {
-        string ?? ""
+    /// String or `""`.
+    public var string: String {
+        optionalString ?? ""
     }
 }
 
 extension AnandaJSON {
-    public var stringOrInt: String? {
-        string ?? int.flatMap { String($0) }
+    /// String (or case from Int) or `nil`.
+    public var optionalStringOrInt: String? {
+        optionalString ?? optionalInt.flatMap { String($0) }
     }
 
-    public var stringOrIntValue: String {
-        stringOrInt ?? ""
-    }
-}
-
-extension AnandaJSON {
-    public var intOrString: Int? {
-        int ?? string.flatMap { Int($0) }
-    }
-
-    public var intOrStringValue: Int {
-        intOrString ?? 0
+    /// String (or case from Int) or `""`.
+    public var stringOrInt: String {
+        optionalStringOrInt ?? ""
     }
 }
 
 extension AnandaJSON {
-    public var doubleOrString: Double? {
-        double ?? string.flatMap { Double($0) }
+    /// Int (or case from String) or `nil`.
+    public var optionalIntOrString: Int? {
+        optionalInt ?? optionalString.flatMap { Int($0) }
     }
 
-    public var doubleOrStringValue: Double {
-        doubleOrString ?? 0
+    /// Int (or case from String) or `0`.
+    public var intOrString: Int {
+        optionalIntOrString ?? 0
     }
 }
 
 extension AnandaJSON {
-    public var dictionaryValue: [String: AnandaJSON] {
-        guard let pointer, yyjson_is_obj(pointer) else {
+    /// Double (or case from String) or `nil`.
+    public var optionalDoubleOrString: Double? {
+        optionalDouble ?? optionalString.flatMap { Double($0) }
+    }
+
+    /// Double (or case from String) or `0`.
+    public var doubleOrString: Double {
+        optionalDoubleOrString ?? 0
+    }
+}
+
+extension AnandaJSON {
+    /// Object
+    public var object: [String: AnandaJSON] {
+        guard isObject else {
             return [:]
         }
 
@@ -178,8 +209,9 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    public var arrayValue: [AnandaJSON] {
-        guard let pointer, yyjson_is_arr(pointer) else {
+    /// Array
+    public var array: [AnandaJSON] {
+        guard isArray else {
             return []
         }
 
@@ -201,37 +233,39 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    public var unixDate: Date? {
-        if let int {
+    /// Date from unix timestamp (Int, Double or String) or `nil`.
+    public var optionalUnixDate: Date? {
+        if let int = optionalInt {
             return .init(timeIntervalSince1970: TimeInterval(int))
         }
 
-        if let double {
+        if let double = optionalDouble {
             return .init(timeIntervalSince1970: double)
         }
 
-        if let string, let value = TimeInterval(string) {
+        if let string = optionalString, let value = TimeInterval(string) {
             return .init(timeIntervalSince1970: value)
         }
 
         return nil
     }
 
-    public var unixDateValue: Date {
-        unixDate ?? .init(timeIntervalSince1970: 0)
+    /// Date from unix timestamp (Int, Double or String) or `Date(timeIntervalSince1970: 0)`.
+    public var unixDate: Date {
+        optionalUnixDate ?? .init(timeIntervalSince1970: 0)
     }
 }
 
 extension AnandaJSON {
-    public var url: URL? {
-        if let string, let url = URL(string: string) {
-            return url
+    /// URL from String or`nil`.
+    public var optionalURL: URL? {
+        optionalString.flatMap {
+            URL(string: $0)
         }
-
-        return nil
     }
 
-    public var urlValue: URL {
-        url ?? URL(string: "/")!
+    /// URL from String or `URL(string: "/")!`.
+    public var url: URL {
+        optionalURL ?? .init(string: "/")!
     }
 }

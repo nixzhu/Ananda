@@ -1,11 +1,13 @@
 import Foundation
 import yyjson
 
+/// AnandaModel can be created from AnandaJSON
 public protocol AnandaModel {
     init(json: AnandaJSON)
 }
 
 extension AnandaModel {
+    /// Initialize with jsonData
     public init(jsonData: Data) {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
@@ -20,6 +22,7 @@ extension AnandaModel {
         }
     }
 
+    /// Initialize with jsonString
     public init(jsonString: String, encoding: String.Encoding = .utf8) {
         if let jsonData = jsonString.data(using: encoding) {
             self.init(jsonData: jsonData)

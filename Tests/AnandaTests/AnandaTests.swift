@@ -68,9 +68,9 @@ struct User: AnandaModel {
     let mastodon: Mastodon
 
     init(json: AnandaJSON) {
-        id = json.id.intValue
-        name = json.name.stringValue
-        int = json["int"].intValue
+        id = json.id.int
+        name = json.name.string
+        int = json["int"].int
         mastodon = .init(json: json.mastodon)
 
         assert(json.unknown.isNull)
@@ -87,8 +87,8 @@ struct User: AnandaModel {
         assert(json.mastodon.profile.extra_info.isEmpty)
         assert(json.mastodon.profile.extra_list.isEmpty)
 
-        let dictionary = json.mastodon.dictionaryValue
-        assert(dictionary["profile"]?.username.stringValue == "@nixzhu@mastodon.social")
+        let mastodon = json.mastodon.object
+        assert(mastodon["profile"]?.username.string == "@nixzhu@mastodon.social")
     }
 }
 
@@ -99,9 +99,9 @@ extension User {
 
         init(json: AnandaJSON) {
             profile = .init(json: json.profile)
-            toots = json.toots.arrayValue.map { .init(json: $0) }
+            toots = json.toots.array.map { .init(json: $0) }
 
-            assert(json.toots[0].id.intValue == 1)
+            assert(json.toots[0].id.int == 1)
         }
     }
 }
@@ -114,10 +114,10 @@ extension User.Mastodon {
         let createdAt: Date
 
         init(json: AnandaJSON) {
-            id = json.id.intOrStringValue
-            content = json.content.stringValue
-            isProtected = json.is_protected.boolValue
-            createdAt = json.created_at.unixDateValue
+            id = json.id.intOrString
+            content = json.content.string
+            isProtected = json.is_protected.bool
+            createdAt = json.created_at.unixDate
         }
     }
 }
@@ -128,8 +128,8 @@ extension User.Mastodon {
         let nickname: String
 
         init(json: AnandaJSON) {
-            username = json.username.stringValue
-            nickname = json.nickname.stringValue
+            username = json.username.string
+            nickname = json.nickname.string
         }
     }
 }
