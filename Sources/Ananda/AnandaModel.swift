@@ -7,7 +7,7 @@ public protocol AnandaModel {
 }
 
 extension AnandaModel {
-    /// Initialize with jsonData
+    /// Initialize with `jsonData`
     public init(jsonData: Data) {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
@@ -22,7 +22,7 @@ extension AnandaModel {
         }
     }
 
-    /// Initialize with jsonString
+    /// Initialize with `jsonString`, `encoding` default to `.utf8`
     public init(jsonString: String, encoding: String.Encoding = .utf8) {
         if let jsonData = jsonString.data(using: encoding) {
             self.init(jsonData: jsonData)

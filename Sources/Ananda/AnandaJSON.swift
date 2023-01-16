@@ -5,34 +5,24 @@ import yyjson
 @dynamicMemberLookup public struct AnandaJSON {
     private let pointer: UnsafeMutablePointer<yyjson_val>?
 
+    /// Initialize with `pointer`
     public init(pointer: UnsafeMutablePointer<yyjson_val>?) {
         self.pointer = pointer
     }
 
+    /// Object's member value with`dynamicMember` as key
     public subscript(dynamicMember member: String) -> AnandaJSON {
         self[member]
     }
 
+    /// Object's member value with `key`
     public subscript(key: String) -> AnandaJSON {
-        .init(
-            pointer: pointer.flatMap {
-                yyjson_obj_get($0, key)
-            }
-        )
+        .init(pointer: yyjson_obj_get(pointer, key))
     }
 
+    /// Array's member value at `index`
     public subscript(index: Int) -> AnandaJSON {
-        guard let pointer, yyjson_is_arr(pointer) else {
-            return .init(pointer: nil)
-        }
-
-        let size = yyjson_arr_size(pointer)
-
-        if (0..<size).contains(index) {
-            return .init(pointer: yyjson_arr_get(pointer, index))
-        } else {
-            return .init(pointer: nil)
-        }
+        .init(pointer: yyjson_arr_get(pointer, index))
     }
 }
 
@@ -48,21 +38,8 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// `true` if the value is object, otherwise `false`.
-    public var isObject: Bool {
-        yyjson_is_obj(pointer)
-    }
-}
-
-extension AnandaJSON {
-    /// `true` if the value is array, otherwise `false`.
-    public var isArray: Bool {
-        yyjson_is_arr(pointer)
-    }
-}
-
-extension AnandaJSON {
-    /// `true` if the value is null or is object but size is empty or is array but size is empty, otherwise `false`.
+    /// `true` if the value is null or is object but size is empty or is array but size is empty,
+    /// otherwise `false`.
     public var isEmpty: Bool {
         if isNull {
             return true
@@ -81,101 +58,118 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Bool or `nil`.
-    public var optionalBool: Bool? {
-        pointer.flatMap {
-            yyjson_is_bool($0) ? yyjson_get_bool($0) : nil
-        }
+    /// Whether the value is bool.
+    public var isBool: Bool {
+        yyjson_is_bool(pointer)
     }
 
-    /// Bool or `false`.
+    /// Bool value if present, or `nil`.
+    public var optionalBool: Bool? {
+        yyjson_get_bool(pointer)
+    }
+
+    /// Bool value if present or `false`.
     public var bool: Bool {
         optionalBool ?? false
     }
 }
 
 extension AnandaJSON {
-    /// Int or `nil`.
-    public var optionalInt: Int? {
-        pointer.flatMap {
-            yyjson_is_int($0) ? Int(yyjson_get_sint($0)) : nil
-        }
+    /// Whether the value is integer.
+    public var isInt: Bool {
+        yyjson_is_int(pointer)
     }
 
-    /// Int or `0`.
+    /// Int value if present, or `nil`.
+    public var optionalInt: Int? {
+        isInt ? Int(yyjson_get_sint(pointer)) : nil
+    }
+
+    /// Int value if present, or `0`.
     public var int: Int {
         optionalInt ?? 0
     }
 }
 
 extension AnandaJSON {
-    /// Double or `nil`.
-    public var optionalDouble: Double? {
-        pointer.flatMap {
-            yyjson_is_real($0) ? yyjson_get_real($0) : nil
-        }
+    /// Whether the value is double.
+    public var isDouble: Bool {
+        yyjson_is_real(pointer)
     }
 
-    /// Double or`0`.
+    /// Double value if present, or `nil`.
+    public var optionalDouble: Double? {
+        isDouble ? yyjson_get_real(pointer) : nil
+    }
+
+    /// Double value if present, or`0`.
     public var double: Double {
         optionalDouble ?? 0
     }
 }
 
 extension AnandaJSON {
-    /// String or `nil`.
+    /// Whether the value is string.
+    public var isString: Bool {
+        yyjson_is_str(pointer)
+    }
+
+    /// String value if present, or `nil`.
     public var optionalString: String? {
-        pointer.flatMap {
-            yyjson_get_str($0).flatMap {
-                .init(cString: $0)
-            }
+        yyjson_get_str(pointer).flatMap {
+            .init(cString: $0)
         }
     }
 
-    /// String or `""`.
+    /// String value if present, or `""`.
     public var string: String {
         optionalString ?? ""
     }
 }
 
 extension AnandaJSON {
-    /// String (or case from Int) or `nil`.
+    /// String value (or case from Int) if present, or `nil`.
     public var optionalStringOrInt: String? {
         optionalString ?? optionalInt.flatMap { String($0) }
     }
 
-    /// String (or case from Int) or `""`.
+    /// String value (or case from Int) if present, or `""`.
     public var stringOrInt: String {
         optionalStringOrInt ?? ""
     }
 }
 
 extension AnandaJSON {
-    /// Int (or case from String) or `nil`.
+    /// Int value (or case from String) if present, or `nil`.
     public var optionalIntOrString: Int? {
         optionalInt ?? optionalString.flatMap { Int($0) }
     }
 
-    /// Int (or case from String) or `0`.
+    /// Int value (or case from String) if present, or `0`.
     public var intOrString: Int {
         optionalIntOrString ?? 0
     }
 }
 
 extension AnandaJSON {
-    /// Double (or case from String) or `nil`.
+    /// Double value (or case from String) if present, or `nil`.
     public var optionalDoubleOrString: Double? {
         optionalDouble ?? optionalString.flatMap { Double($0) }
     }
 
-    /// Double (or case from String) or `0`.
+    /// Double value (or case from String) if present, or `0`.
     public var doubleOrString: Double {
         optionalDoubleOrString ?? 0
     }
 }
 
 extension AnandaJSON {
-    /// Object
+    /// Whether the value is object.
+    public var isObject: Bool {
+        yyjson_is_obj(pointer)
+    }
+
+    /// Object value if present, or empty dictionary.
     public var object: [String: AnandaJSON] {
         guard isObject else {
             return [:]
@@ -209,7 +203,12 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Array
+    /// Whether the value is array.
+    public var isArray: Bool {
+        yyjson_is_arr(pointer)
+    }
+
+    /// Array value if present, or empty array.
     public var array: [AnandaJSON] {
         guard isArray else {
             return []
@@ -233,7 +232,7 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Date from unix timestamp (Int, Double or String) or `nil`.
+    /// Date value from unix timestamp (Int, Double or String), or `nil`.
     public var optionalUnixDate: Date? {
         if let int = optionalInt {
             return .init(timeIntervalSince1970: TimeInterval(int))
@@ -250,21 +249,21 @@ extension AnandaJSON {
         return nil
     }
 
-    /// Date from unix timestamp (Int, Double or String) or `Date(timeIntervalSince1970: 0)`.
+    /// Date value from unix timestamp (Int, Double or String), or `Date(timeIntervalSince1970: 0)`.
     public var unixDate: Date {
         optionalUnixDate ?? .init(timeIntervalSince1970: 0)
     }
 }
 
 extension AnandaJSON {
-    /// URL from String or`nil`.
+    /// URL value from String, or`nil`.
     public var optionalURL: URL? {
         optionalString.flatMap {
             URL(string: $0)
         }
     }
 
-    /// URL from String or `URL(string: "/")!`.
+    /// URL value from String, or `URL(string: "/")!`.
     public var url: URL {
         optionalURL ?? .init(string: "/")!
     }

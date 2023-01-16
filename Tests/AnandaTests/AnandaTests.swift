@@ -74,6 +74,7 @@ struct User: AnandaModel {
         mastodon = .init(json: json.mastodon)
 
         assert(json.unknown.isNull)
+        assert(json["unknown"].isNull)
         assert(!json.name.isNull)
         assert(!json.mastodon.isNull)
         assert(!json.mastodon.profile.isNull)
@@ -81,6 +82,7 @@ struct User: AnandaModel {
         assert(!json.mastodon.profile.extra_list.isNull)
 
         assert(json.unknown.isEmpty)
+        assert(json["unknown"].isEmpty)
         assert(!json.name.isEmpty)
         assert(!json.mastodon.isEmpty)
         assert(!json.mastodon.profile.isEmpty)
@@ -101,7 +103,11 @@ extension User {
             profile = .init(json: json.profile)
             toots = json.toots.array.map { .init(json: $0) }
 
+            assert(json.toots[-1].id.int == 0)
             assert(json.toots[0].id.int == 1)
+            assert(json.toots[1].id.int == 2)
+            assert(json.toots[2].id.intOrString == 88_888_888_888_888_888)
+            assert(json.toots[3].id.int == 0)
         }
     }
 }
