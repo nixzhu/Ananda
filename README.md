@@ -31,6 +31,9 @@ We have JSON as follow:
 And we create models conforms to `AnandaModel` protocol as follow:
 
 ```swift
+import Foundation
+import Ananda
+
 struct Mastodon: AnandaModel {
     let profile: Profile
     let toots: [Toot]
@@ -73,5 +76,5 @@ extension Mastodon {
 Then, we can initialize a `Mastodon` as follow:
 
 ```swift
-let model = Mastodon(jsonString: jsonString)
+let model = Mastodon(jsonString: "...")
 ```
