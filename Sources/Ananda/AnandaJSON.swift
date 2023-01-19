@@ -64,13 +64,13 @@ extension AnandaJSON {
     }
 
     /// Bool value if present, or `nil`.
-    public var optionalBool: Bool? {
+    public var bool: Bool? {
         yyjson_get_bool(pointer)
     }
 
-    /// Bool value if present or `false`.
-    public var bool: Bool {
-        optionalBool ?? false
+    /// Bool value if present, or `defaultValue` defaults to`false`.
+    public func bool(defaultValue: Bool = false) -> Bool {
+        bool ?? defaultValue
     }
 }
 
@@ -81,13 +81,13 @@ extension AnandaJSON {
     }
 
     /// Int value if present, or `nil`.
-    public var optionalInt: Int? {
+    public var int: Int? {
         isInt ? Int(yyjson_get_sint(pointer)) : nil
     }
 
-    /// Int value if present, or `0`.
-    public var int: Int {
-        optionalInt ?? 0
+    /// Int value if present, or `defaultValue` defaults to`0`.
+    public func int(defaultValue: Int = 0) -> Int {
+        int ?? defaultValue
     }
 }
 
@@ -98,13 +98,13 @@ extension AnandaJSON {
     }
 
     /// Double value if present, or `nil`.
-    public var optionalDouble: Double? {
+    public var double: Double? {
         isDouble ? yyjson_get_real(pointer) : nil
     }
 
-    /// Double value if present, or`0`.
-    public var double: Double {
-        optionalDouble ?? 0
+    /// Double value if present, or `defaultValue` defaults to`0`.
+    public func double(defaultValue: Double = 0) -> Double {
+        double ?? defaultValue
     }
 }
 
@@ -115,51 +115,51 @@ extension AnandaJSON {
     }
 
     /// String value if present, or `nil`.
-    public var optionalString: String? {
+    public var string: String? {
         yyjson_get_str(pointer).flatMap {
             .init(cString: $0)
         }
     }
 
-    /// String value if present, or `""`.
-    public var string: String {
-        optionalString ?? ""
+    /// String value if present, or `defaultValue` defaults to`""`.
+    public func string(defaultValue: String = "") -> String {
+        string ?? defaultValue
     }
 }
 
 extension AnandaJSON {
     /// String value (or case from Int) if present, or `nil`.
-    public var optionalStringOrInt: String? {
-        optionalString ?? optionalInt.flatMap { String($0) }
+    public var stringOrInt: String? {
+        string ?? int.flatMap { String($0) }
     }
 
-    /// String value (or case from Int) if present, or `""`.
-    public var stringOrInt: String {
-        optionalStringOrInt ?? ""
+    /// String value (or case from Int) if present, or `defaultValue` defaults to`""`.
+    public func stringOrInt(defaultValue: String = "") -> String {
+        stringOrInt ?? defaultValue
     }
 }
 
 extension AnandaJSON {
     /// Int value (or case from String) if present, or `nil`.
-    public var optionalIntOrString: Int? {
-        optionalInt ?? optionalString.flatMap { Int($0) }
+    public var intOrString: Int? {
+        int ?? string.flatMap { Int($0) }
     }
 
-    /// Int value (or case from String) if present, or `0`.
-    public var intOrString: Int {
-        optionalIntOrString ?? 0
+    /// Int value (or case from String) if present, or `defaultValue` defaults to`0`.
+    public func intOrString(defaultValue: Int = 0) -> Int {
+        intOrString ?? defaultValue
     }
 }
 
 extension AnandaJSON {
     /// Double value (or case from String) if present, or `nil`.
-    public var optionalDoubleOrString: Double? {
-        optionalDouble ?? optionalString.flatMap { Double($0) }
+    public var doubleOrString: Double? {
+        double ?? string.flatMap { Double($0) }
     }
 
-    /// Double value (or case from String) if present, or `0`.
-    public var doubleOrString: Double {
-        optionalDoubleOrString ?? 0
+    /// Double value (or case from String) if present, or `defaultValue` defaults to`0`.
+    public func doubleOrString(defaultValue: Double = 0) -> Double {
+        doubleOrString ?? defaultValue
     }
 }
 
@@ -169,10 +169,10 @@ extension AnandaJSON {
         yyjson_is_obj(pointer)
     }
 
-    /// Object value if present, or empty dictionary.
-    public var object: [String: AnandaJSON] {
+    /// Object value if present, or `nil`.
+    public var object: [String: AnandaJSON]? {
         guard isObject else {
-            return [:]
+            return nil
         }
 
         var result: [String: AnandaJSON] = [:]
@@ -200,6 +200,11 @@ extension AnandaJSON {
 
         return result
     }
+
+    /// Object value if present, or `defaultValue` defaults to empty dictionary.
+    public func object(defaultValue: [String: AnandaJSON] = [:]) -> [String: AnandaJSON] {
+        object ?? defaultValue
+    }
 }
 
 extension AnandaJSON {
@@ -208,10 +213,10 @@ extension AnandaJSON {
         yyjson_is_arr(pointer)
     }
 
-    /// Array value if present, or empty array.
-    public var array: [AnandaJSON] {
+    /// Array value if present, or `nil`.
+    public var array: [AnandaJSON]? {
         guard isArray else {
-            return []
+            return nil
         }
 
         var result: [AnandaJSON] = []
@@ -229,42 +234,48 @@ extension AnandaJSON {
 
         return result
     }
+
+    /// Array value if present, or `defaultValue` defaults to empty array.
+    public func array(defaultValue: [AnandaJSON] = []) -> [AnandaJSON] {
+        array ?? defaultValue
+    }
 }
 
 extension AnandaJSON {
     /// Date value from unix timestamp (Int, Double or String), or `nil`.
-    public var optionalUnixDate: Date? {
-        if let int = optionalInt {
+    public var unixDate: Date? {
+        if let int {
             return .init(timeIntervalSince1970: TimeInterval(int))
         }
 
-        if let double = optionalDouble {
+        if let double {
             return .init(timeIntervalSince1970: double)
         }
 
-        if let string = optionalString, let value = TimeInterval(string) {
+        if let string, let value = TimeInterval(string) {
             return .init(timeIntervalSince1970: value)
         }
 
         return nil
     }
 
-    /// Date value from unix timestamp (Int, Double or String), or `Date(timeIntervalSince1970: 0)`.
-    public var unixDate: Date {
-        optionalUnixDate ?? .init(timeIntervalSince1970: 0)
+    /// Date value from unix timestamp (Int, Double or String),
+    /// or `defaultValue` defaults to`Date(timeIntervalSince1970: 0)`.
+    public func unixDate(defaultValue: Date = .init(timeIntervalSince1970: 0)) -> Date {
+        unixDate ?? defaultValue
     }
 }
 
 extension AnandaJSON {
     /// URL value from String, or`nil`.
-    public var optionalURL: URL? {
-        optionalString.flatMap {
+    public var url: URL? {
+        string.flatMap {
             URL(string: $0)
         }
     }
 
-    /// URL value from String, or `URL(string: "/")!`.
-    public var url: URL {
-        optionalURL ?? .init(string: "/")!
+    /// URL value from String, or `defaultValue` defaults to`URL(string: "/")!`.
+    public func url(defaultValue: URL = .init(string: "/")!) -> URL {
+        url ?? defaultValue
     }
 }
