@@ -87,13 +87,13 @@ final class AnandaTests: XCTestCase {
 }
 
 struct User: AnandaModel {
-    let id: Int
+    let id: UInt
     let name: String
     let int: Int
     let mastodon: Mastodon
 
     init(json: AnandaJSON) {
-        id = json.id.int()
+        id = json.id.uInt()
         name = json.name.string()
         int = json["int"].int()
         mastodon = .init(json: json.mastodon)
