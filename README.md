@@ -53,7 +53,7 @@ extension Mastodon {
         init(json: AnandaJSON) {
             username = json.username.string()
             nickname = json.nickname.string()
-            avatarURL = json.avatar_url.url()
+            avatarURL = json.avatar_url.urlFromString()
         }
     }
 }
@@ -67,7 +67,7 @@ extension Mastodon {
         init(json: AnandaJSON) {
             id = json.id.int()
             content = json.content.string()
-            createdAt = json.created_at.unixDate()
+            createdAt = json.created_at.dateFromUnixTimestamp()
         }
     }
 }

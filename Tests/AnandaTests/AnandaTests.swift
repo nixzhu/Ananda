@@ -148,7 +148,7 @@ extension User.Mastodon {
             id = json.id.intOrString()
             content = json.content.string()
             isProtected = json.is_protected.boolOrInt()
-            createdAt = json.created_at.unixDate()
+            createdAt = json.created_at.dateFromUnixTimestamp()
         }
     }
 }

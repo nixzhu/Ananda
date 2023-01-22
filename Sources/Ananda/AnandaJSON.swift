@@ -248,7 +248,7 @@ extension AnandaJSON {
 
 extension AnandaJSON {
     /// Date value from unix timestamp (Int, Double or String), or `nil`.
-    public var unixDate: Date? {
+    public var dateFromUnixTimestamp: Date? {
         if let int {
             return .init(timeIntervalSince1970: TimeInterval(int))
         }
@@ -266,21 +266,23 @@ extension AnandaJSON {
 
     /// Date value from unix timestamp (Int, Double or String),
     /// or `defaultValue` defaults to`Date(timeIntervalSince1970: 0)`.
-    public func unixDate(defaultValue: Date = .init(timeIntervalSince1970: 0)) -> Date {
-        unixDate ?? defaultValue
+    public func dateFromUnixTimestamp(
+        defaultValue: Date = .init(timeIntervalSince1970: 0)
+    ) -> Date {
+        dateFromUnixTimestamp ?? defaultValue
     }
 }
 
 extension AnandaJSON {
     /// URL value from String, or`nil`.
-    public var url: URL? {
+    public var urlFromString: URL? {
         string.flatMap {
             URL(string: $0)
         }
     }
 
     /// URL value from String, or `defaultValue` defaults to`URL(string: "/")!`.
-    public func url(defaultValue: URL = .init(string: "/")!) -> URL {
-        url ?? defaultValue
+    public func urlFromString(defaultValue: URL = .init(string: "/")!) -> URL {
+        urlFromString ?? defaultValue
     }
 }
