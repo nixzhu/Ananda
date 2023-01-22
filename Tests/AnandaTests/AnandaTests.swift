@@ -25,13 +25,19 @@ final class AnandaTests: XCTestCase {
                         {
                             "id": 2,
                             "content": "How do you do?",
-                            "is_protected": false,
+                            "is_protected": true,
                             "created_at": 1234567890
                         },
                         {
                             "id": "88888888888888888",
                             "content": "A4纸不发货了",
-                            "is_protected": true,
+                            "is_protected": 0,
+                            "created_at": "8888888888"
+                        },
+                        {
+                            "id": "99999999999999999",
+                            "content": "春季快乐！",
+                            "is_protected": 1,
                             "created_at": "9999999999"
                         }
                     ]
@@ -46,18 +52,37 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.int, 18)
         XCTAssertEqual(model.mastodon.profile.username, "@nixzhu@mastodon.social")
 
+        XCTAssertEqual(model.mastodon.toots[0].isProtected, false)
+        XCTAssertEqual(model.mastodon.toots[0].id, 1)
+
         XCTAssertEqual(
             model.mastodon.toots[0].createdAt,
             .init(timeIntervalSince1970: 1_234_567_890)
         )
+
+        XCTAssertEqual(model.mastodon.toots[1].isProtected, true)
+        XCTAssertEqual(model.mastodon.toots[1].id, 2)
 
         XCTAssertEqual(
             model.mastodon.toots[1].createdAt,
             .init(timeIntervalSince1970: 1_234_567_890)
         )
 
-        XCTAssertEqual(model.mastodon.toots[2].isProtected, true)
+        XCTAssertEqual(model.mastodon.toots[2].isProtected, false)
         XCTAssertEqual(model.mastodon.toots[2].id, 88_888_888_888_888_888)
+
+        XCTAssertEqual(
+            model.mastodon.toots[2].createdAt,
+            .init(timeIntervalSince1970: 8_888_888_888)
+        )
+
+        XCTAssertEqual(model.mastodon.toots[3].isProtected, true)
+        XCTAssertEqual(model.mastodon.toots[3].id, 99_999_999_999_999_999)
+
+        XCTAssertEqual(
+            model.mastodon.toots[3].createdAt,
+            .init(timeIntervalSince1970: 9_999_999_999)
+        )
     }
 }
 
@@ -122,7 +147,7 @@ extension User.Mastodon {
         init(json: AnandaJSON) {
             id = json.id.intOrString()
             content = json.content.string()
-            isProtected = json.is_protected.bool()
+            isProtected = json.is_protected.boolOrInt()
             createdAt = json.created_at.unixDate()
         }
     }

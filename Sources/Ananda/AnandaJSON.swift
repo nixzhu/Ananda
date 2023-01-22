@@ -65,12 +65,23 @@ extension AnandaJSON {
 
     /// Bool value if present, or `nil`.
     public var bool: Bool? {
-        yyjson_get_bool(pointer)
+        isBool ? yyjson_get_bool(pointer) : nil
     }
 
     /// Bool value if present, or `defaultValue` defaults to`false`.
     public func bool(defaultValue: Bool = false) -> Bool {
         bool ?? defaultValue
+    }
+
+    /// Bool value (or case from Int, `0` is `false`, otherwise is `true`) if present, or `nil`.
+    public var boolOrInt: Bool? {
+        bool ?? int.flatMap { $0 != 0 }
+    }
+
+    /// Bool value (or case from Int, `0` is `false`, otherwise is `true`) if present,
+    /// or `defaultValue` defaults to`false`.
+    public func boolOrInt(defaultValue: Bool = false) -> Bool {
+        boolOrInt ?? defaultValue
     }
 }
 
@@ -89,6 +100,16 @@ extension AnandaJSON {
     public func int(defaultValue: Int = 0) -> Int {
         int ?? defaultValue
     }
+
+    /// Int value (or case from String) if present, or `nil`.
+    public var intOrString: Int? {
+        int ?? string.flatMap { Int($0) }
+    }
+
+    /// Int value (or case from String) if present, or `defaultValue` defaults to`0`.
+    public func intOrString(defaultValue: Int = 0) -> Int {
+        intOrString ?? defaultValue
+    }
 }
 
 extension AnandaJSON {
@@ -106,6 +127,16 @@ extension AnandaJSON {
     public func double(defaultValue: Double = 0) -> Double {
         double ?? defaultValue
     }
+
+    /// Double value (or case from String) if present, or `nil`.
+    public var doubleOrString: Double? {
+        double ?? string.flatMap { Double($0) }
+    }
+
+    /// Double value (or case from String) if present, or `defaultValue` defaults to`0`.
+    public func doubleOrString(defaultValue: Double = 0) -> Double {
+        doubleOrString ?? defaultValue
+    }
 }
 
 extension AnandaJSON {
@@ -116,18 +147,16 @@ extension AnandaJSON {
 
     /// String value if present, or `nil`.
     public var string: String? {
-        yyjson_get_str(pointer).flatMap {
+        isString ? yyjson_get_str(pointer).flatMap {
             .init(cString: $0)
-        }
+        } : nil
     }
 
     /// String value if present, or `defaultValue` defaults to`""`.
     public func string(defaultValue: String = "") -> String {
         string ?? defaultValue
     }
-}
 
-extension AnandaJSON {
     /// String value (or case from Int) if present, or `nil`.
     public var stringOrInt: String? {
         string ?? int.flatMap { String($0) }
@@ -136,30 +165,6 @@ extension AnandaJSON {
     /// String value (or case from Int) if present, or `defaultValue` defaults to`""`.
     public func stringOrInt(defaultValue: String = "") -> String {
         stringOrInt ?? defaultValue
-    }
-}
-
-extension AnandaJSON {
-    /// Int value (or case from String) if present, or `nil`.
-    public var intOrString: Int? {
-        int ?? string.flatMap { Int($0) }
-    }
-
-    /// Int value (or case from String) if present, or `defaultValue` defaults to`0`.
-    public func intOrString(defaultValue: Int = 0) -> Int {
-        intOrString ?? defaultValue
-    }
-}
-
-extension AnandaJSON {
-    /// Double value (or case from String) if present, or `nil`.
-    public var doubleOrString: Double? {
-        double ?? string.flatMap { Double($0) }
-    }
-
-    /// Double value (or case from String) if present, or `defaultValue` defaults to`0`.
-    public func doubleOrString(defaultValue: Double = 0) -> Double {
-        doubleOrString ?? defaultValue
     }
 }
 
