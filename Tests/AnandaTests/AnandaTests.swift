@@ -114,8 +114,8 @@ struct User: AnandaModel {
         assert(json.mastodon.profile.extra_info.isEmpty)
         assert(json.mastodon.profile.extra_list.isEmpty)
 
-        let mastodon = json.mastodon.object()
-        assert(mastodon["profile"]?.username.string == "@nixzhu@mastodon.social")
+        let mastodonInfo = json.mastodon.dictionary()
+        assert(mastodonInfo["profile"]?.username.string == "@nixzhu@mastodon.social")
     }
 }
 

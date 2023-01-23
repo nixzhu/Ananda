@@ -184,8 +184,8 @@ extension AnandaJSON {
         yyjson_is_obj(pointer)
     }
 
-    /// Object value if present, or `nil`.
-    public var object: [String: AnandaJSON]? {
+    /// Object value (as dictionary) if present, or `nil`.
+    public var dictionary: [String: AnandaJSON]? {
         guard isObject else {
             return nil
         }
@@ -216,9 +216,9 @@ extension AnandaJSON {
         return result
     }
 
-    /// Object value if present, or `defaultValue` defaults to empty dictionary.
-    public func object(defaultValue: [String: AnandaJSON] = [:]) -> [String: AnandaJSON] {
-        object ?? defaultValue
+    /// Object value (as dictionary) if present, or `defaultValue` defaults to empty dictionary.
+    public func dictionary(defaultValue: [String: AnandaJSON] = [:]) -> [String: AnandaJSON] {
+        dictionary ?? defaultValue
     }
 }
 
