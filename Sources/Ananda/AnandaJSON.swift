@@ -1,8 +1,55 @@
 import Foundation
 import yyjson
+import JJLISO8601DateFormatter
 
 /// Container of pointer to`yyjson_val`, provides some convenient APIs to access JSON values.
 @dynamicMemberLookup public struct AnandaJSON {
+    /// Extracting date from `AnandaJSON`, user can customize it.
+    public static var dateExtractor: (AnandaJSON) -> Date? = {
+        if let int = $0.int {
+            return .init(timeIntervalSince1970: TimeInterval(int))
+        }
+
+        if let double = $0.double {
+            return .init(timeIntervalSince1970: double)
+        }
+
+        if let string = $0.string {
+            if let value = TimeInterval(string) {
+                return .init(timeIntervalSince1970: value)
+            }
+
+            if let date = iso8601DateFormatter1.date(from: string) {
+                return date
+            }
+
+            if let date = iso8601DateFormatter2.date(from: string) {
+                return date
+            }
+        }
+
+        return nil
+    }
+
+    /// Extracting url from `AnandaJSON`, user can customize it.
+    public static var urlExtractor: (AnandaJSON) -> URL? = {
+        $0.string.flatMap {
+            URL(string: $0)
+        }
+    }
+
+    private static let iso8601DateFormatter1: JJLISO8601DateFormatter = {
+        let dateFormatter = JJLISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime]
+        return dateFormatter
+    }()
+
+    private static let iso8601DateFormatter2: JJLISO8601DateFormatter = {
+        let dateFormatter = JJLISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return dateFormatter
+    }()
+
     private let pointer: UnsafeMutablePointer<yyjson_val>?
 
     /// Initialize with `pointer`
@@ -257,42 +304,26 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Date value from unix timestamp (Int, Double or String), or `nil`.
-    public var dateFromUnixTimestamp: Date? {
-        if let int {
-            return .init(timeIntervalSince1970: TimeInterval(int))
-        }
-
-        if let double {
-            return .init(timeIntervalSince1970: double)
-        }
-
-        if let string, let value = TimeInterval(string) {
-            return .init(timeIntervalSince1970: value)
-        }
-
-        return nil
+    /// Date value with `dateExtractor` if present , or `nil`.
+    public var date: Date? {
+        Self.dateExtractor(self)
     }
 
-    /// Date value from unix timestamp (Int, Double or String),
-    /// or `defaultValue` defaults to`Date(timeIntervalSince1970: 0)`.
-    public func dateFromUnixTimestamp(
-        defaultValue: Date = .init(timeIntervalSince1970: 0)
-    ) -> Date {
-        dateFromUnixTimestamp ?? defaultValue
+    /// Date value with `dateExtractor` if present, or `defaultValue` defaults
+    /// to`Date(timeIntervalSince1970: 0)`.
+    public func date(defaultValue: Date = .init(timeIntervalSince1970: 0)) -> Date {
+        date ?? defaultValue
     }
 }
 
 extension AnandaJSON {
-    /// URL value from String, or`nil`.
-    public var urlFromString: URL? {
-        string.flatMap {
-            URL(string: $0)
-        }
+    /// URL value with `urlExtractor` if present, or`nil`.
+    public var url: URL? {
+        Self.urlExtractor(self)
     }
 
-    /// URL value from String, or `defaultValue` defaults to`URL(string: "/")!`.
-    public func urlFromString(defaultValue: URL = .init(string: "/")!) -> URL {
-        urlFromString ?? defaultValue
+    /// URL value with `urlExtractor` if present, or `defaultValue` defaults to`URL(string: "/")!`.
+    public func url(defaultValue: URL = .init(string: "/")!) -> URL {
+        url ?? defaultValue
     }
 }

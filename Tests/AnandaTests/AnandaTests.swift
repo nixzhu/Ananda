@@ -12,6 +12,7 @@ final class AnandaTests: XCTestCase {
                     "profile": {
                         "username": "@nixzhu@mastodon.social",
                         "nickname": "NIX",
+                        "avatar_url": "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png",
                         "extra_info": {},
                         "extra_list": []
                     },
@@ -38,7 +39,7 @@ final class AnandaTests: XCTestCase {
                             "id": "99999999999999999",
                             "content": "春季快乐！",
                             "is_protected": 1,
-                            "created_at": "9999999999"
+                            "created_at": "2012-04-23T18:25:43.511Z"
                         }
                     ]
                 }
@@ -51,6 +52,11 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.name, "NIX 👨‍👩‍👧‍👦/🐣")
         XCTAssertEqual(model.int, 18)
         XCTAssertEqual(model.mastodon.profile.username, "@nixzhu@mastodon.social")
+
+        XCTAssertEqual(
+            model.mastodon.profile.avatarURL.absoluteString,
+            "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png"
+        )
 
         XCTAssertEqual(model.mastodon.toots[0].isProtected, false)
         XCTAssertEqual(model.mastodon.toots[0].id, 1)
@@ -80,8 +86,8 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.mastodon.toots[3].id, 99_999_999_999_999_999)
 
         XCTAssertEqual(
-            model.mastodon.toots[3].createdAt,
-            .init(timeIntervalSince1970: 9_999_999_999)
+            model.mastodon.toots[3].createdAt.timeIntervalSince1970,
+            1_335_205_543.511
         )
     }
 }
@@ -148,7 +154,7 @@ extension User.Mastodon {
             id = json.id.intOrString()
             content = json.content.string()
             isProtected = json.is_protected.boolOrInt()
-            createdAt = json.created_at.dateFromUnixTimestamp()
+            createdAt = json.created_at.date()
         }
     }
 }
@@ -157,10 +163,12 @@ extension User.Mastodon {
     struct Profile: AnandaModel {
         let username: String
         let nickname: String
+        let avatarURL: URL
 
         init(json: AnandaJSON) {
             username = json.username.string()
             nickname = json.nickname.string()
+            avatarURL = json.avatar_url.url()
         }
     }
 }
