@@ -169,6 +169,16 @@ extension AnandaJSON {
     public func uInt(defaultValue: UInt = 0) -> UInt {
         uInt ?? defaultValue
     }
+
+    /// UInt value (or case from String) if present, or `nil`.
+    public var uIntOrString: UInt? {
+        uInt ?? string.flatMap { UInt($0) }
+    }
+
+    /// UInt value (or case from String) if present, or `defaultValue` defaults to`0`.
+    public func uIntOrString(defaultValue: UInt = 0) -> UInt {
+        uIntOrString ?? defaultValue
+    }
 }
 
 extension AnandaJSON {
