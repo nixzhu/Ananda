@@ -41,12 +41,14 @@ import JJLISO8601DateFormatter
     private static let iso8601DateFormatter1: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime]
+
         return dateFormatter
     }()
 
     private static let iso8601DateFormatter2: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
         return dateFormatter
     }()
 

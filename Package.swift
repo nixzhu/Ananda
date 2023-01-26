@@ -11,15 +11,27 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/ibireme/yyjson.git", from: "0.6.0"),
-        .package(url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git", from: "0.1.6"),
+        .package(
+            url: "https://github.com/ibireme/yyjson.git",
+            from: "0.6.0"
+        ),
+        .package(
+            url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
+            from: "0.1.6"
+        ),
     ],
     targets: [
         .target(
             name: "Ananda",
             dependencies: [
-                .product(name: "yyjson", package: "yyjson"),
-                .product(name: "JJLISO8601DateFormatter", package: "JJLISO8601DateFormatter"),
+                .product(
+                    name: "yyjson",
+                    package: "yyjson"
+                ),
+                .product(
+                    name: "JJLISO8601DateFormatter",
+                    package: "JJLISO8601DateFormatter"
+                ),
             ]
         ),
         .testTarget(
