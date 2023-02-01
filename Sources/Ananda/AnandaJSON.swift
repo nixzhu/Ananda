@@ -6,10 +6,10 @@ import JJLISO8601DateFormatter
 @dynamicMemberLookup public struct AnandaJSON {
     /// Extracting bool from `AnandaJSON`, user can customize it.
     public static var boolExtractor: (AnandaJSON) -> Bool? = {
-        if $0.isBool {
-            return yyjson_get_bool($0.pointer)
+        if let bool = $0.originalBool {
+            return bool
         } else {
-            if let int = $0.int {
+            if let int = $0.originalInt {
                 return int != 0
             }
 
@@ -19,10 +19,10 @@ import JJLISO8601DateFormatter
 
     /// Extracting int from `AnandaJSON`, user can customize it.
     public static var intExtractor: (AnandaJSON) -> Int? = {
-        if $0.isInt {
-            return Int(yyjson_get_sint($0.pointer))
+        if let int = $0.originalInt {
+            return int
         } else {
-            if let string = $0.string {
+            if let string = $0.originalString {
                 return Int(string)
             }
 
@@ -32,10 +32,10 @@ import JJLISO8601DateFormatter
 
     /// Extracting uInt from `AnandaJSON`, user can customize it.
     public static var uIntExtractor: (AnandaJSON) -> UInt? = {
-        if $0.isInt {
-            return UInt(yyjson_get_uint($0.pointer))
+        if let uInt = $0.originalUInt {
+            return uInt
         } else {
-            if let string = $0.string {
+            if let string = $0.originalString {
                 return UInt(string)
             }
 
@@ -45,11 +45,24 @@ import JJLISO8601DateFormatter
 
     /// Extracting double from `AnandaJSON`, user can customize it.
     public static var doubleExtractor: (AnandaJSON) -> Double? = {
-        if $0.isDouble {
-            return yyjson_get_real($0.pointer)
+        if let double = $0.originalDouble {
+            return double
         } else {
-            if let string = $0.string {
+            if let string = $0.originalString {
                 return Double(string)
+            }
+
+            return nil
+        }
+    }
+
+    /// Extracting string from `AnandaJSON`, user can customize it.
+    public static var stringExtractor: (AnandaJSON) -> String? = {
+        if let string = $0.originalString {
+            return string
+        } else {
+            if let int = $0.originalInt {
+                return String(int)
             }
 
             return nil
@@ -58,15 +71,15 @@ import JJLISO8601DateFormatter
 
     /// Extracting date from `AnandaJSON`, user can customize it.
     public static var dateExtractor: (AnandaJSON) -> Date? = {
-        if let int = $0.int {
+        if let int = $0.originalInt {
             return .init(timeIntervalSince1970: TimeInterval(int))
         }
 
-        if let double = $0.double {
+        if let double = $0.originalDouble {
             return .init(timeIntervalSince1970: double)
         }
 
-        if let string = $0.string {
+        if let string = $0.originalString {
             if let value = TimeInterval(string) {
                 return .init(timeIntervalSince1970: value)
             }
@@ -85,7 +98,7 @@ import JJLISO8601DateFormatter
 
     /// Extracting url from `AnandaJSON`, user can customize it.
     public static var urlExtractor: (AnandaJSON) -> URL? = {
-        $0.string.flatMap {
+        $0.originalString.flatMap {
             URL(string: $0)
         }
     }
@@ -164,6 +177,11 @@ extension AnandaJSON {
         yyjson_is_bool(pointer)
     }
 
+    /// Bool value if present, or `nil`.
+    public var originalBool: Bool? {
+        isBool ? yyjson_get_bool(pointer) : nil
+    }
+
     /// Bool value with `boolExtractor` if present, or `nil`.
     public var bool: Bool? {
         Self.boolExtractor(self)
@@ -181,6 +199,11 @@ extension AnandaJSON {
         yyjson_is_int(pointer)
     }
 
+    /// Int value if present, or `nil`.
+    public var originalInt: Int? {
+        isInt ? Int(yyjson_get_sint(pointer)) : nil
+    }
+
     /// Int value with `intExtractor`if present, or `nil`.
     public var int: Int? {
         Self.intExtractor(self)
@@ -189,6 +212,11 @@ extension AnandaJSON {
     /// Int value with `intExtractor` if present, or `defaultValue` defaults to`0`.
     public func int(defaultValue: Int = 0) -> Int {
         int ?? defaultValue
+    }
+
+    /// UInt value if present, or `nil`.
+    public var originalUInt: UInt? {
+        isInt ? UInt(yyjson_get_uint(pointer)) : nil
     }
 
     /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
@@ -206,6 +234,11 @@ extension AnandaJSON {
     /// Whether the value is double.
     public var isDouble: Bool {
         yyjson_is_real(pointer)
+    }
+
+    /// Double value if present, or `nil`.
+    public var originalDouble: Double? {
+        isDouble ? yyjson_get_real(pointer) : nil
     }
 
     /// Double value with `doubleExtractor` if present, or `nil`.
@@ -226,25 +259,20 @@ extension AnandaJSON {
     }
 
     /// String value if present, or `nil`.
-    public var string: String? {
+    public var originalString: String? {
         isString ? yyjson_get_str(pointer).flatMap {
-            .init(cString: $0)
+            String(cString: $0)
         } : nil
     }
 
-    /// String value if present, or `defaultValue` defaults to`""`.
+    /// String value with `stringExtractor` if present, or `nil`.
+    public var string: String? {
+        Self.stringExtractor(self)
+    }
+
+    /// String value with `stringExtractor` if present, or `defaultValue` defaults to`""`.
     public func string(defaultValue: String = "") -> String {
         string ?? defaultValue
-    }
-
-    /// String value (or case from Int) if present, or `nil`.
-    public var stringOrInt: String? {
-        string ?? int.flatMap { String($0) }
-    }
-
-    /// String value (or case from Int) if present, or `defaultValue` defaults to`""`.
-    public func stringOrInt(defaultValue: String = "") -> String {
-        stringOrInt ?? defaultValue
     }
 }
 
