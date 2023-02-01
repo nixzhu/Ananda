@@ -4,6 +4,19 @@ import JJLISO8601DateFormatter
 
 /// Container of pointer to`yyjson_val`, provides some convenient APIs to access JSON values.
 @dynamicMemberLookup public struct AnandaJSON {
+    /// Extracting bool from `AnandaJSON`, user can customize it.
+    public static var boolExtractor: (AnandaJSON) -> Bool? = {
+        if $0.isBool {
+            return yyjson_get_bool($0.pointer)
+        } else {
+            if let int = $0.int {
+                return int != 0
+            }
+
+            return nil
+        }
+    }
+
     /// Extracting date from `AnandaJSON`, user can customize it.
     public static var dateExtractor: (AnandaJSON) -> Date? = {
         if let int = $0.int {
@@ -112,25 +125,14 @@ extension AnandaJSON {
         yyjson_is_bool(pointer)
     }
 
-    /// Bool value if present, or `nil`.
+    /// Bool value with `boolExtractor` if present, or `nil`.
     public var bool: Bool? {
-        isBool ? yyjson_get_bool(pointer) : nil
+        Self.boolExtractor(self)
     }
 
-    /// Bool value if present, or `defaultValue` defaults to`false`.
+    /// Bool value with `boolExtractor` if present, or `defaultValue` defaults to`false`.
     public func bool(defaultValue: Bool = false) -> Bool {
         bool ?? defaultValue
-    }
-
-    /// Bool value (or case from Int, `0` is `false`, otherwise is `true`) if present, or `nil`.
-    public var boolOrInt: Bool? {
-        bool ?? int.flatMap { $0 != 0 }
-    }
-
-    /// Bool value (or case from Int, `0` is `false`, otherwise is `true`) if present,
-    /// or `defaultValue` defaults to`false`.
-    public func boolOrInt(defaultValue: Bool = false) -> Bool {
-        boolOrInt ?? defaultValue
     }
 }
 

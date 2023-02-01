@@ -153,7 +153,7 @@ extension User.Mastodon {
         init(json: AnandaJSON) {
             id = json.id.intOrString()
             content = json.content.string()
-            isProtected = json.is_protected.boolOrInt()
+            isProtected = json.is_protected.bool()
             createdAt = json.created_at.date()
         }
     }
