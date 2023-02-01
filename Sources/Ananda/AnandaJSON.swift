@@ -17,6 +17,32 @@ import JJLISO8601DateFormatter
         }
     }
 
+    /// Extracting int from `AnandaJSON`, user can customize it.
+    public static var intExtractor: (AnandaJSON) -> Int? = {
+        if $0.isInt {
+            return Int(yyjson_get_sint($0.pointer))
+        } else {
+            if let string = $0.string {
+                return Int(string)
+            }
+
+            return nil
+        }
+    }
+
+    /// Extracting uInt from `AnandaJSON`, user can customize it.
+    public static var uIntExtractor: (AnandaJSON) -> UInt? = {
+        if $0.isInt {
+            return UInt(yyjson_get_uint($0.pointer))
+        } else {
+            if let string = $0.string {
+                return UInt(string)
+            }
+
+            return nil
+        }
+    }
+
     /// Extracting date from `AnandaJSON`, user can customize it.
     public static var dateExtractor: (AnandaJSON) -> Date? = {
         if let int = $0.int {
@@ -144,7 +170,7 @@ extension AnandaJSON {
 
     /// Int value if present, or `nil`.
     public var int: Int? {
-        isInt ? Int(yyjson_get_sint(pointer)) : nil
+        Self.intExtractor(self)
     }
 
     /// Int value if present, or `defaultValue` defaults to`0`.
@@ -152,34 +178,14 @@ extension AnandaJSON {
         int ?? defaultValue
     }
 
-    /// Int value (or case from String) if present, or `nil`.
-    public var intOrString: Int? {
-        int ?? string.flatMap { Int($0) }
-    }
-
-    /// Int value (or case from String) if present, or `defaultValue` defaults to`0`.
-    public func intOrString(defaultValue: Int = 0) -> Int {
-        intOrString ?? defaultValue
-    }
-
     /// UInt value if present, or `defaultValue` defaults to`0`.
     public var uInt: UInt? {
-        isInt ? UInt(yyjson_get_uint(pointer)) : nil
+        Self.uIntExtractor(self)
     }
 
     /// UInt value if present, or `defaultValue` defaults to`0`.
     public func uInt(defaultValue: UInt = 0) -> UInt {
         uInt ?? defaultValue
-    }
-
-    /// UInt value (or case from String) if present, or `nil`.
-    public var uIntOrString: UInt? {
-        uInt ?? string.flatMap { UInt($0) }
-    }
-
-    /// UInt value (or case from String) if present, or `defaultValue` defaults to`0`.
-    public func uIntOrString(defaultValue: UInt = 0) -> UInt {
-        uIntOrString ?? defaultValue
     }
 }
 

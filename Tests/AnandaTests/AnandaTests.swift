@@ -137,8 +137,8 @@ extension User {
             assert(json.toots[-1].id.int == nil)
             assert(json.toots[0].id.int == 1)
             assert(json.toots[1].id.int == 2)
-            assert(json.toots[2].id.intOrString == 88_888_888_888_888_888)
-            assert(json.toots[3].id.int == nil)
+            assert(json.toots[2].id.int == 88_888_888_888_888_888)
+            assert(json.toots[3].id.int == 99_999_999_999_999_999)
         }
     }
 }
@@ -151,7 +151,7 @@ extension User.Mastodon {
         let createdAt: Date
 
         init(json: AnandaJSON) {
-            id = json.id.intOrString()
+            id = json.id.int()
             content = json.content.string()
             isProtected = json.is_protected.bool()
             createdAt = json.created_at.date()
