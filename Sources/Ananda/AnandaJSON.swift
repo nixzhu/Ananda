@@ -43,6 +43,19 @@ import JJLISO8601DateFormatter
         }
     }
 
+    /// Extracting double from `AnandaJSON`, user can customize it.
+    public static var doubleExtractor: (AnandaJSON) -> Double? = {
+        if $0.isDouble {
+            return yyjson_get_real($0.pointer)
+        } else {
+            if let string = $0.string {
+                return Double(string)
+            }
+
+            return nil
+        }
+    }
+
     /// Extracting date from `AnandaJSON`, user can customize it.
     public static var dateExtractor: (AnandaJSON) -> Date? = {
         if let int = $0.int {
@@ -168,22 +181,22 @@ extension AnandaJSON {
         yyjson_is_int(pointer)
     }
 
-    /// Int value if present, or `nil`.
+    /// Int value with `intExtractor`if present, or `nil`.
     public var int: Int? {
         Self.intExtractor(self)
     }
 
-    /// Int value if present, or `defaultValue` defaults to`0`.
+    /// Int value with `intExtractor` if present, or `defaultValue` defaults to`0`.
     public func int(defaultValue: Int = 0) -> Int {
         int ?? defaultValue
     }
 
-    /// UInt value if present, or `defaultValue` defaults to`0`.
+    /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
     public var uInt: UInt? {
         Self.uIntExtractor(self)
     }
 
-    /// UInt value if present, or `defaultValue` defaults to`0`.
+    /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
     public func uInt(defaultValue: UInt = 0) -> UInt {
         uInt ?? defaultValue
     }
@@ -195,24 +208,14 @@ extension AnandaJSON {
         yyjson_is_real(pointer)
     }
 
-    /// Double value if present, or `nil`.
+    /// Double value with `doubleExtractor` if present, or `nil`.
     public var double: Double? {
-        isDouble ? yyjson_get_real(pointer) : nil
+        Self.doubleExtractor(self)
     }
 
-    /// Double value if present, or `defaultValue` defaults to`0`.
+    /// Double value with `doubleExtractor` if present, or `defaultValue` defaults to`0`.
     public func double(defaultValue: Double = 0) -> Double {
         double ?? defaultValue
-    }
-
-    /// Double value (or case from String) if present, or `nil`.
-    public var doubleOrString: Double? {
-        double ?? string.flatMap { Double($0) }
-    }
-
-    /// Double value (or case from String) if present, or `defaultValue` defaults to`0`.
-    public func doubleOrString(defaultValue: Double = 0) -> Double {
-        doubleOrString ?? defaultValue
     }
 }
 
