@@ -26,7 +26,7 @@ final class AnandaTests: XCTestCase {
                         {
                             "id": 2,
                             "content": "How do you do?",
-                            "is_protected": true,
+                            "is_protected": "true",
                             "created_at": 1234567890
                         },
                         {
@@ -92,7 +92,36 @@ final class AnandaTests: XCTestCase {
     }
 }
 
+struct MockAnandaValueExtractor: AnandaValueExtractor {
+    func extractBool(from json: AnandaJSON) -> Bool? {
+        if let bool = json.originalBool {
+            return bool
+        } else {
+            if let int = json.originalInt {
+                return int != 0
+            }
+
+            if let string = json.originalString {
+                switch string {
+                case "true":
+                    return true
+                case "false":
+                    return false
+                default:
+                    break
+                }
+            }
+
+            return nil
+        }
+    }
+}
+
 struct User: AnandaModel {
+    static var valueExtractor: AnandaValueExtractor {
+        MockAnandaValueExtractor()
+    }
+
     let id: UInt
     let name: String
     let int: Int

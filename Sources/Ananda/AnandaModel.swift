@@ -3,10 +3,18 @@ import yyjson
 
 /// AnandaModel can be created from AnandaJSON
 public protocol AnandaModel {
+    /// AnandaValueExtractor
+    static var valueExtractor: AnandaValueExtractor { get }
+
     init(json: AnandaJSON)
 }
 
 extension AnandaModel {
+    /// By default use DefaultAnandaValueExtractor as AnandaValueExtractor
+    public static var valueExtractor: AnandaValueExtractor {
+        DefaultAnandaValueExtractor()
+    }
+
     /// Initialize with `jsonData`
     public init(jsonData: Data) {
         let doc = jsonData.withUnsafeBytes {
@@ -14,11 +22,17 @@ extension AnandaModel {
         }
 
         if let doc {
-            self.init(json: .init(pointer: yyjson_doc_get_root(doc)))
+            self.init(
+                json: .init(
+                    pointer: yyjson_doc_get_root(doc),
+                    valueExtractor: Self.valueExtractor
+                )
+            )
+
             yyjson_doc_free(doc)
         } else {
             assertionFailure("Should not be here!")
-            self.init(json: .init(pointer: nil))
+            self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
 
@@ -28,7 +42,7 @@ extension AnandaModel {
             self.init(jsonData: jsonData)
         } else {
             assertionFailure("Should not be here!")
-            self.init(json: .init(pointer: nil))
+            self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
 }

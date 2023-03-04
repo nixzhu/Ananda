@@ -1,127 +1,18 @@
 import Foundation
 import yyjson
-import JJLISO8601DateFormatter
 
 /// Container of pointer to`yyjson_val`, provides some convenient APIs to access JSON values.
 @dynamicMemberLookup public struct AnandaJSON {
-    /// Extracting bool from `AnandaJSON`, user can customize it.
-    public static var boolExtractor: (AnandaJSON) -> Bool? = {
-        if let bool = $0.originalBool {
-            return bool
-        } else {
-            if let int = $0.originalInt {
-                return int != 0
-            }
-
-            return nil
-        }
-    }
-
-    /// Extracting int from `AnandaJSON`, user can customize it.
-    public static var intExtractor: (AnandaJSON) -> Int? = {
-        if let int = $0.originalInt {
-            return int
-        } else {
-            if let string = $0.originalString {
-                return Int(string)
-            }
-
-            return nil
-        }
-    }
-
-    /// Extracting uInt from `AnandaJSON`, user can customize it.
-    public static var uIntExtractor: (AnandaJSON) -> UInt? = {
-        if let uInt = $0.originalUInt {
-            return uInt
-        } else {
-            if let string = $0.originalString {
-                return UInt(string)
-            }
-
-            return nil
-        }
-    }
-
-    /// Extracting double from `AnandaJSON`, user can customize it.
-    public static var doubleExtractor: (AnandaJSON) -> Double? = {
-        if let double = $0.originalDouble {
-            return double
-        } else {
-            if let string = $0.originalString {
-                return Double(string)
-            }
-
-            return nil
-        }
-    }
-
-    /// Extracting string from `AnandaJSON`, user can customize it.
-    public static var stringExtractor: (AnandaJSON) -> String? = {
-        if let string = $0.originalString {
-            return string
-        } else {
-            if let int = $0.originalInt {
-                return String(int)
-            }
-
-            return nil
-        }
-    }
-
-    /// Extracting date from `AnandaJSON`, user can customize it.
-    public static var dateExtractor: (AnandaJSON) -> Date? = {
-        if let int = $0.originalInt {
-            return .init(timeIntervalSince1970: TimeInterval(int))
-        }
-
-        if let double = $0.originalDouble {
-            return .init(timeIntervalSince1970: double)
-        }
-
-        if let string = $0.originalString {
-            if let value = TimeInterval(string) {
-                return .init(timeIntervalSince1970: value)
-            }
-
-            if let date = iso8601DateFormatter1.date(from: string) {
-                return date
-            }
-
-            if let date = iso8601DateFormatter2.date(from: string) {
-                return date
-            }
-        }
-
-        return nil
-    }
-
-    /// Extracting url from `AnandaJSON`, user can customize it.
-    public static var urlExtractor: (AnandaJSON) -> URL? = {
-        $0.originalString.flatMap {
-            URL(string: $0)
-        }
-    }
-
-    private static let iso8601DateFormatter1: JJLISO8601DateFormatter = {
-        let dateFormatter = JJLISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime]
-
-        return dateFormatter
-    }()
-
-    private static let iso8601DateFormatter2: JJLISO8601DateFormatter = {
-        let dateFormatter = JJLISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-        return dateFormatter
-    }()
-
     private let pointer: UnsafeMutablePointer<yyjson_val>?
+    private let valueExtractor: AnandaValueExtractor
 
-    /// Initialize with `pointer`
-    public init(pointer: UnsafeMutablePointer<yyjson_val>?) {
+    /// Initialize with `pointer` & `anandaValueExtractor`
+    public init(
+        pointer: UnsafeMutablePointer<yyjson_val>?,
+        valueExtractor: AnandaValueExtractor
+    ) {
         self.pointer = pointer
+        self.valueExtractor = valueExtractor
     }
 
     /// Object's member value with`dynamicMember` as key
@@ -131,12 +22,18 @@ import JJLISO8601DateFormatter
 
     /// Object's member value with `key`
     public subscript(key: String) -> AnandaJSON {
-        .init(pointer: yyjson_obj_get(pointer, key))
+        .init(
+            pointer: yyjson_obj_get(pointer, key),
+            valueExtractor: valueExtractor
+        )
     }
 
     /// Array's member value at `index`
     public subscript(index: Int) -> AnandaJSON {
-        .init(pointer: yyjson_arr_get(pointer, index))
+        .init(
+            pointer: yyjson_arr_get(pointer, index),
+            valueExtractor: valueExtractor
+        )
     }
 }
 
@@ -152,14 +49,14 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// `true` if the value is null or is object but size is empty or is array but size is empty,
-    /// otherwise `false`.
+    /// `true` if the value is null or is dictionary but size is empty or is array but size is
+    /// empty, otherwise `false`.
     public var isEmpty: Bool {
         if isNull {
             return true
         }
 
-        if isObject {
+        if isDictionary {
             return yyjson_obj_size(pointer) == 0
         }
 
@@ -172,19 +69,19 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Whether the value is bool.
-    public var isBool: Bool {
+    /// Whether the original value is bool.
+    public var isOriginalBool: Bool {
         yyjson_is_bool(pointer)
     }
 
     /// Bool value if present, or `nil`.
     public var originalBool: Bool? {
-        isBool ? yyjson_get_bool(pointer) : nil
+        isOriginalBool ? yyjson_get_bool(pointer) : nil
     }
 
     /// Bool value with `boolExtractor` if present, or `nil`.
     public var bool: Bool? {
-        Self.boolExtractor(self)
+        valueExtractor.extractBool(from: self)
     }
 
     /// Bool value with `boolExtractor` if present, or `defaultValue` defaults to`false`.
@@ -194,19 +91,19 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Whether the value is integer.
-    public var isInt: Bool {
+    /// Whether the original value is integer.
+    public var isOriginalInt: Bool {
         yyjson_is_int(pointer)
     }
 
     /// Int value if present, or `nil`.
     public var originalInt: Int? {
-        isInt ? Int(yyjson_get_sint(pointer)) : nil
+        isOriginalInt ? Int(yyjson_get_sint(pointer)) : nil
     }
 
     /// Int value with `intExtractor`if present, or `nil`.
     public var int: Int? {
-        Self.intExtractor(self)
+        valueExtractor.extractInt(from: self)
     }
 
     /// Int value with `intExtractor` if present, or `defaultValue` defaults to`0`.
@@ -216,12 +113,12 @@ extension AnandaJSON {
 
     /// UInt value if present, or `nil`.
     public var originalUInt: UInt? {
-        isInt ? UInt(yyjson_get_uint(pointer)) : nil
+        isOriginalInt ? UInt(yyjson_get_uint(pointer)) : nil
     }
 
     /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
     public var uInt: UInt? {
-        Self.uIntExtractor(self)
+        valueExtractor.extractUInt(from: self)
     }
 
     /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
@@ -231,19 +128,19 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Whether the value is double.
-    public var isDouble: Bool {
+    /// Whether the original value is double.
+    public var isOriginalDouble: Bool {
         yyjson_is_real(pointer)
     }
 
     /// Double value if present, or `nil`.
     public var originalDouble: Double? {
-        isDouble ? yyjson_get_real(pointer) : nil
+        isOriginalDouble ? yyjson_get_real(pointer) : nil
     }
 
     /// Double value with `doubleExtractor` if present, or `nil`.
     public var double: Double? {
-        Self.doubleExtractor(self)
+        valueExtractor.extractDouble(from: self)
     }
 
     /// Double value with `doubleExtractor` if present, or `defaultValue` defaults to`0`.
@@ -253,21 +150,23 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Whether the value is string.
-    public var isString: Bool {
+    /// Whether the original value is string.
+    public var isOriginalString: Bool {
         yyjson_is_str(pointer)
     }
 
     /// String value if present, or `nil`.
     public var originalString: String? {
-        isString ? yyjson_get_str(pointer).flatMap {
-            String(cString: $0)
-        } : nil
+        isOriginalString
+            ? yyjson_get_str(pointer).flatMap {
+                String(cString: $0)
+            }
+            : nil
     }
 
     /// String value with `stringExtractor` if present, or `nil`.
     public var string: String? {
-        Self.stringExtractor(self)
+        valueExtractor.extractString(from: self)
     }
 
     /// String value with `stringExtractor` if present, or `defaultValue` defaults to`""`.
@@ -278,13 +177,13 @@ extension AnandaJSON {
 
 extension AnandaJSON {
     /// Whether the value is object.
-    public var isObject: Bool {
+    public var isDictionary: Bool {
         yyjson_is_obj(pointer)
     }
 
-    /// Object value (as dictionary) if present, or `nil`.
+    /// Dictionary if present, or `nil`.
     public var dictionary: [String: AnandaJSON]? {
-        guard isObject else {
+        guard isDictionary else {
             return nil
         }
 
@@ -302,7 +201,10 @@ extension AnandaJSON {
                 }
 
                 if let keyString {
-                    result[keyString] = .init(pointer: value)
+                    result[keyString] = .init(
+                        pointer: value,
+                        valueExtractor: valueExtractor
+                    )
                 } else {
                     assertionFailure("Should not be here!")
                 }
@@ -314,7 +216,7 @@ extension AnandaJSON {
         return result
     }
 
-    /// Object value (as dictionary) if present, or `defaultValue` defaults to empty dictionary.
+    /// Dictionary if present, or `defaultValue` defaults to empty dictionary.
     public func dictionary(defaultValue: [String: AnandaJSON] = [:]) -> [String: AnandaJSON] {
         dictionary ?? defaultValue
     }
@@ -339,7 +241,7 @@ extension AnandaJSON {
 
         while true {
             if let value = yyjson_arr_iter_next(&iter) {
-                result.append(.init(pointer: value))
+                result.append(.init(pointer: value, valueExtractor: valueExtractor))
             } else {
                 break
             }
@@ -357,7 +259,7 @@ extension AnandaJSON {
 extension AnandaJSON {
     /// Date value with `dateExtractor` if present , or `nil`.
     public var date: Date? {
-        Self.dateExtractor(self)
+        valueExtractor.extractDate(from: self)
     }
 
     /// Date value with `dateExtractor` if present, or `defaultValue` defaults
@@ -370,7 +272,7 @@ extension AnandaJSON {
 extension AnandaJSON {
     /// URL value with `urlExtractor` if present, or`nil`.
     public var url: URL? {
-        Self.urlExtractor(self)
+        valueExtractor.extractURL(from: self)
     }
 
     /// URL value with `urlExtractor` if present, or `defaultValue` defaults to`URL(string: "/")!`.
