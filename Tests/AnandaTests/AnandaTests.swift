@@ -92,34 +92,32 @@ final class AnandaTests: XCTestCase {
     }
 }
 
-struct MockAnandaValueExtractor: AnandaValueExtractor {
-    func extractBool(from json: AnandaJSON) -> Bool? {
-        if let bool = json.originalBool {
-            return bool
-        } else {
-            if let int = json.originalInt {
-                return int != 0
-            }
-
-            if let string = json.originalString {
-                switch string {
-                case "true":
-                    return true
-                case "false":
-                    return false
-                default:
-                    break
-                }
-            }
-
-            return nil
-        }
-    }
-}
-
 struct User: AnandaModel {
     static var valueExtractor: AnandaValueExtractor {
-        MockAnandaValueExtractor()
+        .init(
+            bool: {
+                if let bool = $0.originalBool {
+                    return bool
+                } else {
+                    if let int = $0.originalInt {
+                        return int != 0
+                    }
+
+                    if let string = $0.originalString {
+                        switch string {
+                        case "true":
+                            return true
+                        case "false":
+                            return false
+                        default:
+                            break
+                        }
+                    }
+
+                    return nil
+                }
+            }
+        )
     }
 
     let id: UInt

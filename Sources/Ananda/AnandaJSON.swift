@@ -81,7 +81,7 @@ extension AnandaJSON {
 
     /// Bool value with `boolExtractor` if present, or `nil`.
     public var bool: Bool? {
-        valueExtractor.extractBool(from: self)
+        valueExtractor.bool(self)
     }
 
     /// Bool value with `boolExtractor` if present, or `defaultValue` defaults to`false`.
@@ -103,7 +103,7 @@ extension AnandaJSON {
 
     /// Int value with `intExtractor`if present, or `nil`.
     public var int: Int? {
-        valueExtractor.extractInt(from: self)
+        valueExtractor.int(self)
     }
 
     /// Int value with `intExtractor` if present, or `defaultValue` defaults to`0`.
@@ -118,7 +118,7 @@ extension AnandaJSON {
 
     /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
     public var uInt: UInt? {
-        valueExtractor.extractUInt(from: self)
+        valueExtractor.uInt(self)
     }
 
     /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
@@ -140,7 +140,7 @@ extension AnandaJSON {
 
     /// Double value with `doubleExtractor` if present, or `nil`.
     public var double: Double? {
-        valueExtractor.extractDouble(from: self)
+        valueExtractor.double(self)
     }
 
     /// Double value with `doubleExtractor` if present, or `defaultValue` defaults to`0`.
@@ -166,7 +166,7 @@ extension AnandaJSON {
 
     /// String value with `stringExtractor` if present, or `nil`.
     public var string: String? {
-        valueExtractor.extractString(from: self)
+        valueExtractor.string(self)
     }
 
     /// String value with `stringExtractor` if present, or `defaultValue` defaults to`""`.
@@ -259,7 +259,7 @@ extension AnandaJSON {
 extension AnandaJSON {
     /// Date value with `dateExtractor` if present , or `nil`.
     public var date: Date? {
-        valueExtractor.extractDate(from: self)
+        valueExtractor.date(self)
     }
 
     /// Date value with `dateExtractor` if present, or `defaultValue` defaults
@@ -272,7 +272,7 @@ extension AnandaJSON {
 extension AnandaJSON {
     /// URL value with `urlExtractor` if present, or`nil`.
     public var url: URL? {
-        valueExtractor.extractURL(from: self)
+        valueExtractor.url(self)
     }
 
     /// URL value with `urlExtractor` if present, or `defaultValue` defaults to`URL(string: "/")!`.

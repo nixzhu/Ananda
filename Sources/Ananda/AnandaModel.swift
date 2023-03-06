@@ -6,13 +6,14 @@ public protocol AnandaModel {
     /// AnandaValueExtractor
     static var valueExtractor: AnandaValueExtractor { get }
 
+    /// Initialize with `jsonData`
     init(json: AnandaJSON)
 }
 
 extension AnandaModel {
-    /// By default use DefaultAnandaValueExtractor as AnandaValueExtractor
+    /// AnandaValueExtractor
     public static var valueExtractor: AnandaValueExtractor {
-        DefaultAnandaValueExtractor()
+        .init()
     }
 
     /// Initialize with `jsonData`
