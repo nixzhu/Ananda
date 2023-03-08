@@ -13,7 +13,7 @@ public protocol AnandaModel {
 extension AnandaModel {
     /// AnandaValueExtractor
     public static var valueExtractor: AnandaValueExtractor {
-        .init()
+        .shared
     }
 
     /// Initialize with `jsonData`
@@ -32,7 +32,7 @@ extension AnandaModel {
 
             yyjson_doc_free(doc)
         } else {
-            assertionFailure("Should not be here!")
+            assertionFailure("Should not be here! \(String(data: jsonData, encoding: .utf8) ?? "")")
             self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
@@ -42,7 +42,7 @@ extension AnandaModel {
         if let jsonData = jsonString.data(using: encoding) {
             self.init(jsonData: jsonData)
         } else {
-            assertionFailure("Should not be here!")
+            assertionFailure("Should not be here! \(jsonString)")
             self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
