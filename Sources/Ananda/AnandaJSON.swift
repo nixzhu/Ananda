@@ -1,12 +1,12 @@
 import Foundation
 import yyjson
 
-/// Container of pointer to`yyjson_val`, provides some convenient APIs to access JSON values.
+/// Container of pointer to `yyjson_val`, provides some convenient APIs to access JSON values.
 @dynamicMemberLookup public struct AnandaJSON {
     private let pointer: UnsafeMutablePointer<yyjson_val>?
     private let valueExtractor: AnandaValueExtractor
 
-    /// Initialize with `pointer` & `anandaValueExtractor`
+    /// Initialize with `pointer` and `valueExtractor`.
     public init(
         pointer: UnsafeMutablePointer<yyjson_val>?,
         valueExtractor: AnandaValueExtractor
