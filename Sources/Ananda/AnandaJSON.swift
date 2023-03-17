@@ -79,12 +79,12 @@ extension AnandaJSON {
         isOriginalBool ? yyjson_get_bool(pointer) : nil
     }
 
-    /// Bool value with `boolExtractor` if present, or `nil`.
+    /// Bool value with `valueExtractor` if present, or `nil`.
     public var bool: Bool? {
         valueExtractor.bool(self)
     }
 
-    /// Bool value with `boolExtractor` if present, or `defaultValue` defaults to`false`.
+    /// Bool value with `valueExtractor` if present, or `defaultValue` defaults to `false`.
     public func bool(defaultValue: Bool = false) -> Bool {
         bool ?? defaultValue
     }
@@ -101,12 +101,12 @@ extension AnandaJSON {
         isOriginalInt ? Int(yyjson_get_sint(pointer)) : nil
     }
 
-    /// Int value with `intExtractor`if present, or `nil`.
+    /// Int value with `valueExtractor`if present, or `nil`.
     public var int: Int? {
         valueExtractor.int(self)
     }
 
-    /// Int value with `intExtractor` if present, or `defaultValue` defaults to`0`.
+    /// Int value with `valueExtractor` if present, or `defaultValue` defaults to `0`.
     public func int(defaultValue: Int = 0) -> Int {
         int ?? defaultValue
     }
@@ -116,12 +116,12 @@ extension AnandaJSON {
         isOriginalInt ? UInt(yyjson_get_uint(pointer)) : nil
     }
 
-    /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
+    /// UInt value with `valueExtractor` if present, or `defaultValue` defaults to `0`.
     public var uInt: UInt? {
         valueExtractor.uInt(self)
     }
 
-    /// UInt value with `uIntExtractor` if present, or `defaultValue` defaults to`0`.
+    /// UInt value with `valueExtractor` if present, or `defaultValue` defaults to `0`.
     public func uInt(defaultValue: UInt = 0) -> UInt {
         uInt ?? defaultValue
     }
@@ -138,12 +138,12 @@ extension AnandaJSON {
         isOriginalDouble ? yyjson_get_real(pointer) : nil
     }
 
-    /// Double value with `doubleExtractor` if present, or `nil`.
+    /// Double value with `valueExtractor` if present, or `nil`.
     public var double: Double? {
         valueExtractor.double(self)
     }
 
-    /// Double value with `doubleExtractor` if present, or `defaultValue` defaults to`0`.
+    /// Double value with `valueExtractor` if present, or `defaultValue` defaults to `0`.
     public func double(defaultValue: Double = 0) -> Double {
         double ?? defaultValue
     }
@@ -164,12 +164,12 @@ extension AnandaJSON {
             : nil
     }
 
-    /// String value with `stringExtractor` if present, or `nil`.
+    /// String value with `valueExtractor` if present, or `nil`.
     public var string: String? {
         valueExtractor.string(self)
     }
 
-    /// String value with `stringExtractor` if present, or `defaultValue` defaults to`""`.
+    /// String value with `valueExtractor` if present, or `defaultValue` defaults to `""`.
     public func string(defaultValue: String = "") -> String {
         string ?? defaultValue
     }
@@ -257,25 +257,25 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Date value with `dateExtractor` if present , or `nil`.
+    /// Date value with `valueExtractor` if present , or `nil`.
     public var date: Date? {
         valueExtractor.date(self)
     }
 
-    /// Date value with `dateExtractor` if present, or `defaultValue` defaults
-    /// to`Date(timeIntervalSince1970: 0)`.
+    /// Date value with `valueExtractor` if present, or `defaultValue` defaults
+    /// to `Date(timeIntervalSince1970: 0)`.
     public func date(defaultValue: Date = .init(timeIntervalSince1970: 0)) -> Date {
         date ?? defaultValue
     }
 }
 
 extension AnandaJSON {
-    /// URL value with `urlExtractor` if present, or`nil`.
+    /// URL value with `valueExtractor` if present, or`nil`.
     public var url: URL? {
         valueExtractor.url(self)
     }
 
-    /// URL value with `urlExtractor` if present, or `defaultValue` defaults to`URL(string: "/")!`.
+    /// URL value with `valueExtractor` if present, or `defaultValue` defaults to `URL(string: "/")!`.
     public func url(defaultValue: URL = .init(string: "/")!) -> URL {
         url ?? defaultValue
     }
