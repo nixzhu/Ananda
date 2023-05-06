@@ -13,6 +13,7 @@ final class AnandaTests: XCTestCase {
                         "username": "@nixzhu@mastodon.social",
                         "nickname": "NIX",
                         "avatar_url": "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png",
+                        "mp3_url": "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2210/2009年06月26日博尔普斯/标清高清/MP3_320_16_Stero/60054701923104030.mp3",
                         "extra_info": {},
                         "extra_list": []
                     },
@@ -56,6 +57,10 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(
             model.mastodon.profile.avatarURL.absoluteString,
             "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png"
+        )
+        XCTAssertEqual(
+            model.mastodon.profile.mp3URL.absoluteString,
+            "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2210/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701923104030.mp3"
         )
 
         XCTAssertEqual(model.mastodon.toots[0].isProtected, false)
@@ -191,11 +196,13 @@ extension User.Mastodon {
         let username: String
         let nickname: String
         let avatarURL: URL
+        let mp3URL: URL
 
         init(json: AnandaJSON) {
             username = json.username.string()
             nickname = json.nickname.string()
             avatarURL = json.avatar_url.url()
+            mp3URL = json.mp3_url.url()
         }
     }
 }

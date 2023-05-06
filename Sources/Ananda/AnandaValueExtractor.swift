@@ -95,11 +95,11 @@ public struct AnandaValueExtractor {
                     return .init(timeIntervalSince1970: value)
                 }
 
-                if let date = JJLISO8601DateFormatter.iso8601DateFormatter1.date(from: string) {
+                if let date = JJLISO8601DateFormatter.ananda_iso8601A.date(from: string) {
                     return date
                 }
 
-                if let date = JJLISO8601DateFormatter.iso8601DateFormatter2.date(from: string) {
+                if let date = JJLISO8601DateFormatter.ananda_iso8601B.date(from: string) {
                     return date
                 }
             }
@@ -107,9 +107,19 @@ public struct AnandaValueExtractor {
             return nil
         },
         url: @escaping (AnandaJSON) -> URL? = {
-            $0.originalString.flatMap {
-                URL(string: $0)
+            guard let string = $0.originalString else {
+                return nil
             }
+
+            if let url = URL(string: string) {
+                return url
+            }
+
+            if let encoded = string.addingPercentEncoding(withAllowedCharacters: .ananda_url) {
+                return URL(string: encoded)
+            }
+
+            return nil
         }
     ) {
         self.bool = bool
@@ -123,17 +133,26 @@ public struct AnandaValueExtractor {
 }
 
 extension JJLISO8601DateFormatter {
-    public static let iso8601DateFormatter1: JJLISO8601DateFormatter = {
+    public static let ananda_iso8601A: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime]
 
         return dateFormatter
     }()
 
-    public static let iso8601DateFormatter2: JJLISO8601DateFormatter = {
+    public static let ananda_iso8601B: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
         return dateFormatter
+    }()
+}
+
+extension CharacterSet {
+    public static let ananda_url: Self = {
+        var set = CharacterSet.urlQueryAllowed
+        set.insert("#")
+        set.formUnion(.urlPathAllowed)
+        return set
     }()
 }
