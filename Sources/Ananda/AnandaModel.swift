@@ -6,7 +6,7 @@ public protocol AnandaModel {
     /// AnandaValueExtractor
     static var valueExtractor: AnandaValueExtractor { get }
 
-    /// Initialize with `jsonData`
+    /// Initialize with `json`
     init(json: AnandaJSON)
 }
 
