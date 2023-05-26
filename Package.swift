@@ -13,7 +13,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ibireme/yyjson.git",
-            from: "0.6.0"
+            from: "0.7.0"
         ),
         .package(
             url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
