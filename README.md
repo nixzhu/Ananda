@@ -78,3 +78,9 @@ Then, we can initialize a `Mastodon` as follow:
 ```swift
 let model = Mastodon(jsonString: "...")
 ```
+
+## Tool
+
+You may use [Ducky Model Editor](https://apps.apple.com/us/app/ducky-model-editor/id1525505933) to generate AnandaModel from JSON to save your time.
+
+![Ducky Model Editor](https://raw.githubusercontent.com/nixzhu/Ananda/main/ducky-model-editor.png)
