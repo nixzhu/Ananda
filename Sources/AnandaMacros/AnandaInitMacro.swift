@@ -53,24 +53,26 @@ public struct AnandaInitMacro: MemberMacro {
 
 extension TypeSyntax {
     func ananda(key: String) -> String {
+        let json = "json[\"\(key)\"]"
+
         if let simpleType = self.as(SimpleTypeIdentifierSyntax.self) {
             switch simpleType.name.text {
             case "Bool":
-                return "json.\(key).bool()"
+                return "\(json).bool()"
             case "Int":
-                return "json.\(key).int()"
+                return "\(json).int()"
             case "UInt":
-                return "json.\(key).uInt()"
+                return "\(json).uInt()"
             case "Double":
-                return "json.\(key).double()"
+                return "\(json).double()"
             case "String":
-                return "json.\(key).string()"
+                return "\(json).string()"
             case "URL":
-                return "json.\(key).url()"
+                return "\(json).url()"
             case "Date":
-                return "json.\(key).date()"
+                return "\(json).date()"
             default:
-                return ".init(json: json.\(key))"
+                return ".init(json: \(json))"
             }
         }
 
@@ -78,21 +80,21 @@ extension TypeSyntax {
             if let simpleType = optionalType.wrappedType.as(SimpleTypeIdentifierSyntax.self) {
                 switch simpleType.name.text {
                 case "Bool":
-                    return "json.\(key).bool"
+                    return "\(json).bool"
                 case "Int":
-                    return "json.\(key).int"
+                    return "\(json).int"
                 case "UInt":
-                    return "json.\(key).uInt"
+                    return "\(json).uInt"
                 case "Double":
-                    return "json.\(key).double"
+                    return "\(json).double"
                 case "String":
-                    return "json.\(key).string"
+                    return "\(json).string"
                 case "URL":
-                    return "json.\(key).url"
+                    return "\(json).url"
                 case "Date":
-                    return "json.\(key).date"
+                    return "\(json).date"
                 default:
-                    return "json.\(key).isEmpty ? nil : .init(json: json.\(key))"
+                    return "\(json).isEmpty ? nil : .init(json: \(json))"
                 }
             }
 
@@ -100,21 +102,21 @@ extension TypeSyntax {
                 if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
                     switch simpleType.name.text {
                     case "Bool":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.bool() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.bool() }"
                     case "Int":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.int() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.int() }"
                     case "UInt":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.uInt() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.uInt() }"
                     case "Double":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.double() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.double() }"
                     case "String":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.string() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.string() }"
                     case "URL":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.url() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.url() }"
                     case "Date":
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { $0.date() }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { $0.date() }"
                     default:
-                        return "json.\(key).isEmpty ? nil : json.\(key).array().map { .init(json: $0) }"
+                        return "\(json).isEmpty ? nil : \(json).array().map { .init(json: $0) }"
                     }
                 }
             }
@@ -124,21 +126,21 @@ extension TypeSyntax {
             if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
                 switch simpleType.name.text {
                 case "Bool":
-                    return "json.\(key).array().map { $0.bool() }"
+                    return "\(json).array().map { $0.bool() }"
                 case "Int":
-                    return "json.\(key).array().map { $0.int() }"
+                    return "\(json).array().map { $0.int() }"
                 case "UInt":
-                    return "json.\(key).array().map { $0.uInt() }"
+                    return "\(json).array().map { $0.uInt() }"
                 case "Double":
-                    return "json.\(key).array().map { $0.double() }"
+                    return "\(json).array().map { $0.double() }"
                 case "String":
-                    return "json.\(key).array().map { $0.string() }"
+                    return "\(json).array().map { $0.string() }"
                 case "URL":
-                    return "json.\(key).array().map { $0.url() }"
+                    return "\(json).array().map { $0.url() }"
                 case "Date":
-                    return "json.\(key).array().map { $0.date() }"
+                    return "\(json).array().map { $0.date() }"
                 default:
-                    return "json.\(key).array().map { .init(json: $0) }"
+                    return "\(json).array().map { .init(json: $0) }"
                 }
             }
         }
