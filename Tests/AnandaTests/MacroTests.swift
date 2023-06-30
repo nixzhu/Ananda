@@ -85,22 +85,20 @@ final class MacroTests: XCTestCase {
 }
 
 @AnandaInit
-struct Alice: AnandaModel {
+struct IndieApp: AnandaModel {
     @AnandaInit
-    final class Bob: AnandaModel {
-        let b1: Int
-        let b2: Int?
-        let b3: [Int]
-        let b4: [Int]?
+    struct Developer: AnandaModel {
+        @AnandaKey("user_id")
+        let userID: Int
+        let username: String
+        let email: String
+        @AnandaKey("website_url")
+        let websiteURL: URL
     }
-    @AnandaKey("avatar_url")
-    let avatarURL: URL
-    let a1: Bool
-    let a2: Bool?
-    let a3: [Bool]
-    let a4: [Bool]?
-    let c1: Bob
-    let c2: Bob?
-    let c3: [Bob]
-    let c4: [Bob]?
+
+    let name: String
+    let introduction: String
+    @AnandaKey("supported_outputs")
+    let supportedOutputs: [String]
+    let developer: Developer
 }
