@@ -1,5 +1,6 @@
 import XCTest
 import SwiftSyntaxMacrosTestSupport
+@testable import Ananda
 @testable import AnandaMacros
 
 final class MacroTests: XCTestCase {
@@ -7,27 +8,29 @@ final class MacroTests: XCTestCase {
         assertMacroExpansion(
             """
             @AnandaInit
-            struct A: AnandaModel {
+            struct Alice: AnandaModel {
                 @AnandaInit
-                final class B: AnandaModel {
+                final class Bob: AnandaModel {
                     let b1: Int
                     let b2: Int?
                     let b3: [Int]
                     let b4: [Int]?
                 }
+                @AnandaKey("avatar_url")
+                let avatarURL: URL
                 let a1: Bool
                 let a2: Bool?
                 let a3: [Bool]
                 let a4: [Bool]?
-                let c1: B
-                let c2: B?
-                let c3: [B]
-                let c4: [B]?
+                let c1: Bob
+                let c2: Bob?
+                let c3: [Bob]
+                let c4: [Bob]?
             }
             """,
             expandedSource: """
-                struct A: AnandaModel {
-                    final class B: AnandaModel {
+                struct Alice: AnandaModel {
+                    final class Bob: AnandaModel {
                         let b1: Int
                         let b2: Int?
                         let b3: [Int]
@@ -43,15 +46,17 @@ final class MacroTests: XCTestCase {
                             }
                         }
                     }
+                    let avatarURL: URL
                     let a1: Bool
                     let a2: Bool?
                     let a3: [Bool]
                     let a4: [Bool]?
-                    let c1: B
-                    let c2: B?
-                    let c3: [B]
-                    let c4: [B]?
+                    let c1: Bob
+                    let c2: Bob?
+                    let c3: [Bob]
+                    let c4: [Bob]?
                     init(json: AnandaJSON) {
+                        self.avatarURL = json.avatar_url.url()
                         self.a1 = json.a1.bool()
                         self.a2 = json.a2.bool
                         self.a3 = json.a3.array().map {
@@ -71,7 +76,31 @@ final class MacroTests: XCTestCase {
                     }
                 }
                 """,
-            macros: ["AnandaInit": AnandaInitMacro.self]
+            macros: [
+                "AnandaInit": AnandaInitMacro.self,
+                "AnandaKey": AnandaKeyMacro.self,
+            ]
         )
     }
+}
+
+@AnandaInit
+struct Alice: AnandaModel {
+    @AnandaInit
+    final class Bob: AnandaModel {
+        let b1: Int
+        let b2: Int?
+        let b3: [Int]
+        let b4: [Int]?
+    }
+    @AnandaKey("avatar_url")
+    let avatarURL: URL
+    let a1: Bool
+    let a2: Bool?
+    let a3: [Bool]
+    let a4: [Bool]?
+    let c1: Bob
+    let c2: Bob?
+    let c3: [Bob]
+    let c4: [Bob]?
 }
