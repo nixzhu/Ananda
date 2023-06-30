@@ -1,9 +1,18 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.9
 
 import PackageDescription
+import CompilerPluginSupport
 
 let package = Package(
     name: "Ananda",
+    platforms: [
+        .macOS(.v10_15),
+        .iOS(.v13),
+        .tvOS(.v13),
+        .watchOS(.v6),
+        .macCatalyst(.v13),
+        .visionOS(.v1),
+    ],
     products: [
         .library(
             name: "Ananda",
@@ -19,11 +28,23 @@ let package = Package(
             url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
             from: "0.1.6"
         ),
+        .package(
+            url: "https://github.com/apple/swift-syntax.git",
+            from: "509.0.0-swift-5.9-DEVELOPMENT-SNAPSHOT-2023-04-25-b"
+        ),
     ],
     targets: [
+        .macro(
+            name: "AnandaMacros",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+            ]
+        ),
         .target(
             name: "Ananda",
             dependencies: [
+                "AnandaMacros",
                 .product(
                     name: "yyjson",
                     package: "yyjson"
@@ -36,7 +57,10 @@ let package = Package(
         ),
         .testTarget(
             name: "AnandaTests",
-            dependencies: ["Ananda"]
+            dependencies: [
+                "Ananda",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            ]
         ),
     ]
 )
