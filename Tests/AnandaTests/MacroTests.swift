@@ -9,7 +9,7 @@ final class MacroTests: XCTestCase {
             @AnandaInit
             struct A: AnandaModel {
                 @AnandaInit
-                class B: AnandaModel {
+                final class B: AnandaModel {
                     let b1: Int
                     let b2: Int?
                     let b3: [Int]
@@ -27,7 +27,7 @@ final class MacroTests: XCTestCase {
             """,
             expandedSource: """
                 struct A: AnandaModel {
-                    class B: AnandaModel {
+                    final class B: AnandaModel {
                         let b1: Int
                         let b2: Int?
                         let b3: [Int]
