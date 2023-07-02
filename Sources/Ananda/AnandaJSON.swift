@@ -56,15 +56,20 @@ extension AnandaJSON {
             return true
         }
 
-        if isDictionary {
+        if yyjson_is_obj(pointer) {
             return yyjson_obj_size(pointer) == 0
         }
 
-        if isArray {
+        if yyjson_is_arr(pointer) {
             return yyjson_arr_size(pointer) == 0
         }
 
         return false
+    }
+
+    /// `nil` if self is empty, otherwise `self`.
+    public var emptyAsNil: AnandaJSON? {
+        isEmpty ? nil : self
     }
 }
 
@@ -176,14 +181,9 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Whether the value is object.
-    public var isDictionary: Bool {
-        yyjson_is_obj(pointer)
-    }
-
     /// Dictionary if present, or `nil`.
     public var dictionary: [String: AnandaJSON]? {
-        guard isDictionary else {
+        guard yyjson_is_obj(pointer) && yyjson_obj_size(pointer) > 0 else {
             return nil
         }
 
@@ -223,14 +223,9 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// Whether the value is array.
-    public var isArray: Bool {
-        yyjson_is_arr(pointer)
-    }
-
     /// Array value if present, or `nil`.
     public var array: [AnandaJSON]? {
-        guard isArray else {
+        guard yyjson_is_arr(pointer) && yyjson_arr_size(pointer) > 0 else {
             return nil
         }
 

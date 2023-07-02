@@ -94,7 +94,7 @@ extension TypeSyntax {
                 case "Date":
                     return "\(json).date"
                 default:
-                    return "\(json).isEmpty ? nil : .init(json: \(json))"
+                    return "\(json).emptyAsNil.map { .init(json: $0) }"
                 }
             }
 
@@ -102,21 +102,21 @@ extension TypeSyntax {
                 if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
                     switch simpleType.name.text {
                     case "Bool":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.bool() }"
+                        return "\(json).array.map { $0.bool() }"
                     case "Int":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.int() }"
+                        return "\(json).array.map { $0.int() }"
                     case "UInt":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.uInt() }"
+                        return "\(json).array.map { $0.uInt() }"
                     case "Double":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.double() }"
+                        return "\(json).array.map { $0.double() }"
                     case "String":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.string() }"
+                        return "\(json).array.map { $0.string() }"
                     case "URL":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.url() }"
+                        return "\(json).array.map { $0.url() }"
                     case "Date":
-                        return "\(json).isEmpty ? nil : \(json).array().map { $0.date() }"
+                        return "\(json).array.map { $0.date() }"
                     default:
-                        return "\(json).isEmpty ? nil : \(json).array().map { .init(json: $0) }"
+                        return "\(json).array.map { .init(json: $0) }"
                     }
                 }
             }

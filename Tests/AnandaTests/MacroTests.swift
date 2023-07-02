@@ -41,7 +41,7 @@ final class MacroTests: XCTestCase {
                             self.b3 = json["b3"].array().map {
                                 $0.int()
                             }
-                            self.b4 = json["b4"].isEmpty ? nil : json["b4"].array().map {
+                            self.b4 = json["b4"].array.map {
                                 $0.int()
                             }
                         }
@@ -62,15 +62,17 @@ final class MacroTests: XCTestCase {
                         self.a3 = json["a3"].array().map {
                             $0.bool()
                         }
-                        self.a4 = json["a4"].isEmpty ? nil : json["a4"].array().map {
+                        self.a4 = json["a4"].array.map {
                             $0.bool()
                         }
                         self.c1 = .init(json: json["c1"])
-                        self.c2 = json["c2"].isEmpty ? nil : .init(json: json["c2"])
+                        self.c2 = json["c2"].emptyAsNil.map {
+                            .init(json: $0)
+                        }
                         self.c3 = json["c3"].array().map {
                             .init(json: $0)
                         }
-                        self.c4 = json["c4"].isEmpty ? nil : json["c4"].array().map {
+                        self.c4 = json["c4"].array.map {
                             .init(json: $0)
                         }
                     }
