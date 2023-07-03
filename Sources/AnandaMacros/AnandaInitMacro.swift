@@ -97,6 +97,29 @@ extension TypeSyntax {
                     return "\(json).dictionary().mapValues { .init(json: $0) }"
                 }
             }
+
+            if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
+                if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                    switch simpleType.name.text {
+                    case "Bool":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.bool() } }"
+                    case "Int":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.int() } }"
+                    case "UInt":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.uInt() } }"
+                    case "Double":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.double() } }"
+                    case "String":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.string() } }"
+                    case "URL":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.url() } }"
+                    case "Date":
+                        return "\(json).dictionary().mapValues { $0.array().map { $0.date() } }"
+                    default:
+                        return "\(json).dictionary().mapValues { $0.array().map { .init(json: $0) } }"
+                    }
+                }
+            }
         }
 
         if let arrayType = self.as(ArrayTypeSyntax.self) {
@@ -140,6 +163,29 @@ extension TypeSyntax {
                         return "\(json).array().map { $0.dictionary().mapValues { $0.date() } }"
                     default:
                         return "\(json).array().map { $0.dictionary().mapValues { .init(json: $0) } }"
+                    }
+                }
+
+                if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
+                    if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                        switch simpleType.name.text {
+                        case "Bool":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"
+                        case "Int":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.int() } } }"
+                        case "UInt":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.uInt() } } }"
+                        case "Double":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.double() } } }"
+                        case "String":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.string() } } }"
+                        case "URL":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.url() } } }"
+                        case "Date":
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.date() } } }"
+                        default:
+                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { .init(json: $0) } } }"
+                        }
                     }
                 }
             }
@@ -188,6 +234,29 @@ extension TypeSyntax {
                         return "\(json).dictionary?.mapValues { .init(json: $0) }"
                     }
                 }
+
+                if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
+                    if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                        switch simpleType.name.text {
+                        case "Bool":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.bool() } }"
+                        case "Int":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.int() } }"
+                        case "UInt":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.uInt() } }"
+                        case "Double":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.double() } }"
+                        case "String":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.string() } }"
+                        case "URL":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.url() } }"
+                        case "Date":
+                            return "\(json).dictionary?.mapValues { $0.array().map { $0.date() } }"
+                        default:
+                            return "\(json).dictionary?.mapValues { $0.array().map { .init(json: $0) } }"
+                        }
+                    }
+                }
             }
 
             if let arrayType = optionalType.wrappedType.as(ArrayTypeSyntax.self) {
@@ -231,6 +300,29 @@ extension TypeSyntax {
                             return "\(json).array?.map { $0.dictionary().mapValues { $0.date() } }"
                         default:
                             return "\(json).array?.map { $0.dictionary().mapValues { .init(json: $0) } }"
+                        }
+                    }
+
+                    if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
+                        if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                            switch simpleType.name.text {
+                            case "Bool":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"
+                            case "Int":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.int() } } }"
+                            case "UInt":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.uInt() } } }"
+                            case "Double":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.double() } } }"
+                            case "String":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.string() } } }"
+                            case "URL":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.url() } } }"
+                            case "Date":
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.date() } } }"
+                            default:
+                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { .init(json: $0) } } }"
+                            }
                         }
                     }
                 }

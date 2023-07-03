@@ -17,8 +17,12 @@ final class MacroTests: XCTestCase {
                     let b4: [Int]?
                     let b5: [String: Int]
                     let b6: [String: Int]?
-                    let b7: [[String: Int]]
-                    let b8: [[String: Int]]?
+                    let b7: [String: [Int]]
+                    let b8: [String: [Int]]?
+                    let b9: [[String: Int]]
+                    let b10: [[String: Int]]?
+                    let b11: [[String: [Int]]]
+                    let b12: [[String: [Int]]]?
                 }
                 @AnandaKey("avatar_url")
                 let avatarURL: URL
@@ -32,8 +36,12 @@ final class MacroTests: XCTestCase {
                 let c4: [Bob]?
                 let c5: [String: Bob]
                 let c6: [String: Bob]?
-                let c7: [[String: Bob]]
-                let c8: [[String: Bob]]?
+                let c7: [String: [Bob]]
+                let c8: [String: [Bob]]?
+                let c9: [[String: Bob]]
+                let c10: [[String: Bob]]?
+                let c11: [[String: [Bob]]]
+                let c12: [[String: [Bob]]]?
             }
             """,
             expandedSource: """
@@ -45,8 +53,12 @@ final class MacroTests: XCTestCase {
                         let b4: [Int]?
                         let b5: [String: Int]
                         let b6: [String: Int]?
-                        let b7: [[String: Int]]
-                        let b8: [[String: Int]]?
+                        let b7: [String: [Int]]
+                        let b8: [String: [Int]]?
+                        let b9: [[String: Int]]
+                        let b10: [[String: Int]]?
+                        let b11: [[String: [Int]]]
+                        let b12: [[String: [Int]]]?
                         init(json: AnandaJSON) {
                             self.b1 = json["b1"].int()
                             self.b2 = json["b2"].int
@@ -62,14 +74,38 @@ final class MacroTests: XCTestCase {
                             self.b6 = json["b6"].dictionary?.mapValues {
                                 $0.int()
                             }
-                            self.b7 = json["b7"].array().map {
+                            self.b7 = json["b7"].dictionary().mapValues {
+                                $0.array().map {
+                                    $0.int()
+                                }
+                            }
+                            self.b8 = json["b8"].dictionary?.mapValues {
+                                $0.array().map {
+                                    $0.int()
+                                }
+                            }
+                            self.b9 = json["b9"].array().map {
                                 $0.dictionary().mapValues {
                                     $0.int()
                                 }
                             }
-                            self.b8 = json["b8"].array?.map {
+                            self.b10 = json["b10"].array?.map {
                                 $0.dictionary().mapValues {
                                     $0.int()
+                                }
+                            }
+                            self.b11 = json["b11"].array().map {
+                                $0.dictionary().mapValues {
+                                    $0.array().map {
+                                        $0.int()
+                                    }
+                                }
+                            }
+                            self.b12 = json["b12"].array?.map {
+                                $0.dictionary().mapValues {
+                                    $0.array().map {
+                                        $0.int()
+                                    }
                                 }
                             }
                         }
@@ -85,8 +121,12 @@ final class MacroTests: XCTestCase {
                     let c4: [Bob]?
                     let c5: [String: Bob]
                     let c6: [String: Bob]?
-                    let c7: [[String: Bob]]
-                    let c8: [[String: Bob]]?
+                    let c7: [String: [Bob]]
+                    let c8: [String: [Bob]]?
+                    let c9: [[String: Bob]]
+                    let c10: [[String: Bob]]?
+                    let c11: [[String: [Bob]]]
+                    let c12: [[String: [Bob]]]?
                     init(json: AnandaJSON) {
                         self.avatarURL = json["avatar_url"].url()
                         self.a1 = json["a1"].bool()
@@ -113,14 +153,38 @@ final class MacroTests: XCTestCase {
                         self.c6 = json["c6"].dictionary?.mapValues {
                             .init(json: $0)
                         }
-                        self.c7 = json["c7"].array().map {
+                        self.c7 = json["c7"].dictionary().mapValues {
+                            $0.array().map {
+                                .init(json: $0)
+                            }
+                        }
+                        self.c8 = json["c8"].dictionary?.mapValues {
+                            $0.array().map {
+                                .init(json: $0)
+                            }
+                        }
+                        self.c9 = json["c9"].array().map {
                             $0.dictionary().mapValues {
                                 .init(json: $0)
                             }
                         }
-                        self.c8 = json["c8"].array?.map {
+                        self.c10 = json["c10"].array?.map {
                             $0.dictionary().mapValues {
                                 .init(json: $0)
+                            }
+                        }
+                        self.c11 = json["c11"].array().map {
+                            $0.dictionary().mapValues {
+                                $0.array().map {
+                                    .init(json: $0)
+                                }
+                            }
+                        }
+                        self.c12 = json["c12"].array?.map {
+                            $0.dictionary().mapValues {
+                                $0.array().map {
+                                    .init(json: $0)
+                                }
                             }
                         }
                     }
