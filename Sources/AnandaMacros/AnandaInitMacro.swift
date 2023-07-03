@@ -142,6 +142,29 @@ extension TypeSyntax {
                         return "\(json).array?.map { .init(json: $0) }"
                     }
                 }
+
+                if let dictionaryType = arrayType.elementType.as(DictionaryTypeSyntax.self) {
+                    if let simpleType = dictionaryType.valueType.as(SimpleTypeIdentifierSyntax.self) {
+                        switch simpleType.name.text {
+                        case "Bool":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.bool() } }"
+                        case "Int":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.int() } }"
+                        case "UInt":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.uInt() } }"
+                        case "Double":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.double() } }"
+                        case "String":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.string() } }"
+                        case "URL":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.url() } }"
+                        case "Date":
+                            return "\(json).array?.map { $0.dictionary().mapValues { $0.date() } }"
+                        default:
+                            return "\(json).array?.map { $0.dictionary().mapValues { .init(json: $0) } }"
+                        }
+                    }
+                }
             }
         }
 
@@ -187,6 +210,29 @@ extension TypeSyntax {
                     return "\(json).array().map { $0.date() }"
                 default:
                     return "\(json).array().map { .init(json: $0) }"
+                }
+            }
+
+            if let dictionaryType = arrayType.elementType.as(DictionaryTypeSyntax.self) {
+                if let simpleType = dictionaryType.valueType.as(SimpleTypeIdentifierSyntax.self) {
+                    switch simpleType.name.text {
+                    case "Bool":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.bool() } }"
+                    case "Int":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.int() } }"
+                    case "UInt":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.uInt() } }"
+                    case "Double":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.double() } }"
+                    case "String":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.string() } }"
+                    case "URL":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.url() } }"
+                    case "Date":
+                        return "\(json).array().map { $0.dictionary().mapValues { $0.date() } }"
+                    default:
+                        return "\(json).array().map { $0.dictionary().mapValues { .init(json: $0) } }"
+                    }
                 }
             }
         }

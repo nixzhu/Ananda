@@ -17,6 +17,8 @@ final class MacroTests: XCTestCase {
                     let b4: [Int]?
                     let b5: [String: Int]
                     let b6: [String: Int]?
+                    let b7: [[String: Int]]
+                    let b8: [[String: Int]]?
                 }
                 @AnandaKey("avatar_url")
                 let avatarURL: URL
@@ -30,6 +32,8 @@ final class MacroTests: XCTestCase {
                 let c4: [Bob]?
                 let c5: [String: Bob]
                 let c6: [String: Bob]?
+                let c7: [[String: Bob]]
+                let c8: [[String: Bob]]?
             }
             """,
             expandedSource: """
@@ -41,6 +45,8 @@ final class MacroTests: XCTestCase {
                         let b4: [Int]?
                         let b5: [String: Int]
                         let b6: [String: Int]?
+                        let b7: [[String: Int]]
+                        let b8: [[String: Int]]?
                         init(json: AnandaJSON) {
                             self.b1 = json["b1"].int()
                             self.b2 = json["b2"].int
@@ -56,6 +62,16 @@ final class MacroTests: XCTestCase {
                             self.b6 = json["b6"].dictionary?.mapValues {
                                 $0.int()
                             }
+                            self.b7 = json["b7"].array().map {
+                                $0.dictionary().mapValues {
+                                    $0.int()
+                                }
+                            }
+                            self.b8 = json["b8"].array?.map {
+                                $0.dictionary().mapValues {
+                                    $0.int()
+                                }
+                            }
                         }
                     }
                     let avatarURL: URL
@@ -69,6 +85,8 @@ final class MacroTests: XCTestCase {
                     let c4: [Bob]?
                     let c5: [String: Bob]
                     let c6: [String: Bob]?
+                    let c7: [[String: Bob]]
+                    let c8: [[String: Bob]]?
                     init(json: AnandaJSON) {
                         self.avatarURL = json["avatar_url"].url()
                         self.a1 = json["a1"].bool()
@@ -94,6 +112,16 @@ final class MacroTests: XCTestCase {
                         }
                         self.c6 = json["c6"].dictionary?.mapValues {
                             .init(json: $0)
+                        }
+                        self.c7 = json["c7"].array().map {
+                            $0.dictionary().mapValues {
+                                .init(json: $0)
+                            }
+                        }
+                        self.c8 = json["c8"].array?.map {
+                            $0.dictionary().mapValues {
+                                .init(json: $0)
+                            }
                         }
                     }
                 }
