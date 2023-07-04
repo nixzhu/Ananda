@@ -1,3 +1,4 @@
+import Foundation
 import SwiftCompilerPlugin
 import SwiftSyntax
 import SwiftSyntaxBuilder
@@ -9,6 +10,31 @@ public struct AnandaInitMacro: MemberMacro {
         providingMembersOf declaration: some DeclGroupSyntax,
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
+        let accessModifierHead: String = {
+            let names = declaration.as(StructDeclSyntax.self)?.modifiers?
+                .map { "\($0.name)".trimmingCharacters(in: .whitespacesAndNewlines) } ??
+                declaration.as(ClassDeclSyntax.self)?.modifiers?
+                .map { "\($0.name)".trimmingCharacters(in: .whitespacesAndNewlines) } ?? []
+
+            if names.contains("public") {
+                return "public "
+            }
+
+            if names.contains("internal") {
+                return "internal "
+            }
+
+            if names.contains("fileprivate") {
+                return "fileprivate "
+            }
+
+            if names.contains("private") {
+                return "private "
+            }
+
+            return ""
+        }()
+
         let members = declaration.as(StructDeclSyntax.self)?.memberBlock.members ??
             declaration.as(ClassDeclSyntax.self)?.memberBlock.members ?? []
 
@@ -40,7 +66,7 @@ public struct AnandaInitMacro: MemberMacro {
         }
 
         let initializer = try InitializerDeclSyntax(
-            .init(stringLiteral: "init(json: AnandaJSON)")
+            .init(stringLiteral: "\(accessModifierHead)init(json: AnandaJSON)")
         ) {
             for (key, name, type) in list {
                 ExprSyntax("self.\(name) = \(raw: type.ananda(key: key))")
@@ -282,7 +308,9 @@ extension TypeSyntax {
                 }
 
                 if let dictionaryType = arrayType.elementType.as(DictionaryTypeSyntax.self) {
-                    if let simpleType = dictionaryType.valueType.as(SimpleTypeIdentifierSyntax.self) {
+                    if let simpleType = dictionaryType.valueType.as(
+                        SimpleTypeIdentifierSyntax.self
+                    ) {
                         switch simpleType.name.text {
                         case "Bool":
                             return "\(json).array?.map { $0.dictionary().mapValues { $0.bool() } }"
@@ -304,7 +332,9 @@ extension TypeSyntax {
                     }
 
                     if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
-                        if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                        if let simpleType = arrayType.elementType.as(
+                            SimpleTypeIdentifierSyntax.self
+                        ) {
                             switch simpleType.name.text {
                             case "Bool":
                                 return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"

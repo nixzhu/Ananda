@@ -252,20 +252,20 @@ struct Mastodon: AnandaModel {
 }
 
 @AnandaInit
-struct World: AnandaModel {
+public struct World: AnandaModel {
     @AnandaInit
-    struct Company: AnandaModel {
+    public final class Company: AnandaModel {
         @AnandaInit
-        struct Market: AnandaModel {
-            let value: Int
-            let targets: [String]?
+        public struct Market: AnandaModel {
+            public let value: Int
+            public let targets: [String]?
         }
 
-        let id: UInt
-        let motto: String
-        let market: Market
-        let ceo: String?
+        public let id: UInt
+        public let motto: String
+        public let market: Market
+        public let ceo: String?
     }
 
-    let companies: [String: Company]
+    public let companies: [String: Company]
 }
