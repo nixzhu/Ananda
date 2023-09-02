@@ -4,7 +4,7 @@ public macro AnandaInit() = #externalMacro(
     type: "AnandaInitMacro"
 )
 
-@attached(member)
+@attached(peer)
 public macro AnandaKey(_: String) = #externalMacro(
     module: "AnandaMacros",
     type: "AnandaKeyMacro"
