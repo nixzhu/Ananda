@@ -10,12 +10,21 @@
       }
     },
     {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "74203046135342e4a4a627476dd6caf8b28fe11b",
+        "version" : "509.0.0"
+      }
+    },
+    {
       "identity" : "yyjson",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ibireme/yyjson.git",
       "state" : {
-        "revision" : "09ccaa449e01879e23f68d8be165e78e65334443",
-        "version" : "0.7.0"
+        "revision" : "e01ae9d89eaf858894d366169329097171a28d67",
+        "version" : "0.8.0"
       }
     }
   ],
