@@ -11,9 +11,9 @@ public struct AnandaInitMacro: MemberMacro {
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
         let accessModifierHead: String = {
-            let names = declaration.as(StructDeclSyntax.self)?.modifiers?
+            let names = declaration.as(StructDeclSyntax.self)?.modifiers
                 .map { "\($0.name)".trimmingCharacters(in: .whitespacesAndNewlines) } ??
-                declaration.as(ClassDeclSyntax.self)?.modifiers?
+                declaration.as(ClassDeclSyntax.self)?.modifiers
                 .map { "\($0.name)".trimmingCharacters(in: .whitespacesAndNewlines) } ?? []
 
             if names.contains("public") {
@@ -42,11 +42,11 @@ public struct AnandaInitMacro: MemberMacro {
 
         let list = variableDecls.map {
             (
-                $0.attributes?.first?.as(AttributeSyntax.self)?
+                $0.attributes.first?.as(AttributeSyntax.self)?
                     .attributeName.description == "AnandaKey"
-                    ? $0.attributes?.first?.as(AttributeSyntax.self)?
-                        .argument?.as(TupleExprElementListSyntax.self)?.first?
-                        .as(TupleExprElementSyntax.self)?.expression
+                    ? $0.attributes.first?.as(AttributeSyntax.self)?
+                        .arguments?.as(LabeledExprListSyntax.self)?.first?
+                        .as(LabeledExprSyntax.self)?.expression
                         .as(StringLiteralExprSyntax.self)?.segments.first?.description
                     : nil,
                 $0.bindings.first?.pattern,
@@ -81,7 +81,7 @@ extension TypeSyntax {
     func ananda(key: String) -> String {
         let json = "json[\"\(key)\"]"
 
-        if let simpleType = self.as(SimpleTypeIdentifierSyntax.self) {
+        if let simpleType = self.as(IdentifierTypeSyntax.self) {
             switch simpleType.name.text {
             case "Bool":
                 return "\(json).bool()"
@@ -103,7 +103,7 @@ extension TypeSyntax {
         }
 
         if let dictionaryType = self.as(DictionaryTypeSyntax.self) {
-            if let simpleType = dictionaryType.valueType.as(SimpleTypeIdentifierSyntax.self) {
+            if let simpleType = dictionaryType.value.as(IdentifierTypeSyntax.self) {
                 switch simpleType.name.text {
                 case "Bool":
                     return "\(json).dictionary().mapValues { $0.bool() }"
@@ -124,8 +124,8 @@ extension TypeSyntax {
                 }
             }
 
-            if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
-                if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+            if let arrayType = dictionaryType.value.as(ArrayTypeSyntax.self) {
+                if let simpleType = arrayType.element.as(IdentifierTypeSyntax.self) {
                     switch simpleType.name.text {
                     case "Bool":
                         return "\(json).dictionary().mapValues { $0.array().map { $0.bool() } }"
@@ -149,7 +149,7 @@ extension TypeSyntax {
         }
 
         if let arrayType = self.as(ArrayTypeSyntax.self) {
-            if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+            if let simpleType = arrayType.element.as(IdentifierTypeSyntax.self) {
                 switch simpleType.name.text {
                 case "Bool":
                     return "\(json).array().map { $0.bool() }"
@@ -170,8 +170,8 @@ extension TypeSyntax {
                 }
             }
 
-            if let dictionaryType = arrayType.elementType.as(DictionaryTypeSyntax.self) {
-                if let simpleType = dictionaryType.valueType.as(SimpleTypeIdentifierSyntax.self) {
+            if let dictionaryType = arrayType.element.as(DictionaryTypeSyntax.self) {
+                if let simpleType = dictionaryType.value.as(IdentifierTypeSyntax.self) {
                     switch simpleType.name.text {
                     case "Bool":
                         return "\(json).array().map { $0.dictionary().mapValues { $0.bool() } }"
@@ -192,8 +192,8 @@ extension TypeSyntax {
                     }
                 }
 
-                if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
-                    if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                if let arrayType = dictionaryType.value.as(ArrayTypeSyntax.self) {
+                    if let simpleType = arrayType.element.as(IdentifierTypeSyntax.self) {
                         switch simpleType.name.text {
                         case "Bool":
                             return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"
@@ -218,7 +218,7 @@ extension TypeSyntax {
         }
 
         if let optionalType = self.as(OptionalTypeSyntax.self) {
-            if let simpleType = optionalType.wrappedType.as(SimpleTypeIdentifierSyntax.self) {
+            if let simpleType = optionalType.wrappedType.as(IdentifierTypeSyntax.self) {
                 switch simpleType.name.text {
                 case "Bool":
                     return "\(json).bool"
@@ -240,7 +240,7 @@ extension TypeSyntax {
             }
 
             if let dictionaryType = optionalType.wrappedType.as(DictionaryTypeSyntax.self) {
-                if let simpleType = dictionaryType.valueType.as(SimpleTypeIdentifierSyntax.self) {
+                if let simpleType = dictionaryType.value.as(IdentifierTypeSyntax.self) {
                     switch simpleType.name.text {
                     case "Bool":
                         return "\(json).dictionary?.mapValues { $0.bool() }"
@@ -261,8 +261,8 @@ extension TypeSyntax {
                     }
                 }
 
-                if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
-                    if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                if let arrayType = dictionaryType.value.as(ArrayTypeSyntax.self) {
+                    if let simpleType = arrayType.element.as(IdentifierTypeSyntax.self) {
                         switch simpleType.name.text {
                         case "Bool":
                             return "\(json).dictionary?.mapValues { $0.array().map { $0.bool() } }"
@@ -286,7 +286,7 @@ extension TypeSyntax {
             }
 
             if let arrayType = optionalType.wrappedType.as(ArrayTypeSyntax.self) {
-                if let simpleType = arrayType.elementType.as(SimpleTypeIdentifierSyntax.self) {
+                if let simpleType = arrayType.element.as(IdentifierTypeSyntax.self) {
                     switch simpleType.name.text {
                     case "Bool":
                         return "\(json).array?.map { $0.bool() }"
@@ -307,10 +307,8 @@ extension TypeSyntax {
                     }
                 }
 
-                if let dictionaryType = arrayType.elementType.as(DictionaryTypeSyntax.self) {
-                    if let simpleType = dictionaryType.valueType.as(
-                        SimpleTypeIdentifierSyntax.self
-                    ) {
+                if let dictionaryType = arrayType.element.as(DictionaryTypeSyntax.self) {
+                    if let simpleType = dictionaryType.value.as(IdentifierTypeSyntax.self) {
                         switch simpleType.name.text {
                         case "Bool":
                             return "\(json).array?.map { $0.dictionary().mapValues { $0.bool() } }"
@@ -331,10 +329,8 @@ extension TypeSyntax {
                         }
                     }
 
-                    if let arrayType = dictionaryType.valueType.as(ArrayTypeSyntax.self) {
-                        if let simpleType = arrayType.elementType.as(
-                            SimpleTypeIdentifierSyntax.self
-                        ) {
+                    if let arrayType = dictionaryType.value.as(ArrayTypeSyntax.self) {
+                        if let simpleType = arrayType.element.as(IdentifierTypeSyntax.self) {
                             switch simpleType.name.text {
                             case "Bool":
                                 return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"

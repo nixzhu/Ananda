@@ -22,7 +22,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ibireme/yyjson.git",
-            from: "0.7.0"
+            from: "0.8.0"
         ),
         .package(
             url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
@@ -30,7 +30,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/apple/swift-syntax.git",
-            from: "509.0.0-swift-5.9-DEVELOPMENT-SNAPSHOT-2023-04-25-b"
+            from: "509.0.0"
         ),
     ],
     targets: [

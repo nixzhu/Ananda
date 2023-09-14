@@ -59,6 +59,7 @@ final class MacroTests: XCTestCase {
                         let b10: [[String: Int]]?
                         let b11: [[String: [Int]]]
                         let b12: [[String: [Int]]]?
+
                         init(json: AnandaJSON) {
                             self.b1 = json["b1"].int()
                             self.b2 = json["b2"].int
@@ -127,6 +128,7 @@ final class MacroTests: XCTestCase {
                     let c10: [[String: Bob]]?
                     let c11: [[String: [Bob]]]
                     let c12: [[String: [Bob]]]?
+
                     init(json: AnandaJSON) {
                         self.avatarURL = json["avatar_url"].url()
                         self.a1 = json["a1"].bool()
