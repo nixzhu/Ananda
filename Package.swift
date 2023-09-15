@@ -32,6 +32,10 @@ let package = Package(
             url: "https://github.com/apple/swift-syntax.git",
             from: "509.0.0"
         ),
+        .package(
+            url: "https://github.com/google/swift-benchmark.git",
+            from: "0.1.2"
+        ),
     ],
     targets: [
         .macro(
@@ -60,6 +64,13 @@ let package = Package(
             dependencies: [
                 "Ananda",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            ]
+        ),
+        .executableTarget(
+            name: "ananda-benchmark",
+            dependencies: [
+                "Ananda",
+                .product(name: "Benchmark", package: "swift-benchmark"),
             ]
         ),
     ]
