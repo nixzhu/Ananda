@@ -50,15 +50,20 @@ public struct AnandaInitMacro: MemberMacro {
                         .as(StringLiteralExprSyntax.self)?.segments.first?.description
                     : nil,
                 $0.bindings.first?.pattern,
-                $0.bindings.first?.typeAnnotation?.type
+                $0.bindings.first?.typeAnnotation?.type,
+                $0.bindings.first?.accessorBlock
             )
         }
-        .compactMap { key, name, type -> (String, PatternSyntax, TypeSyntax)? in
+        .compactMap { key, name, type, accessorBlock -> (String, PatternSyntax, TypeSyntax)? in
             guard let name else {
                 return nil
             }
 
             guard let type else {
+                return nil
+            }
+
+            guard accessorBlock == nil else {
                 return nil
             }
 

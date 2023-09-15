@@ -198,6 +198,45 @@ final class MacroTests: XCTestCase {
             ]
         )
     }
+
+    func testComputedProperty() {
+        assertMacroExpansion(
+            """
+            @AnandaInit
+            public struct IDs: APICodable {
+                public var id: Int { trakt }
+
+                public let trakt: Int
+                public let slug: String?
+                public let tvdb: Int?
+                public let imdb: String?
+                public let tmdb: Int
+            }
+            """,
+            expandedSource: """
+                public struct IDs: APICodable {
+                    public var id: Int { trakt }
+
+                    public let trakt: Int
+                    public let slug: String?
+                    public let tvdb: Int?
+                    public let imdb: String?
+                    public let tmdb: Int
+
+                    public init(json: AnandaJSON) {
+                        self.trakt = json["trakt"].int()
+                        self.slug = json["slug"].string
+                        self.tvdb = json["tvdb"].int
+                        self.imdb = json["imdb"].string
+                        self.tmdb = json["tmdb"].int()
+                    }
+                }
+                """,
+            macros: [
+                "AnandaInit": AnandaInitMacro.self,
+            ]
+        )
+    }
 }
 
 @AnandaInit
