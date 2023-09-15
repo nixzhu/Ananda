@@ -79,6 +79,43 @@ Then, we can initialize a `Mastodon` as follow:
 let model = Mastodon(jsonString: "...")
 ```
 
+## Swift Macro
+
+With Swift 5.9, you can use macro to eliminate the initialization methods as follow:
+
+```swift
+import Foundation
+import Ananda
+
+@AnandaInit
+struct Mastodon: AnandaModel {
+    let profile: Profile
+    let toots: [Toot]
+}
+
+extension Mastodon {
+    @AnandaInit
+    struct Profile: AnandaModel {
+        let nickname: String
+        let username: String
+        @AnandaKey("avatar_url")
+        let avatarURL: URL
+    }
+}
+
+extension Mastodon {
+    @AnandaInit
+    struct Toot: AnandaModel {
+        let id: Int
+        let content: String
+        @AnandaKey("created_at")
+        let createdAt: Date
+    }
+}
+```
+
+Simple and clean, right?
+
 ## Tool
 
 You may use [Ducky Model Editor](https://apps.apple.com/us/app/ducky-model-editor/id1525505933) to generate AnandaModel from JSON to save your time.
