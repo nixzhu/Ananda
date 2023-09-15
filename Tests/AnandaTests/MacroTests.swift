@@ -199,7 +199,7 @@ final class MacroTests: XCTestCase {
         )
     }
 
-    func testComputedProperty() {
+    func testComputedOrIgnoredProperties() {
         assertMacroExpansion(
             """
             @AnandaInit
@@ -211,6 +211,9 @@ final class MacroTests: XCTestCase {
                 public let tvdb: Int?
                 public let imdb: String?
                 public let tmdb: Int
+            
+                @AnandaIgnored
+                public var poster: URL?
             }
             """,
             expandedSource: """
@@ -222,6 +225,9 @@ final class MacroTests: XCTestCase {
                     public let tvdb: Int?
                     public let imdb: String?
                     public let tmdb: Int
+
+                    @AnandaIgnored
+                    public var poster: URL?
 
                     public init(json: AnandaJSON) {
                         self.trakt = json["trakt"].int()

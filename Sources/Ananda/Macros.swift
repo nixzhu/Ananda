@@ -9,3 +9,9 @@ public macro AnandaKey(_: String) = #externalMacro(
     module: "AnandaMacros",
     type: "AnandaKeyMacro"
 )
+
+@attached(peer)
+public macro AnandaIgnored() = #externalMacro(
+    module: "AnandaMacros",
+    type: "AnandaIgnoredMacro"
+)
