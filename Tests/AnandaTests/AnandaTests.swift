@@ -2,7 +2,7 @@ import XCTest
 @testable import Ananda
 
 final class AnandaTests: XCTestCase {
-    func testAnandaModel() throws {
+    func testObject() {
         let jsonString = """
             {
                 "id": 42,
@@ -94,6 +94,45 @@ final class AnandaTests: XCTestCase {
             model.mastodon.toots[3].createdAt.timeIntervalSince1970,
             1_335_205_543.511
         )
+    }
+
+    func testArray() {
+        let jsonData = """
+            [
+                {
+                    "id": 0,
+                    "name": "nix"
+                },
+                {
+                    "id": 1,
+                    "name": "zhu"
+                }
+            ]
+            """.data(using: .utf8)!
+
+        struct Item: AnandaModel {
+            let id: Int
+            let name: String
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                name = json.name.string()
+            }
+        }
+
+        struct Model: AnandaModel {
+            let list: [Item]
+
+            init(json: AnandaJSON) {
+                list = json.array().map { .init(json: $0) }
+            }
+        }
+
+        let model = Model(jsonData: jsonData)
+        XCTAssertEqual(model.list[0].id, 0)
+        XCTAssertEqual(model.list[0].name, "nix")
+        XCTAssertEqual(model.list[1].id, 1)
+        XCTAssertEqual(model.list[1].name, "zhu")
     }
 }
 
