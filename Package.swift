@@ -41,8 +41,14 @@ let package = Package(
         .macro(
             name: "AnandaMacros",
             dependencies: [
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(
+                    name: "SwiftSyntaxMacros",
+                    package: "swift-syntax"
+                ),
+                .product(
+                    name: "SwiftCompilerPlugin",
+                    package: "swift-syntax"
+                ),
             ]
         ),
         .target(
@@ -63,14 +69,20 @@ let package = Package(
             name: "AnandaTests",
             dependencies: [
                 "Ananda",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+                .product(
+                    name: "SwiftSyntaxMacrosTestSupport",
+                    package: "swift-syntax"
+                ),
             ]
         ),
         .executableTarget(
             name: "ananda-benchmark",
             dependencies: [
                 "Ananda",
-                .product(name: "Benchmark", package: "swift-benchmark"),
+                .product(
+                    name: "Benchmark",
+                    package: "swift-benchmark"
+                ),
             ]
         ),
     ]
