@@ -2,6 +2,57 @@ import XCTest
 @testable import Ananda
 
 final class AnandaTests: XCTestCase {
+    func testBool() {
+        struct Model: AnandaModel {
+            let boolA: Bool
+            let boolB: Bool
+            let boolC: Bool
+            let boolD: Bool
+            let boolE: Bool
+            let boolF: Bool
+            let boolG: Bool
+            let boolH: Bool
+            let boolI: Bool
+
+            init(json: AnandaJSON) {
+                boolA = json.boolA.bool()
+                boolB = json.boolB.bool()
+                boolC = json.boolC.bool()
+                boolD = json.boolD.bool()
+                boolE = json.boolE.bool()
+                boolF = json.boolF.bool()
+                boolG = json.boolG.bool()
+                boolH = json.boolH.bool()
+                boolI = json.boolI.bool()
+            }
+        }
+
+        let jsonString = """
+            {
+                "boolA": true,
+                "boolB": false,
+                "boolC": 0,
+                "boolD": 1,
+                "boolE": -1,
+                "boolF": 100,
+                "boolG": "true",
+                "boolH": "false",
+                "boolI": ""
+            }
+            """
+
+        let model = Model(jsonString: jsonString)
+        XCTAssertEqual(model.boolA, true)
+        XCTAssertEqual(model.boolB, false)
+        XCTAssertEqual(model.boolC, false)
+        XCTAssertEqual(model.boolD, true)
+        XCTAssertEqual(model.boolE, true)
+        XCTAssertEqual(model.boolF, true)
+        XCTAssertEqual(model.boolG, false)
+        XCTAssertEqual(model.boolH, false)
+        XCTAssertEqual(model.boolI, false)
+    }
+
     func testObject() {
         let jsonString = """
             {
