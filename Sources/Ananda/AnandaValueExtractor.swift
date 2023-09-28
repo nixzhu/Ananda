@@ -63,6 +63,10 @@ public struct AnandaValueExtractor {
             if let double = $0.originalDouble {
                 return double
             } else {
+                if let int = $0.originalInt {
+                    return Double(int)
+                }
+
                 if let string = $0.originalString {
                     return Double(string)
                 }

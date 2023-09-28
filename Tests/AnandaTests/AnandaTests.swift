@@ -128,6 +128,69 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.l, nil)
     }
 
+    func testDouble() {
+        struct Model: AnandaModel {
+            let a: Double
+            let b: Double
+            let c: Double
+            let d: Double
+            let e: Double
+            let f: Double
+            let g: Double
+            let h: Double
+            let i: Double
+            let j: Double?
+            let k: Double?
+            let l: Double?
+
+            init(json: AnandaJSON) {
+                a = json.a.double()
+                b = json.b.double()
+                c = json.c.double()
+                d = json.d.double()
+                e = json.e.double()
+                f = json.f.double()
+                g = json.g.double()
+                h = json.h.double()
+                i = json.i.double()
+                j = json.j.double
+                k = json.k.double
+                l = json.l.double
+            }
+        }
+
+        let jsonData = """
+            {
+                "a": -1.0,
+                "b": 0.0,
+                "c": 1.0,
+                "d": "-1.0",
+                "e": "0.0",
+                "f": "1.0",
+                "g": "",
+                "h": "2",
+                "i": 5,
+                "j": "",
+                "k": "2",
+                "l": 5
+            }
+            """.data(using: .utf8)!
+
+        let model = Model(jsonData)
+        XCTAssertEqual(model.a, -1)
+        XCTAssertEqual(model.b, 0)
+        XCTAssertEqual(model.c, 1)
+        XCTAssertEqual(model.d, -1)
+        XCTAssertEqual(model.e, 0)
+        XCTAssertEqual(model.f, 1)
+        XCTAssertEqual(model.g, 0)
+        XCTAssertEqual(model.h, 2)
+        XCTAssertEqual(model.i, 5)
+        XCTAssertEqual(model.j, nil)
+        XCTAssertEqual(model.k, 2)
+        XCTAssertEqual(model.l, 5)
+    }
+
     func testObject() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
