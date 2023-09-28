@@ -94,8 +94,6 @@ extension TypeSyntax {
                 return "\(json).bool()"
             case "Int":
                 return "\(json).int()"
-            case "UInt":
-                return "\(json).uInt()"
             case "Double":
                 return "\(json).double()"
             case "String":
@@ -116,8 +114,6 @@ extension TypeSyntax {
                     return "\(json).dictionary().mapValues { $0.bool() }"
                 case "Int":
                     return "\(json).dictionary().mapValues { $0.int() }"
-                case "UInt":
-                    return "\(json).dictionary().mapValues { $0.uInt() }"
                 case "Double":
                     return "\(json).dictionary().mapValues { $0.double() }"
                 case "String":
@@ -138,8 +134,6 @@ extension TypeSyntax {
                         return "\(json).dictionary().mapValues { $0.array().map { $0.bool() } }"
                     case "Int":
                         return "\(json).dictionary().mapValues { $0.array().map { $0.int() } }"
-                    case "UInt":
-                        return "\(json).dictionary().mapValues { $0.array().map { $0.uInt() } }"
                     case "Double":
                         return "\(json).dictionary().mapValues { $0.array().map { $0.double() } }"
                     case "String":
@@ -162,8 +156,6 @@ extension TypeSyntax {
                     return "\(json).array().map { $0.bool() }"
                 case "Int":
                     return "\(json).array().map { $0.int() }"
-                case "UInt":
-                    return "\(json).array().map { $0.uInt() }"
                 case "Double":
                     return "\(json).array().map { $0.double() }"
                 case "String":
@@ -184,8 +176,6 @@ extension TypeSyntax {
                         return "\(json).array().map { $0.dictionary().mapValues { $0.bool() } }"
                     case "Int":
                         return "\(json).array().map { $0.dictionary().mapValues { $0.int() } }"
-                    case "UInt":
-                        return "\(json).array().map { $0.dictionary().mapValues { $0.uInt() } }"
                     case "Double":
                         return "\(json).array().map { $0.dictionary().mapValues { $0.double() } }"
                     case "String":
@@ -206,8 +196,6 @@ extension TypeSyntax {
                             return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"
                         case "Int":
                             return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.int() } } }"
-                        case "UInt":
-                            return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.uInt() } } }"
                         case "Double":
                             return "\(json).array().map { $0.dictionary().mapValues { $0.array().map { $0.double() } } }"
                         case "String":
@@ -231,8 +219,6 @@ extension TypeSyntax {
                     return "\(json).bool"
                 case "Int":
                     return "\(json).int"
-                case "UInt":
-                    return "\(json).uInt"
                 case "Double":
                     return "\(json).double"
                 case "String":
@@ -253,8 +239,6 @@ extension TypeSyntax {
                         return "\(json).dictionary?.mapValues { $0.bool() }"
                     case "Int":
                         return "\(json).dictionary?.mapValues { $0.int() }"
-                    case "UInt":
-                        return "\(json).dictionary?.mapValues { $0.uInt() }"
                     case "Double":
                         return "\(json).dictionary?.mapValues { $0.double() }"
                     case "String":
@@ -275,8 +259,6 @@ extension TypeSyntax {
                             return "\(json).dictionary?.mapValues { $0.array().map { $0.bool() } }"
                         case "Int":
                             return "\(json).dictionary?.mapValues { $0.array().map { $0.int() } }"
-                        case "UInt":
-                            return "\(json).dictionary?.mapValues { $0.array().map { $0.uInt() } }"
                         case "Double":
                             return "\(json).dictionary?.mapValues { $0.array().map { $0.double() } }"
                         case "String":
@@ -299,8 +281,6 @@ extension TypeSyntax {
                         return "\(json).array?.map { $0.bool() }"
                     case "Int":
                         return "\(json).array?.map { $0.int() }"
-                    case "UInt":
-                        return "\(json).array?.map { $0.uInt() }"
                     case "Double":
                         return "\(json).array?.map { $0.double() }"
                     case "String":
@@ -321,8 +301,6 @@ extension TypeSyntax {
                             return "\(json).array?.map { $0.dictionary().mapValues { $0.bool() } }"
                         case "Int":
                             return "\(json).array?.map { $0.dictionary().mapValues { $0.int() } }"
-                        case "UInt":
-                            return "\(json).array?.map { $0.dictionary().mapValues { $0.uInt() } }"
                         case "Double":
                             return "\(json).array?.map { $0.dictionary().mapValues { $0.double() } }"
                         case "String":
@@ -343,8 +321,6 @@ extension TypeSyntax {
                                 return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.bool() } } }"
                             case "Int":
                                 return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.int() } } }"
-                            case "UInt":
-                                return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.uInt() } } }"
                             case "Double":
                                 return "\(json).array?.map { $0.dictionary().mapValues { $0.array().map { $0.double() } } }"
                             case "String":

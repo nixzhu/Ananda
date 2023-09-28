@@ -307,7 +307,7 @@ public struct World: AnandaModel {
             public let targets: [String]?
         }
 
-        public let id: UInt
+        public let id: Int
         public let motto: String
         public let market: Market
         public let ceo: String?

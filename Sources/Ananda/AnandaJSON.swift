@@ -115,21 +115,6 @@ extension AnandaJSON {
     public func int(defaultValue: Int = 0) -> Int {
         int ?? defaultValue
     }
-
-    /// UInt value if present, or `nil`.
-    public var originalUInt: UInt? {
-        isOriginalInt ? UInt(yyjson_get_uint(pointer)) : nil
-    }
-
-    /// UInt value with `valueExtractor` if present, or `defaultValue` defaults to `0`.
-    public var uInt: UInt? {
-        valueExtractor.uInt(self)
-    }
-
-    /// UInt value with `valueExtractor` if present, or `defaultValue` defaults to `0`.
-    public func uInt(defaultValue: UInt = 0) -> UInt {
-        uInt ?? defaultValue
-    }
 }
 
 extension AnandaJSON {

@@ -60,12 +60,12 @@ extension Mastodon {
 
 extension Mastodon {
     struct Toot: AnandaModel {
-        let id: UInt
+        let id: Int
         let content: String
         let createdAt: Date
 
         init(json: AnandaJSON) {
-            id = json.id.uInt()
+            id = json.id.int()
             content = json.content.string()
             createdAt = json.created_at.date()
         }

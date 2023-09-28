@@ -10,7 +10,6 @@ public struct AnandaValueExtractor {
 
     let bool: (AnandaJSON) -> Bool?
     let int: (AnandaJSON) -> Int?
-    let uInt: (AnandaJSON) -> UInt?
     let double: (AnandaJSON) -> Double?
     let string: (AnandaJSON) -> String?
     let date: (AnandaJSON) -> Date?
@@ -20,7 +19,6 @@ public struct AnandaValueExtractor {
     /// - Parameters:
     ///   - bool: Extract `Bool` from `AnandaJSON`
     ///   - int: Extract `Int` from `AnandaJSON`
-    ///   - uInt: Extract `UInt` from `AnandaJSON`
     ///   - double: Extract `Double` from `AnandaJSON`
     ///   - string: Extract `String` from `AnandaJSON`
     ///   - date: Extract `Date` from `AnandaJSON`
@@ -43,17 +41,6 @@ public struct AnandaValueExtractor {
             } else {
                 if let string = $0.originalString {
                     return Int(string)
-                }
-
-                return nil
-            }
-        },
-        uInt: @escaping (AnandaJSON) -> UInt? = {
-            if let uInt = $0.originalUInt {
-                return uInt
-            } else {
-                if let string = $0.originalString {
-                    return UInt(string)
                 }
 
                 return nil
@@ -128,7 +115,6 @@ public struct AnandaValueExtractor {
     ) {
         self.bool = bool
         self.int = int
-        self.uInt = uInt
         self.double = double
         self.string = string
         self.date = date

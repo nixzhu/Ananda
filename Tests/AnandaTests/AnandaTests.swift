@@ -264,13 +264,13 @@ final class AnandaTests: XCTestCase {
                 )
             }
 
-            let id: UInt
+            let id: Int
             let name: String
             let int: Int
             let mastodon: Mastodon
 
             init(json: AnandaJSON) {
-                id = json.id.uInt()
+                id = json.id.int()
                 name = json.name.string()
                 int = json["int"].int()
                 mastodon = .init(json: json.mastodon)
