@@ -124,17 +124,7 @@ Simple and clean, right?
 
 ## Benchmark
 
-Run `swift run -c release ananda-benchmark` with Xcode 15 RC.
-
-```
-name                       time         std        iterations
--------------------------------------------------------------
-Codable decoding           18417.000 ns ±   7.15 %      74022
-Ananda decoding             2667.000 ns ±   9.73 %     524924
-Ananda decoding with Macro  2667.000 ns ±   7.48 %     521661
-```
-
-As you can see, Ananda decoding is way faster than Codable decoding.
+See [AnandaBenchmark](https://github.com/nixzhu/AnandaBenchmark).
 
 ## Tool
 
