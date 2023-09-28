@@ -162,11 +162,13 @@ extension AnandaJSON {
 
     /// String value if present, or `nil`.
     public var originalString: String? {
-        isOriginalString
-            ? yyjson_get_str(pointer).flatMap {
+        if isOriginalString {
+            return yyjson_get_str(pointer).flatMap {
                 String(cString: $0)
             }
-            : nil
+        }
+
+        return nil
     }
 
     /// String value with `valueExtractor` if present, or `nil`.
