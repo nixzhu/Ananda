@@ -313,8 +313,55 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.f, .init(timeIntervalSince1970: 1))
         XCTAssertEqual(model.g, .init(timeIntervalSince1970: 0))
         XCTAssertEqual(model.h, .init(timeIntervalSince1970: 0))
-        XCTAssertEqual(model.i, .init(timeIntervalSince1970: 1335205543.511))
-        XCTAssertEqual(model.j, .init(timeIntervalSince1970: 1335050743))
+        XCTAssertEqual(model.i, .init(timeIntervalSince1970: 1_335_205_543.511))
+        XCTAssertEqual(model.j, .init(timeIntervalSince1970: 1_335_050_743))
+    }
+
+    func testURL() {
+        struct Model: AnandaModel {
+            let a: URL?
+            let b: URL?
+            let c: URL?
+            let d: URL?
+            let e: URL?
+            let f: URL?
+            let g: URL
+            let h: URL
+
+            init(json: AnandaJSON) {
+                a = json.a.url
+                b = json.b.url
+                c = json.c.url
+                d = json.d.url
+                e = json.e.url
+                f = json.f.url
+                g = json.g.url()
+                h = json.h.url()
+            }
+        }
+
+        let jsonData = """
+            {
+                "a": -1.0,
+                "b": 1,
+                "c": true,
+                "d": "",
+                "e": ".",
+                "f": "https://github.com/nixzhu",
+                "g": "apple juice",
+                "h": "https://zh.wikipedia.org/wiki/围棋"
+            }
+            """.data(using: .utf8)!
+
+        let model = Model(jsonData)
+        XCTAssertEqual(model.a, nil)
+        XCTAssertEqual(model.b, nil)
+        XCTAssertEqual(model.c, nil)
+        XCTAssertEqual(model.d, nil)
+        XCTAssertEqual(model.e?.absoluteString, ".")
+        XCTAssertEqual(model.f?.absoluteString, "https://github.com/nixzhu")
+        XCTAssertEqual(model.g.absoluteString, "apple%20juice")
+        XCTAssertEqual(model.h.absoluteString, "https://zh.wikipedia.org/wiki/%E5%9B%B4%E6%A3%8B")
     }
 
     func testObject() {
