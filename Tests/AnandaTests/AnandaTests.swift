@@ -4,104 +4,128 @@ import XCTest
 final class AnandaTests: XCTestCase {
     func testBool() {
         struct Model: AnandaModel {
-            let boolA: Bool
-            let boolB: Bool
-            let boolC: Bool
-            let boolD: Bool
-            let boolE: Bool
-            let boolF: Bool
-            let boolG: Bool
-            let boolH: Bool
-            let boolI: Bool
+            let a: Bool
+            let b: Bool
+            let c: Bool
+            let d: Bool
+            let e: Bool
+            let f: Bool
+            let g: Bool
+            let h: Bool
+            let i: Bool
+            let j: Bool?
+            let k: Bool?
+            let l: Bool?
 
             init(json: AnandaJSON) {
-                boolA = json.boolA.bool()
-                boolB = json.boolB.bool()
-                boolC = json.boolC.bool()
-                boolD = json.boolD.bool()
-                boolE = json.boolE.bool()
-                boolF = json.boolF.bool()
-                boolG = json.boolG.bool()
-                boolH = json.boolH.bool()
-                boolI = json.boolI.bool()
+                a = json.a.bool()
+                b = json.b.bool()
+                c = json.c.bool()
+                d = json.d.bool()
+                e = json.e.bool()
+                f = json.f.bool()
+                g = json.g.bool()
+                h = json.h.bool()
+                i = json.i.bool()
+                j = json.j.bool
+                k = json.k.bool
+                l = json.l.bool
             }
         }
 
         let jsonString = """
             {
-                "boolA": true,
-                "boolB": false,
-                "boolC": 0,
-                "boolD": 1,
-                "boolE": -1,
-                "boolF": 100,
-                "boolG": "true",
-                "boolH": "false",
-                "boolI": ""
+                "a": true,
+                "b": false,
+                "c": 0,
+                "d": 1,
+                "e": -1,
+                "f": 100,
+                "g": "true",
+                "h": "false",
+                "i": "",
+                "j": "true",
+                "k": "false",
+                "l": ""
             }
             """
 
         let model = Model(jsonString: jsonString)
-        XCTAssertEqual(model.boolA, true)
-        XCTAssertEqual(model.boolB, false)
-        XCTAssertEqual(model.boolC, false)
-        XCTAssertEqual(model.boolD, true)
-        XCTAssertEqual(model.boolE, true)
-        XCTAssertEqual(model.boolF, true)
-        XCTAssertEqual(model.boolG, false)
-        XCTAssertEqual(model.boolH, false)
-        XCTAssertEqual(model.boolI, false)
+        XCTAssertEqual(model.a, true)
+        XCTAssertEqual(model.b, false)
+        XCTAssertEqual(model.c, false)
+        XCTAssertEqual(model.d, true)
+        XCTAssertEqual(model.e, true)
+        XCTAssertEqual(model.f, true)
+        XCTAssertEqual(model.g, false)
+        XCTAssertEqual(model.h, false)
+        XCTAssertEqual(model.i, false)
+        XCTAssertEqual(model.j, nil)
+        XCTAssertEqual(model.k, nil)
+        XCTAssertEqual(model.l, nil)
     }
 
     func testInt() {
         struct Model: AnandaModel {
-            let intA: Int
-            let intB: Int
-            let intC: Int
-            let intD: Int
-            let intE: Int
-            let intF: Int
-            let intG: Int
-            let intH: Int
-            let intI: Int
+            let a: Int
+            let b: Int
+            let c: Int
+            let d: Int
+            let e: Int
+            let f: Int
+            let g: Int
+            let h: Int
+            let i: Int
+            let j: Int?
+            let k: Int?
+            let l: Int?
 
             init(json: AnandaJSON) {
-                intA = json.intA.int()
-                intB = json.intB.int()
-                intC = json.intC.int()
-                intD = json.intD.int()
-                intE = json.intE.int()
-                intF = json.intF.int()
-                intG = json.intG.int()
-                intH = json.intH.int()
-                intI = json.intI.int()
+                a = json.a.int()
+                b = json.b.int()
+                c = json.c.int()
+                d = json.d.int()
+                e = json.e.int()
+                f = json.f.int()
+                g = json.g.int()
+                h = json.h.int()
+                i = json.i.int()
+                j = json.j.int
+                k = json.k.int
+                l = json.l.int
             }
         }
 
         let jsonString = """
             {
-                "intA": -1,
-                "intB": 0,
-                "intC": 1,
-                "intD": "-1",
-                "intE": "0",
-                "intF": "1",
-                "intG": "",
-                "intH": "1.2",
-                "intI": 4.5
+                "a": -1,
+                "b": 0,
+                "c": 1,
+                "d": "-1",
+                "e": "0",
+                "f": "1",
+                "g": "",
+                "h": "1.2",
+                "i": 4.5,
+                "j": "",
+                "k": "1.2",
+                "l": 4.5
             }
             """
 
         let model = Model(jsonString: jsonString)
-        XCTAssertEqual(model.intA, -1)
-        XCTAssertEqual(model.intB, 0)
-        XCTAssertEqual(model.intC, 1)
-        XCTAssertEqual(model.intD, -1)
-        XCTAssertEqual(model.intE, 0)
-        XCTAssertEqual(model.intF, 1)
-        XCTAssertEqual(model.intG, 0)
-        XCTAssertEqual(model.intH, 0)
-        XCTAssertEqual(model.intI, 0)
+        XCTAssertEqual(model.a, -1)
+        XCTAssertEqual(model.b, 0)
+        XCTAssertEqual(model.c, 1)
+        XCTAssertEqual(model.d, -1)
+        XCTAssertEqual(model.e, 0)
+        XCTAssertEqual(model.f, 1)
+        XCTAssertEqual(model.g, 0)
+        XCTAssertEqual(model.h, 0)
+        XCTAssertEqual(model.i, 0)
+        XCTAssertEqual(model.j, nil)
+        XCTAssertEqual(model.k, nil)
+        XCTAssertEqual(model.l, nil)
     }
 
     func testObject() {
