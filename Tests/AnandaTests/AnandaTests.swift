@@ -53,6 +53,57 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.boolI, false)
     }
 
+    func testInt() {
+        struct Model: AnandaModel {
+            let intA: Int
+            let intB: Int
+            let intC: Int
+            let intD: Int
+            let intE: Int
+            let intF: Int
+            let intG: Int
+            let intH: Int
+            let intI: Int
+
+            init(json: AnandaJSON) {
+                intA = json.intA.int()
+                intB = json.intB.int()
+                intC = json.intC.int()
+                intD = json.intD.int()
+                intE = json.intE.int()
+                intF = json.intF.int()
+                intG = json.intG.int()
+                intH = json.intH.int()
+                intI = json.intI.int()
+            }
+        }
+
+        let jsonString = """
+            {
+                "intA": -1,
+                "intB": 0,
+                "intC": 1,
+                "intD": "-1",
+                "intE": "0",
+                "intF": "1",
+                "intG": "",
+                "intH": "1.2",
+                "intI": 4.5
+            }
+            """
+
+        let model = Model(jsonString: jsonString)
+        XCTAssertEqual(model.intA, -1)
+        XCTAssertEqual(model.intB, 0)
+        XCTAssertEqual(model.intC, 1)
+        XCTAssertEqual(model.intD, -1)
+        XCTAssertEqual(model.intE, 0)
+        XCTAssertEqual(model.intF, 1)
+        XCTAssertEqual(model.intG, 0)
+        XCTAssertEqual(model.intH, 0)
+        XCTAssertEqual(model.intI, 0)
+    }
+
     func testObject() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
