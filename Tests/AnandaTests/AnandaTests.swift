@@ -150,6 +150,8 @@ final class AnandaTests: XCTestCase {
             let j: Double?
             let k: Double?
             let l: Double?
+            let m: Double
+            let n: Double?
 
             init(json: AnandaJSON) {
                 a = json.a.double()
@@ -164,6 +166,8 @@ final class AnandaTests: XCTestCase {
                 j = json.j.double
                 k = json.k.double
                 l = json.l.double
+                m = json.m.double()
+                n = json.n.double
             }
         }
 
@@ -180,7 +184,9 @@ final class AnandaTests: XCTestCase {
                 "i": 5,
                 "j": "",
                 "k": "2",
-                "l": 5
+                "l": 5,
+                "m": true,
+                "n": false
             }
             """.data(using: .utf8)!
 
@@ -197,6 +203,8 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.j, nil)
         XCTAssertEqual(model.k, 2)
         XCTAssertEqual(model.l, 5)
+        XCTAssertEqual(model.m, 0)
+        XCTAssertEqual(model.n, nil)
     }
 
     func testObject() {
