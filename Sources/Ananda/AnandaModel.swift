@@ -19,7 +19,7 @@ extension AnandaModel {
 
 extension AnandaModel {
     /// Initialize with `jsonData`
-    public init(jsonData: Data) {
+    public init(_ jsonData: Data) {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
         }
@@ -40,9 +40,9 @@ extension AnandaModel {
     }
 
     /// Initialize with `jsonString`, `encoding` default to `.utf8`
-    public init(jsonString: String, encoding: String.Encoding = .utf8) {
+    public init(_ jsonString: String, encoding: String.Encoding = .utf8) {
         if let jsonData = jsonString.data(using: encoding) {
-            self.init(jsonData: jsonData)
+            self.init(jsonData)
         } else {
             assertionFailure("Invalid JSON: \(jsonString)")
             self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))

@@ -76,7 +76,13 @@ extension Mastodon {
 Then, we can initialize a `Mastodon` as follow:
 
 ```swift
-let model = Mastodon(jsonString: "...")
+let model = Mastodon(jsonString)
+```
+
+Or
+
+```swift
+let model = Mastodon(jsonData)
 ```
 
 ## Swift Macro

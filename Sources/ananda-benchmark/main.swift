@@ -85,7 +85,7 @@ benchmark("Ananda decoding") {
         }
     }
 
-    let model = IndieApp(jsonData: jsonData)
+    let model = IndieApp(jsonData)
     assert(model.developer.userID == 42)
 }
 
@@ -109,7 +109,7 @@ benchmark("Ananda decoding with Macro") {
         let developer: Developer
     }
 
-    let model = IndieApp(jsonData: jsonData)
+    let model = IndieApp(jsonData)
     assert(model.developer.userID == 42)
 }
 

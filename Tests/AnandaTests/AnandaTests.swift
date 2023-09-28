@@ -50,7 +50,7 @@ final class AnandaTests: XCTestCase {
             }
             """
 
-        let model = Model(jsonString: jsonString)
+        let model = Model(jsonString)
         XCTAssertEqual(model.a, true)
         XCTAssertEqual(model.b, false)
         XCTAssertEqual(model.c, false)
@@ -96,7 +96,7 @@ final class AnandaTests: XCTestCase {
             }
         }
 
-        let jsonString = """
+        let jsonData = """
             {
                 "a": -1,
                 "b": 0,
@@ -111,9 +111,9 @@ final class AnandaTests: XCTestCase {
                 "k": "1.2",
                 "l": 4.5
             }
-            """
+            """.data(using: .utf8)!
 
-        let model = Model(jsonString: jsonString)
+        let model = Model(jsonData)
         XCTAssertEqual(model.a, -1)
         XCTAssertEqual(model.b, 0)
         XCTAssertEqual(model.c, 1)
@@ -277,7 +277,7 @@ final class AnandaTests: XCTestCase {
             }
             """
 
-        let model = User(jsonString: jsonString)
+        let model = User(jsonString)
 
         XCTAssertEqual(model.id, 42)
         XCTAssertEqual(model.name, "NIX 👨‍👩‍👧‍👦/🐣")
@@ -358,7 +358,7 @@ final class AnandaTests: XCTestCase {
             ]
             """.data(using: .utf8)!
 
-        let model = Model(jsonData: jsonData)
+        let model = Model(jsonData)
         XCTAssertEqual(model.list[0].id, 0)
         XCTAssertEqual(model.list[0].name, "nix")
         XCTAssertEqual(model.list[1].id, 1)
