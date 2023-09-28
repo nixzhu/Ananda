@@ -54,6 +54,110 @@ final class AnandaTests: XCTestCase {
     }
 
     func testObject() {
+        struct User: AnandaModel {
+            struct Mastodon: AnandaModel {
+                let profile: Profile
+                let toots: [Toot]
+
+                init(json: AnandaJSON) {
+                    profile = .init(json: json.profile)
+                    toots = json.toots.array().map { .init(json: $0) }
+
+                    assert(json.toots[-1].id.int == nil)
+                    assert(json.toots[0].id.int == 1)
+                    assert(json.toots[1].id.int == 2)
+                    assert(json.toots[2].id.int == 88_888_888_888_888_888)
+                    assert(json.toots[3].id.int == 99_999_999_999_999_999)
+                }
+            }
+
+            struct Toot: AnandaModel {
+                let id: Int
+                let content: String
+                let isProtected: Bool
+                let createdAt: Date
+
+                init(json: AnandaJSON) {
+                    id = json.id.int()
+                    content = json.content.string()
+                    isProtected = json.is_protected.bool()
+                    createdAt = json.created_at.date()
+                }
+            }
+
+            struct Profile: AnandaModel {
+                let username: String
+                let nickname: String
+                let avatarURL: URL
+                let mp3URL: URL
+
+                init(json: AnandaJSON) {
+                    username = json.username.string()
+                    nickname = json.nickname.string()
+                    avatarURL = json.avatar_url.url()
+                    mp3URL = json.mp3_url.url()
+                }
+            }
+
+            static var valueExtractor: AnandaValueExtractor {
+                .init(
+                    bool: {
+                        if let bool = $0.originalBool {
+                            return bool
+                        } else {
+                            if let int = $0.originalInt {
+                                return int != 0
+                            }
+
+                            if let string = $0.originalString {
+                                switch string {
+                                case "true":
+                                    return true
+                                case "false":
+                                    return false
+                                default:
+                                    break
+                                }
+                            }
+
+                            return nil
+                        }
+                    }
+                )
+            }
+
+            let id: UInt
+            let name: String
+            let int: Int
+            let mastodon: Mastodon
+
+            init(json: AnandaJSON) {
+                id = json.id.uInt()
+                name = json.name.string()
+                int = json["int"].int()
+                mastodon = .init(json: json.mastodon)
+
+                assert(json.unknown.isNull)
+                assert(json["unknown"].isNull)
+                assert(!json.name.isNull)
+                assert(!json.mastodon.isNull)
+                assert(!json.mastodon.profile.isNull)
+                assert(!json.mastodon.profile.extra_info.isNull)
+                assert(!json.mastodon.profile.extra_list.isNull)
+
+                assert(json.unknown.isEmpty)
+                assert(json["unknown"].isEmpty)
+                assert(!json.name.isEmpty)
+                assert(!json.mastodon.isEmpty)
+                assert(!json.mastodon.profile.isEmpty)
+                assert(json.mastodon.profile.extra_info.isEmpty)
+                assert(json.mastodon.profile.extra_list.isEmpty)
+
+                let mastodonInfo = json.mastodon.dictionary()
+                assert(mastodonInfo["profile"]?.username.string == "@nixzhu@mastodon.social")
+            }
+        }
+
         let jsonString = """
             {
                 "id": 42,
@@ -148,6 +252,24 @@ final class AnandaTests: XCTestCase {
     }
 
     func testArray() {
+        struct Model: AnandaModel {
+            let list: [Item]
+
+            init(json: AnandaJSON) {
+                list = json.array().map { .init(json: $0) }
+            }
+        }
+
+        struct Item: AnandaModel {
+            let id: Int
+            let name: String
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                name = json.name.string()
+            }
+        }
+
         let jsonData = """
             [
                 {
@@ -161,138 +283,10 @@ final class AnandaTests: XCTestCase {
             ]
             """.data(using: .utf8)!
 
-        struct Item: AnandaModel {
-            let id: Int
-            let name: String
-
-            init(json: AnandaJSON) {
-                id = json.id.int()
-                name = json.name.string()
-            }
-        }
-
-        struct Model: AnandaModel {
-            let list: [Item]
-
-            init(json: AnandaJSON) {
-                list = json.array().map { .init(json: $0) }
-            }
-        }
-
         let model = Model(jsonData: jsonData)
         XCTAssertEqual(model.list[0].id, 0)
         XCTAssertEqual(model.list[0].name, "nix")
         XCTAssertEqual(model.list[1].id, 1)
         XCTAssertEqual(model.list[1].name, "zhu")
-    }
-}
-
-struct User: AnandaModel {
-    static var valueExtractor: AnandaValueExtractor {
-        .init(
-            bool: {
-                if let bool = $0.originalBool {
-                    return bool
-                } else {
-                    if let int = $0.originalInt {
-                        return int != 0
-                    }
-
-                    if let string = $0.originalString {
-                        switch string {
-                        case "true":
-                            return true
-                        case "false":
-                            return false
-                        default:
-                            break
-                        }
-                    }
-
-                    return nil
-                }
-            }
-        )
-    }
-
-    let id: UInt
-    let name: String
-    let int: Int
-    let mastodon: Mastodon
-
-    init(json: AnandaJSON) {
-        id = json.id.uInt()
-        name = json.name.string()
-        int = json["int"].int()
-        mastodon = .init(json: json.mastodon)
-
-        assert(json.unknown.isNull)
-        assert(json["unknown"].isNull)
-        assert(!json.name.isNull)
-        assert(!json.mastodon.isNull)
-        assert(!json.mastodon.profile.isNull)
-        assert(!json.mastodon.profile.extra_info.isNull)
-        assert(!json.mastodon.profile.extra_list.isNull)
-
-        assert(json.unknown.isEmpty)
-        assert(json["unknown"].isEmpty)
-        assert(!json.name.isEmpty)
-        assert(!json.mastodon.isEmpty)
-        assert(!json.mastodon.profile.isEmpty)
-        assert(json.mastodon.profile.extra_info.isEmpty)
-        assert(json.mastodon.profile.extra_list.isEmpty)
-
-        let mastodonInfo = json.mastodon.dictionary()
-        assert(mastodonInfo["profile"]?.username.string == "@nixzhu@mastodon.social")
-    }
-}
-
-extension User {
-    struct Mastodon: AnandaModel {
-        let profile: Profile
-        let toots: [Toot]
-
-        init(json: AnandaJSON) {
-            profile = .init(json: json.profile)
-            toots = json.toots.array().map { .init(json: $0) }
-
-            assert(json.toots[-1].id.int == nil)
-            assert(json.toots[0].id.int == 1)
-            assert(json.toots[1].id.int == 2)
-            assert(json.toots[2].id.int == 88_888_888_888_888_888)
-            assert(json.toots[3].id.int == 99_999_999_999_999_999)
-        }
-    }
-}
-
-extension User.Mastodon {
-    struct Toot: AnandaModel {
-        let id: Int
-        let content: String
-        let isProtected: Bool
-        let createdAt: Date
-
-        init(json: AnandaJSON) {
-            id = json.id.int()
-            content = json.content.string()
-            isProtected = json.is_protected.bool()
-            createdAt = json.created_at.date()
-        }
-    }
-}
-
-extension User.Mastodon {
-    struct Profile: AnandaModel {
-        let username: String
-        let nickname: String
-        let avatarURL: URL
-        let mp3URL: URL
-
-        init(json: AnandaJSON) {
-            username = json.username.string()
-            nickname = json.nickname.string()
-            avatarURL = json.avatar_url.url()
-            mp3URL = json.mp3_url.url()
-        }
     }
 }
