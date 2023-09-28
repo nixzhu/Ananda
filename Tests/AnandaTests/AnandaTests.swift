@@ -207,6 +207,61 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.n, nil)
     }
 
+    func testString() {
+        struct Model: AnandaModel {
+            let a: String
+            let b: String
+            let c: String
+            let d: String
+            let e: String
+            let f: String
+            let g: String
+            let h: String
+            let i: String
+            let j: String
+
+            init(json: AnandaJSON) {
+                a = json.a.string()
+                b = json.b.string()
+                c = json.c.string()
+                d = json.d.string()
+                e = json.e.string()
+                f = json.f.string()
+                g = json.g.string()
+                h = json.h.string()
+                i = json.i.string()
+                j = json.j.string()
+            }
+        }
+
+        let jsonData = """
+            {
+                "a": -1.0,
+                "b": 0.0,
+                "c": 1.0,
+                "d": -1,
+                "e": 0,
+                "f": 1,
+                "g": true,
+                "h": false,
+                "i": "",
+                "j": "joke"
+            }
+            """.data(using: .utf8)!
+
+        let model = Model(jsonData)
+        XCTAssertEqual(model.a, "")
+        XCTAssertEqual(model.b, "")
+        XCTAssertEqual(model.c, "")
+        XCTAssertEqual(model.d, "-1")
+        XCTAssertEqual(model.e, "0")
+        XCTAssertEqual(model.f, "1")
+        XCTAssertEqual(model.g, "")
+        XCTAssertEqual(model.h, "")
+        XCTAssertEqual(model.i, "")
+        XCTAssertEqual(model.j, "joke")
+    }
+
     func testObject() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
