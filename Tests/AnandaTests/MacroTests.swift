@@ -211,7 +211,7 @@ final class MacroTests: XCTestCase {
                 public let tvdb: Int?
                 public let imdb: String?
                 public let tmdb: Int
-            
+
                 @AnandaIgnored
                 public var poster: URL?
             }
@@ -225,8 +225,6 @@ final class MacroTests: XCTestCase {
                     public let tvdb: Int?
                     public let imdb: String?
                     public let tmdb: Int
-
-                    @AnandaIgnored
                     public var poster: URL?
 
                     public init(json: AnandaJSON) {
@@ -240,6 +238,7 @@ final class MacroTests: XCTestCase {
                 """,
             macros: [
                 "AnandaInit": AnandaInitMacro.self,
+                "AnandaIgnored": AnandaIgnoredMacro.self,
             ]
         )
     }
@@ -315,4 +314,20 @@ public struct World: AnandaModel {
     }
 
     public let companies: [String: Company]
+}
+
+public protocol APICodable {}
+
+@AnandaInit
+public struct IDs: APICodable {
+    public var id: Int { trakt }
+
+    public let trakt: Int
+    public let slug: String?
+    public let tvdb: Int?
+    public let imdb: String?
+    public let tmdb: Int
+
+    @AnandaIgnored
+    public var poster: URL?
 }

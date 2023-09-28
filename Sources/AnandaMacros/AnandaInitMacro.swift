@@ -11,10 +11,11 @@ public struct AnandaInitMacro: MemberMacro {
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
         let accessModifierHead: String = {
-            let names = declaration.as(StructDeclSyntax.self)?.modifiers
-                .map { "\($0.name)".trimmingCharacters(in: .whitespacesAndNewlines) } ??
-                declaration.as(ClassDeclSyntax.self)?.modifiers
-                .map { "\($0.name)".trimmingCharacters(in: .whitespacesAndNewlines) } ?? []
+            let names = declaration.as(StructDeclSyntax.self)?.modifiers.map {
+                $0.name.trimmed.text
+            } ?? declaration.as(ClassDeclSyntax.self)?.modifiers.map {
+                $0.name.trimmed.text
+            } ?? []
 
             if names.contains("public") {
                 return "public "
@@ -84,7 +85,7 @@ public struct AnandaInitMacro: MemberMacro {
 }
 
 extension TypeSyntax {
-    func ananda(key: String) -> String {
+    fileprivate func ananda(key: String) -> String {
         let json = "json[\"\(key)\"]"
 
         if let simpleType = self.as(IdentifierTypeSyntax.self) {
