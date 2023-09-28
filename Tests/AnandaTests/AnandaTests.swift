@@ -262,6 +262,61 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.j, "joke")
     }
 
+    func testDate() {
+        struct Model: AnandaModel {
+            let a: Date
+            let b: Date
+            let c: Date
+            let d: Date
+            let e: Date
+            let f: Date
+            let g: Date
+            let h: Date
+            let i: Date
+            let j: Date
+
+            init(json: AnandaJSON) {
+                a = json.a.date()
+                b = json.b.date()
+                c = json.c.date()
+                d = json.d.date()
+                e = json.e.date()
+                f = json.f.date()
+                g = json.g.date()
+                h = json.h.date()
+                i = json.i.date()
+                j = json.j.date()
+            }
+        }
+
+        let jsonData = """
+            {
+                "a": -1.0,
+                "b": 0.0,
+                "c": 1.0,
+                "d": -1,
+                "e": 0,
+                "f": 1,
+                "g": true,
+                "h": false,
+                "i": "2012-04-23T18:25:43.511Z",
+                "j": "1335050743"
+            }
+            """.data(using: .utf8)!
+
+        let model = Model(jsonData)
+        XCTAssertEqual(model.a, .init(timeIntervalSince1970: -1))
+        XCTAssertEqual(model.b, .init(timeIntervalSince1970: 0))
+        XCTAssertEqual(model.c, .init(timeIntervalSince1970: 1))
+        XCTAssertEqual(model.d, .init(timeIntervalSince1970: -1))
+        XCTAssertEqual(model.e, .init(timeIntervalSince1970: 0))
+        XCTAssertEqual(model.f, .init(timeIntervalSince1970: 1))
+        XCTAssertEqual(model.g, .init(timeIntervalSince1970: 0))
+        XCTAssertEqual(model.h, .init(timeIntervalSince1970: 0))
+        XCTAssertEqual(model.i, .init(timeIntervalSince1970: 1335205543.511))
+        XCTAssertEqual(model.j, .init(timeIntervalSince1970: 1335050743))
+    }
+
     func testObject() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
