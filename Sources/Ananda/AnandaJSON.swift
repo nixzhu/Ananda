@@ -170,7 +170,7 @@ extension AnandaJSON {
 extension AnandaJSON {
     /// Dictionary if present, or `nil`.
     public var dictionary: [String: AnandaJSON]? {
-        guard yyjson_is_obj(pointer) && yyjson_obj_size(pointer) > 0 else {
+        guard yyjson_is_obj(pointer), yyjson_obj_size(pointer) > 0 else {
             return nil
         }
 
@@ -212,7 +212,7 @@ extension AnandaJSON {
 extension AnandaJSON {
     /// Array value if present, or `nil`.
     public var array: [AnandaJSON]? {
-        guard yyjson_is_arr(pointer) && yyjson_arr_size(pointer) > 0 else {
+        guard yyjson_is_arr(pointer), yyjson_arr_size(pointer) > 0 else {
             return nil
         }
 
@@ -258,7 +258,7 @@ extension AnandaJSON {
     }
 
     /// URL value with `valueExtractor` if present,
-    /// or `defaultValue` defaults to `URL(string: /// "/")!`.
+    /// or `defaultValue` defaults to `URL(string: "/")!`.
     public func url(defaultValue: URL = .init(string: "/")!) -> URL {
         url ?? defaultValue
     }
