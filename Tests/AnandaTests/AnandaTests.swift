@@ -50,7 +50,7 @@ final class AnandaTests: XCTestCase {
             }
             """
 
-        let model = Model(jsonString)
+        let model = Model.decode(from: jsonString)
         XCTAssertEqual(model.a, true)
         XCTAssertEqual(model.b, false)
         XCTAssertEqual(model.c, false)
@@ -119,7 +119,7 @@ final class AnandaTests: XCTestCase {
             }
             """.data(using: .utf8)!
 
-        let model = Model(jsonData)
+        let model = Model.decode(from: jsonData)
         XCTAssertEqual(model.a, -1)
         XCTAssertEqual(model.b, 0)
         XCTAssertEqual(model.c, 1)
@@ -190,7 +190,7 @@ final class AnandaTests: XCTestCase {
             }
             """.data(using: .utf8)!
 
-        let model = Model(jsonData)
+        let model = Model.decode(from: jsonData)
         XCTAssertEqual(model.a, -1)
         XCTAssertEqual(model.b, 0)
         XCTAssertEqual(model.c, 1)
@@ -249,7 +249,7 @@ final class AnandaTests: XCTestCase {
             }
             """.data(using: .utf8)!
 
-        let model = Model(jsonData)
+        let model = Model.decode(from: jsonData)
         XCTAssertEqual(model.a, "")
         XCTAssertEqual(model.b, "")
         XCTAssertEqual(model.c, "")
@@ -304,7 +304,7 @@ final class AnandaTests: XCTestCase {
             }
             """.data(using: .utf8)!
 
-        let model = Model(jsonData)
+        let model = Model.decode(from: jsonData)
         XCTAssertEqual(model.a, .init(timeIntervalSince1970: -1))
         XCTAssertEqual(model.b, .init(timeIntervalSince1970: 0))
         XCTAssertEqual(model.c, .init(timeIntervalSince1970: 1))
@@ -353,7 +353,7 @@ final class AnandaTests: XCTestCase {
             }
             """.data(using: .utf8)!
 
-        let model = Model(jsonData)
+        let model = Model.decode(from: jsonData)
         XCTAssertEqual(model.a, nil)
         XCTAssertEqual(model.b, nil)
         XCTAssertEqual(model.c, nil)
@@ -513,7 +513,7 @@ final class AnandaTests: XCTestCase {
             }
             """
 
-        let model = User(jsonString)
+        let model = User.decode(from: jsonString)
 
         XCTAssertEqual(model.id, 42)
         XCTAssertEqual(model.name, "NIX 👨‍👩‍👧‍👦/🐣")
@@ -594,7 +594,7 @@ final class AnandaTests: XCTestCase {
             ]
             """.data(using: .utf8)!
 
-        let model = Model(jsonData)
+        let model = Model.decode(from: jsonData)
         XCTAssertEqual(model.list[0].id, 0)
         XCTAssertEqual(model.list[0].name, "nix")
         XCTAssertEqual(model.list[1].id, 1)

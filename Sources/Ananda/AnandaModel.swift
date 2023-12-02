@@ -18,34 +18,38 @@ extension AnandaModel {
 }
 
 extension AnandaModel {
-    /// Initialize with `jsonData`
-    public init(_ jsonData: Data) {
+    /// Decode from `jsonData`
+    public static func decode(from jsonData: Data) -> Self {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
         }
 
         if let doc {
-            self.init(
-                json: .init(
-                    pointer: yyjson_doc_get_root(doc),
-                    valueExtractor: Self.valueExtractor
-                )
+            let json = AnandaJSON(
+                pointer: yyjson_doc_get_root(doc),
+                valueExtractor: Self.valueExtractor
             )
 
+            let model = Self(json: json)
+
             yyjson_doc_free(doc)
+
+            return model
         } else {
             assertionFailure("Invalid JSON: \(String(data: jsonData, encoding: .utf8) ?? "")")
-            self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
+
+            return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
 
-    /// Initialize with `jsonString`, `encoding` default to `.utf8`
-    public init(_ jsonString: String, encoding: String.Encoding = .utf8) {
+    /// Decode from `jsonString`, `encoding` default to `.utf8`
+    public static func decode(from jsonString: String, encoding: String.Encoding = .utf8) -> Self {
         if let jsonData = jsonString.data(using: encoding) {
-            self.init(jsonData)
+            return decode(from: jsonData)
         } else {
             assertionFailure("Invalid JSON: \(jsonString)")
-            self.init(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
+
+            return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
 }
