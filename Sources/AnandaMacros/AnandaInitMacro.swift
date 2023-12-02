@@ -228,7 +228,7 @@ extension TypeSyntax {
                 case "Date":
                     return "\(json).date"
                 default:
-                    return "\(json).emptyAsNil?.map { .init(json: $0) }"
+                    return "\(json).emptyAsNil.map { .init(json: $0) }"
                 }
             }
 

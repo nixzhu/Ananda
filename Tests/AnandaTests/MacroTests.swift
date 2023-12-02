@@ -140,7 +140,7 @@ final class MacroTests: XCTestCase {
                             $0.bool()
                         }
                         self.c1 = .init(json: json["c1"])
-                        self.c2 = json["c2"].emptyAsNil?.map {
+                        self.c2 = json["c2"].emptyAsNil.map {
                             .init(json: $0)
                         }
                         self.c3 = json["c3"].array().map {
