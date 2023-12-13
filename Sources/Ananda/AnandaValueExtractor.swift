@@ -143,6 +143,7 @@ extension CharacterSet {
         var set = CharacterSet.urlQueryAllowed
         set.insert("#")
         set.formUnion(.urlPathAllowed)
+
         return set
     }()
 }
