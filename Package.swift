@@ -26,7 +26,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
-            from: "0.1.6"
+            from: "0.1.7"
         ),
         .package(
             url: "https://github.com/apple/swift-syntax.git",
