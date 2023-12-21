@@ -1,40 +1,40 @@
 import Foundation
 import yyjson
 
-/// AnandaModel can be created from AnandaJSON
+/// AnandaModel can be created from AnandaJSON.
 public protocol AnandaModel {
     /// AnandaValueExtractor
     static var valueExtractor: AnandaValueExtractor { get }
 
-    /// Initialize with `json`
+    /// Initialize with `json`.
     init(json: AnandaJSON)
 }
 
 extension AnandaModel {
-    /// AnandaValueExtractor
+    /// AnandaValueExtractor defaults to `.standard`.
     public static var valueExtractor: AnandaValueExtractor {
-        .shared
+        .standard
     }
 }
 
 extension AnandaModel {
-    /// Decode from `jsonData`
+    /// Decode from `jsonData`.
     public static func decode(from jsonData: Data) -> Self {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
         }
 
         if let doc {
+            defer {
+                yyjson_doc_free(doc)
+            }
+
             let json = AnandaJSON(
                 pointer: yyjson_doc_get_root(doc),
                 valueExtractor: Self.valueExtractor
             )
 
-            let model = Self(json: json)
-
-            yyjson_doc_free(doc)
-
-            return model
+            return Self(json: json)
         } else {
             assertionFailure("Invalid JSON: \(String(data: jsonData, encoding: .utf8) ?? "")")
 
@@ -42,7 +42,7 @@ extension AnandaModel {
         }
     }
 
-    /// Decode from `jsonString`, `encoding` default to `.utf8`
+    /// Decode from `jsonString`, `encoding` default to `.utf8`.
     public static func decode(from jsonString: String, encoding: String.Encoding = .utf8) -> Self {
         if let jsonData = jsonString.data(using: encoding) {
             return decode(from: jsonData)

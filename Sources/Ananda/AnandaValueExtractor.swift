@@ -5,8 +5,8 @@ import JJLISO8601DateFormatter
 ///
 /// Extract value from `AnandaJSON`
 public struct AnandaValueExtractor {
-    /// Shared instance
-    public static let shared = Self()
+    /// Standard shared instance
+    public static let standard = Self()
 
     let bool: (AnandaJSON) -> Bool?
     let int: (AnandaJSON) -> Int?
