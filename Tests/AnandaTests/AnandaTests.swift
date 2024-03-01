@@ -600,4 +600,27 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.list[1].id, 1)
         XCTAssertEqual(model.list[1].name, "zhu")
     }
+
+    func testPath() {
+        struct B: AnandaModel {
+            let c: Int
+
+            init(json: AnandaJSON) {
+                c = json.c.int()
+            }
+        }
+
+        let jsonString = """
+            {
+                "a": {
+                    "b": {
+                        "c": 42
+                    }
+                }
+            }
+            """
+
+        let model = B.decode(from: jsonString, path: ["a", "b"])
+        XCTAssertEqual(model.c, 42)
+    }
 }

@@ -18,8 +18,11 @@ extension AnandaModel {
 }
 
 extension AnandaModel {
-    /// Decode from `jsonData`.
-    public static func decode(from jsonData: Data) -> Self {
+    /// Decode from `jsonData`, with `path` defaults to `[]`.
+    public static func decode(
+        from jsonData: Data,
+        path: [String] = []
+    ) -> Self {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
         }
@@ -29,10 +32,14 @@ extension AnandaModel {
                 yyjson_doc_free(doc)
             }
 
-            let json = AnandaJSON(
+            var json = AnandaJSON(
                 pointer: yyjson_doc_get_root(doc),
                 valueExtractor: Self.valueExtractor
             )
+
+            for key in path {
+                json = json[key]
+            }
 
             return Self(json: json)
         } else {
@@ -42,10 +49,14 @@ extension AnandaModel {
         }
     }
 
-    /// Decode from `jsonString`, `encoding` default to `.utf8`.
-    public static func decode(from jsonString: String, encoding: String.Encoding = .utf8) -> Self {
+    /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
+    public static func decode(
+        from jsonString: String,
+        path: [String] = [],
+        encoding: String.Encoding = .utf8
+    ) -> Self {
         if let jsonData = jsonString.data(using: encoding) {
-            return decode(from: jsonData)
+            return decode(from: jsonData, path: path)
         } else {
             assertionFailure("Invalid JSON: \(jsonString)")
 
