@@ -88,7 +88,7 @@ let mastodon = Mastodon.decode(from: jsonData)
 If you only want to decode a part of the JSON, like `profile`, use the `path` to specify it as follow:
 
 ```swift
-let profile = Mastodon.Profile.decode(from: jsonData, path: ["proflie"])
+let profile = Mastodon.Profile.decode(from: jsonData, path: ["profile"])
 ```
 
 How about just decode `toots`? It's an array, do it as follow:
