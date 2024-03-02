@@ -73,16 +73,28 @@ extension Mastodon {
 }
 ```
 
-Then, we can initialize a `Mastodon` as follow:
+Then, we can decode a `Mastodon` as follow:
 
 ```swift
-let model = Mastodon.decode(from: jsonString)
+let mastodon = Mastodon.decode(from: jsonString)
 ```
 
 Or
 
 ```swift
-let model = Mastodon.decode(from: jsonData)
+let mastodon = Mastodon.decode(from: jsonData)
+```
+
+If you only want to decode a part of the JSON, like `profile`, use the `path` to specify it as follow:
+
+```swift
+let profile = Mastodon.Profile.decode(from: jsonData, path: ["proflie"])
+```
+
+How about just decode `toots`? It's an array, do it as follow:
+
+```swift
+let toots = [Mastodon.Toot].decode(from: jsonData, path: ["toots"])
 ```
 
 ## Swift Macro
