@@ -367,6 +367,61 @@ final class AnandaTests: XCTestCase {
     func testObject() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
+                struct Profile: AnandaModel {
+                    let username: String
+                    let nickname: String
+                    let avatarURL: URL
+                    let mp3URL: URL
+
+                    init(json: AnandaJSON) {
+                        username = json.username.string()
+                        nickname = json.nickname.string()
+                        avatarURL = json.avatar_url.url()
+                        mp3URL = json.mp3_url.url()
+                    }
+                }
+
+                struct Toot: AnandaModel {
+                    static var valueExtractor: AnandaValueExtractor {
+                        .init(
+                            bool: {
+                                if let bool = $0.originalBool {
+                                    return bool
+                                } else {
+                                    if let int = $0.originalInt {
+                                        return int != 0
+                                    }
+
+                                    if let string = $0.originalString {
+                                        switch string {
+                                        case "true":
+                                            return true
+                                        case "false":
+                                            return false
+                                        default:
+                                            break
+                                        }
+                                    }
+
+                                    return nil
+                                }
+                            }
+                        )
+                    }
+
+                    let id: Int
+                    let content: String
+                    let isProtected: Bool
+                    let createdAt: Date
+
+                    init(json: AnandaJSON) {
+                        id = json.id.int()
+                        content = json.content.string()
+                        isProtected = json.is_protected.bool()
+                        createdAt = json.created_at.date()
+                    }
+                }
+
                 let profile: Profile
                 let toots: [Toot]
 
@@ -379,34 +434,6 @@ final class AnandaTests: XCTestCase {
                     assert(json.toots[1].id.int == 2)
                     assert(json.toots[2].id.int == 88_888_888_888_888_888)
                     assert(json.toots[3].id.int == 99_999_999_999_999_999)
-                }
-            }
-
-            struct Toot: AnandaModel {
-                let id: Int
-                let content: String
-                let isProtected: Bool
-                let createdAt: Date
-
-                init(json: AnandaJSON) {
-                    id = json.id.int()
-                    content = json.content.string()
-                    isProtected = json.is_protected.bool()
-                    createdAt = json.created_at.date()
-                }
-            }
-
-            struct Profile: AnandaModel {
-                let username: String
-                let nickname: String
-                let avatarURL: URL
-                let mp3URL: URL
-
-                init(json: AnandaJSON) {
-                    username = json.username.string()
-                    nickname = json.nickname.string()
-                    avatarURL = json.avatar_url.url()
-                    mp3URL = json.mp3_url.url()
                 }
             }
 
@@ -559,6 +586,16 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(
             model.mastodon.toots[3].createdAt.timeIntervalSince1970,
             1_335_205_543.511
+        )
+
+        let toots = [User.Mastodon.Toot].decode(from: jsonString, path: ["mastodon", "toots"])
+
+        XCTAssertEqual(toots[1].isProtected, true)
+        XCTAssertEqual(toots[1].id, 2)
+
+        XCTAssertEqual(
+            toots[1].createdAt,
+            .init(timeIntervalSince1970: 1_234_567_890)
         )
     }
 
