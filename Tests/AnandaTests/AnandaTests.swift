@@ -562,7 +562,7 @@ final class AnandaTests: XCTestCase {
         )
     }
 
-    func testArray() {
+    func testArray1() {
         struct Model: AnandaModel {
             let list: [Item]
 
@@ -601,7 +601,38 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.list[1].name, "zhu")
     }
 
-    func testPath() {
+    func testArray2() {
+        struct Item: AnandaModel {
+            let id: Int
+            let name: String
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                name = json.name.string()
+            }
+        }
+
+        let jsonData = """
+            [
+                {
+                    "id": 0,
+                    "name": "nix"
+                },
+                {
+                    "id": 1,
+                    "name": "zhu"
+                }
+            ]
+            """.data(using: .utf8)!
+
+        let items = [Item].decode(from: jsonData)
+        XCTAssertEqual(items[0].id, 0)
+        XCTAssertEqual(items[0].name, "nix")
+        XCTAssertEqual(items[1].id, 1)
+        XCTAssertEqual(items[1].name, "zhu")
+    }
+
+    func testPath1() {
         struct B: AnandaModel {
             let c: Int
 
@@ -622,5 +653,30 @@ final class AnandaTests: XCTestCase {
 
         let model = B.decode(from: jsonString, path: ["a", "b"])
         XCTAssertEqual(model.c, 42)
+    }
+
+    func testPath2() {
+        struct B: AnandaModel {
+            let c: Int
+
+            init(json: AnandaJSON) {
+                c = json.c.int()
+            }
+        }
+
+        let jsonString = """
+            {
+                "a": {
+                    "b": [
+                        {
+                            "c": 42
+                        }
+                    ]
+                }
+            }
+            """
+
+        let list = [B].decode(from: jsonString, path: ["a", "b"])
+        XCTAssertEqual(list[0].c, 42)
     }
 }
