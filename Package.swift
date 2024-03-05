@@ -22,15 +22,15 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ibireme/yyjson.git",
-            .upToNextMajor(from: "0.8.0")
+            from: "0.8.0"
         ),
         .package(
             url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
-            .upToNextMajor(from: "0.1.7")
+            from: "0.1.7"
         ),
         .package(
             url: "https://github.com/apple/swift-syntax.git",
-            .upToNextMajor(from: "509.1.1")
+            "509.0.0"..<"511.0.0"
         ),
     ],
     targets: [
