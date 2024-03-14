@@ -59,6 +59,9 @@ let package = Package(
                     name: "JJLISO8601DateFormatter",
                     package: "JJLISO8601DateFormatter"
                 ),
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency"),
             ]
         ),
         .testTarget(
