@@ -3,17 +3,17 @@ import JJLISO8601DateFormatter
 
 /// AnandaValueExtractor
 ///
-/// Extract value from `AnandaJSON`
-public struct AnandaValueExtractor {
+/// Extract value from `AnandaJSON`.
+public struct AnandaValueExtractor: Sendable {
     /// Standard shared instance
     public static let standard = Self()
 
-    let bool: (AnandaJSON) -> Bool?
-    let int: (AnandaJSON) -> Int?
-    let double: (AnandaJSON) -> Double?
-    let string: (AnandaJSON) -> String?
-    let date: (AnandaJSON) -> Date?
-    let url: (AnandaJSON) -> URL?
+    let bool: @Sendable (AnandaJSON) -> Bool?
+    let int: @Sendable (AnandaJSON) -> Int?
+    let double: @Sendable (AnandaJSON) -> Double?
+    let string: @Sendable (AnandaJSON) -> String?
+    let date: @Sendable (AnandaJSON) -> Date?
+    let url: @Sendable (AnandaJSON) -> URL?
 
     /// Initializer
     /// - Parameters:
@@ -24,7 +24,7 @@ public struct AnandaValueExtractor {
     ///   - date: Extract `Date` from `AnandaJSON`
     ///   - url: Extract `URL` from `AnandaJSON`
     public init(
-        bool: @escaping (AnandaJSON) -> Bool? = {
+        bool: @Sendable @escaping (AnandaJSON) -> Bool? = {
             if let bool = $0.originalBool {
                 return bool
             } else {
@@ -35,7 +35,7 @@ public struct AnandaValueExtractor {
                 return nil
             }
         },
-        int: @escaping (AnandaJSON) -> Int? = {
+        int: @Sendable @escaping (AnandaJSON) -> Int? = {
             if let int = $0.originalInt {
                 return int
             } else {
@@ -46,7 +46,7 @@ public struct AnandaValueExtractor {
                 return nil
             }
         },
-        double: @escaping (AnandaJSON) -> Double? = {
+        double: @Sendable @escaping (AnandaJSON) -> Double? = {
             if let double = $0.originalDouble {
                 return double
             } else {
@@ -61,7 +61,7 @@ public struct AnandaValueExtractor {
                 return nil
             }
         },
-        string: @escaping (AnandaJSON) -> String? = {
+        string: @Sendable @escaping (AnandaJSON) -> String? = {
             if let string = $0.originalString {
                 return string
             } else {
@@ -72,7 +72,7 @@ public struct AnandaValueExtractor {
                 return nil
             }
         },
-        date: @escaping (AnandaJSON) -> Date? = {
+        date: @Sendable @escaping (AnandaJSON) -> Date? = {
             if let int = $0.originalInt {
                 return .init(timeIntervalSince1970: TimeInterval(int))
             }
@@ -86,18 +86,14 @@ public struct AnandaValueExtractor {
                     return .init(timeIntervalSince1970: value)
                 }
 
-                if let date = JJLISO8601DateFormatter.ananda_iso8601A.date(from: string) {
-                    return date
-                }
-
-                if let date = JJLISO8601DateFormatter.ananda_iso8601B.date(from: string) {
+                if let date = JJLISO8601DateFormatter.ananda_date(from: string) {
                     return date
                 }
             }
 
             return nil
         },
-        url: @escaping (AnandaJSON) -> URL? = {
+        url: @Sendable @escaping (AnandaJSON) -> URL? = {
             guard let string = $0.originalString else {
                 return nil
             }
@@ -122,17 +118,29 @@ public struct AnandaValueExtractor {
     }
 }
 
-extension JJLISO8601DateFormatter {
-    public static let ananda_iso8601A: JJLISO8601DateFormatter = {
+extension JJLISO8601DateFormatter: @unchecked Sendable {
+    public static func ananda_date(from string: String) -> Date? {
+        if let date = ananda_iso8601A.date(from: string) {
+            return date
+        }
+
+        if let date = ananda_iso8601B.date(from: string) {
+            return date
+        }
+
+        return nil
+    }
+
+    private static let ananda_iso8601A: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime]
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
         return dateFormatter
     }()
 
-    public static let ananda_iso8601B: JJLISO8601DateFormatter = {
+    private static let ananda_iso8601B: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        dateFormatter.formatOptions = [.withInternetDateTime]
 
         return dateFormatter
     }()
