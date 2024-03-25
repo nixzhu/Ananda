@@ -252,7 +252,7 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
-    /// URL value with `valueExtractor` if present, or`nil`.
+    /// URL value with `valueExtractor` if present, or `nil`.
     public var url: URL? {
         valueExtractor.url(self)
     }
