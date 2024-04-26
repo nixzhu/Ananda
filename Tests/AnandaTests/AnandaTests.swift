@@ -669,6 +669,26 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(items[1].name, "zhu")
     }
 
+    func testArray3() {
+        do {
+            let jsonString = """
+                [true, false, false]
+                """
+
+            let items = [Bool].decode(from: jsonString)
+            XCTAssertEqual(items, [true, false, false])
+        }
+
+        do {
+            let jsonString = """
+                [1, 2, 3]
+                """
+
+            let items = [Int].decode(from: jsonString)
+            XCTAssertEqual(items, [1, 2, 3])
+        }
+    }
+
     func testPath1() {
         struct B: AnandaModel {
             let c: Int
@@ -715,5 +735,17 @@ final class AnandaTests: XCTestCase {
 
         let list = [B].decode(from: jsonString, path: ["a", "b"])
         XCTAssertEqual(list[0].c, 42)
+    }
+}
+
+extension Bool: AnandaModel {
+    public init(json: AnandaJSON) {
+        self = json.bool()
+    }
+}
+
+extension Int: AnandaModel {
+    public init(json: AnandaJSON) {
+        self = json.int()
     }
 }
