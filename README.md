@@ -99,11 +99,12 @@ let toots = [Mastodon.Toot].decode(from: jsonData, path: ["toots"])
 
 ## Swift Macro
 
-With Swift 5.9, you can use macro to eliminate the initialization methods as follow:
+With Swift 5.9 and [AnandaMacros](https://github.com/nixzhu/AnandaMacros), you can use macro to eliminate the initialization methods as follow:
 
 ```swift
 import Foundation
 import Ananda
+import AnandaMacros
 
 @AnandaInit
 struct Mastodon: AnandaModel {
