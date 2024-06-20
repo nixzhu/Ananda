@@ -73,12 +73,8 @@ public struct AnandaValueExtractor: Sendable {
             }
         },
         date: @Sendable @escaping (AnandaJSON) -> Date? = {
-            if let int = $0.originalInt {
-                return .init(timeIntervalSince1970: TimeInterval(int))
-            }
-
-            if let double = $0.originalDouble {
-                return .init(timeIntervalSince1970: double)
+            if let number = $0.originalNumber {
+                return .init(timeIntervalSince1970: number)
             }
 
             if let string = $0.originalString {
@@ -133,14 +129,21 @@ extension JJLISO8601DateFormatter: @unchecked Sendable {
 
     private static let ananda_iso8601A: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        dateFormatter.formatOptions = [
+            .withInternetDateTime,
+            .withFractionalSeconds,
+        ]
 
         return dateFormatter
     }()
 
     private static let ananda_iso8601B: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime]
+
+        dateFormatter.formatOptions = [
+            .withInternetDateTime,
+        ]
 
         return dateFormatter
     }()

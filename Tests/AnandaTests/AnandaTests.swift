@@ -274,6 +274,7 @@ final class AnandaTests: XCTestCase {
             let h: Date
             let i: Date
             let j: Date
+            let k: Date
 
             init(json: AnandaJSON) {
                 a = json.a.date()
@@ -286,6 +287,7 @@ final class AnandaTests: XCTestCase {
                 h = json.h.date()
                 i = json.i.date()
                 j = json.j.date()
+                k = json.k.date()
             }
         }
 
@@ -300,7 +302,8 @@ final class AnandaTests: XCTestCase {
                 "g": true,
                 "h": false,
                 "i": "2012-04-23T18:25:43.511Z",
-                "j": "1335050743"
+                "j": "1335050743",
+                "k": "1335050743.1"
             }
             """.data(using: .utf8)!
 
@@ -315,6 +318,7 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.h, .init(timeIntervalSince1970: 0))
         XCTAssertEqual(model.i, .init(timeIntervalSince1970: 1_335_205_543.511))
         XCTAssertEqual(model.j, .init(timeIntervalSince1970: 1_335_050_743))
+        XCTAssertEqual(model.k, .init(timeIntervalSince1970: 1_335_050_743.1))
     }
 
     func testURL() {

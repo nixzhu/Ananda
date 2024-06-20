@@ -140,6 +140,18 @@ extension AnandaJSON {
 }
 
 extension AnandaJSON {
+    /// Whether the original value is number (integer or double).
+    public var isOriginalNumber: Bool {
+        yyjson_is_num(pointer)
+    }
+
+    /// Double value if present, or `nil`.
+    public var originalNumber: Double? {
+        isOriginalNumber ? yyjson_get_num(pointer) : nil
+    }
+}
+
+extension AnandaJSON {
     /// Whether the original value is string.
     public var isOriginalString: Bool {
         yyjson_is_str(pointer)
