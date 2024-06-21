@@ -1,5 +1,8 @@
 import Foundation
+
+#if !os(Linux)
 import JJLISO8601DateFormatter
+#endif
 
 /// AnandaValueExtractor
 ///
@@ -82,9 +85,15 @@ public struct AnandaValueExtractor: Sendable {
                     return .init(timeIntervalSince1970: value)
                 }
 
+                #if os(Linux)
+                if let date = ISO8601DateFormatter.ananda_date(from: string) {
+                    return date
+                }
+                #else
                 if let date = JJLISO8601DateFormatter.ananda_date(from: string) {
                     return date
                 }
+                #endif
             }
 
             return nil
@@ -114,7 +123,8 @@ public struct AnandaValueExtractor: Sendable {
     }
 }
 
-extension JJLISO8601DateFormatter: @unchecked Sendable {
+#if os(Linux)
+extension ISO8601DateFormatter {
     public static func ananda_date(from string: String) -> Date? {
         if let date = ananda_iso8601A.date(from: string) {
             return date
@@ -127,7 +137,42 @@ extension JJLISO8601DateFormatter: @unchecked Sendable {
         return nil
     }
 
-    private static let ananda_iso8601A: JJLISO8601DateFormatter = {
+    private nonisolated(unsafe) static let ananda_iso8601A: ISO8601DateFormatter = {
+        let dateFormatter = ISO8601DateFormatter()
+
+        dateFormatter.formatOptions = [
+            .withInternetDateTime,
+            .withFractionalSeconds,
+        ]
+
+        return dateFormatter
+    }()
+
+    private nonisolated(unsafe) static let ananda_iso8601B: ISO8601DateFormatter = {
+        let dateFormatter = ISO8601DateFormatter()
+
+        dateFormatter.formatOptions = [
+            .withInternetDateTime,
+        ]
+
+        return dateFormatter
+    }()
+}
+#else
+extension JJLISO8601DateFormatter {
+    public static func ananda_date(from string: String) -> Date? {
+        if let date = ananda_iso8601A.date(from: string) {
+            return date
+        }
+
+        if let date = ananda_iso8601B.date(from: string) {
+            return date
+        }
+
+        return nil
+    }
+
+    private nonisolated(unsafe) static let ananda_iso8601A: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
 
         dateFormatter.formatOptions = [
@@ -138,7 +183,7 @@ extension JJLISO8601DateFormatter: @unchecked Sendable {
         return dateFormatter
     }()
 
-    private static let ananda_iso8601B: JJLISO8601DateFormatter = {
+    private nonisolated(unsafe) static let ananda_iso8601B: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
 
         dateFormatter.formatOptions = [
@@ -148,9 +193,10 @@ extension JJLISO8601DateFormatter: @unchecked Sendable {
         return dateFormatter
     }()
 }
+#endif
 
 extension CharacterSet {
-    public static let ananda_url: Self = {
+    public nonisolated(unsafe) static let ananda_url: Self = {
         var set = CharacterSet.urlQueryAllowed
         set.insert("#")
         set.formUnion(.urlPathAllowed)
