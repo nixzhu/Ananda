@@ -124,7 +124,7 @@ public struct AnandaValueExtractor: Sendable {
 }
 
 #if os(Linux)
-extension ISO8601DateFormatter {
+extension ISO8601DateFormatter: @unchecked Sendable {
     public static func ananda_date(from string: String) -> Date? {
         if let date = ananda_iso8601A.date(from: string) {
             return date
@@ -137,7 +137,7 @@ extension ISO8601DateFormatter {
         return nil
     }
 
-    private nonisolated(unsafe) static let ananda_iso8601A: ISO8601DateFormatter = {
+    private static let ananda_iso8601A: ISO8601DateFormatter = {
         let dateFormatter = ISO8601DateFormatter()
 
         dateFormatter.formatOptions = [
@@ -148,7 +148,7 @@ extension ISO8601DateFormatter {
         return dateFormatter
     }()
 
-    private nonisolated(unsafe) static let ananda_iso8601B: ISO8601DateFormatter = {
+    private static let ananda_iso8601B: ISO8601DateFormatter = {
         let dateFormatter = ISO8601DateFormatter()
 
         dateFormatter.formatOptions = [
@@ -159,7 +159,7 @@ extension ISO8601DateFormatter {
     }()
 }
 #else
-extension JJLISO8601DateFormatter {
+extension JJLISO8601DateFormatter: @unchecked Sendable {
     public static func ananda_date(from string: String) -> Date? {
         if let date = ananda_iso8601A.date(from: string) {
             return date
@@ -172,7 +172,7 @@ extension JJLISO8601DateFormatter {
         return nil
     }
 
-    private nonisolated(unsafe) static let ananda_iso8601A: JJLISO8601DateFormatter = {
+    private static let ananda_iso8601A: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
 
         dateFormatter.formatOptions = [
@@ -183,7 +183,7 @@ extension JJLISO8601DateFormatter {
         return dateFormatter
     }()
 
-    private nonisolated(unsafe) static let ananda_iso8601B: JJLISO8601DateFormatter = {
+    private static let ananda_iso8601B: JJLISO8601DateFormatter = {
         let dateFormatter = JJLISO8601DateFormatter()
 
         dateFormatter.formatOptions = [
@@ -195,8 +195,8 @@ extension JJLISO8601DateFormatter {
 }
 #endif
 
-extension CharacterSet {
-    public nonisolated(unsafe) static let ananda_url: Self = {
+extension CharacterSet: @unchecked Sendable {
+    public static let ananda_url: Self = {
         var set = CharacterSet.urlQueryAllowed
         set.insert("#")
         set.formUnion(.urlPathAllowed)
