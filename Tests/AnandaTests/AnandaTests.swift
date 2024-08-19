@@ -397,11 +397,9 @@ final class AnandaTests: XCTestCase {
                                     }
 
                                     if let string = $0.originalString {
-                                        switch string {
+                                        switch string.lowercased() {
                                         case "true":
                                             return true
-                                        case "false":
-                                            return false
                                         default:
                                             break
                                         }
@@ -419,6 +417,7 @@ final class AnandaTests: XCTestCase {
                     let createdAt: Date
 
                     init(json: AnandaJSON) {
+                        let json = json.withValueExtractor(Self.valueExtractor)
                         id = json.id.int()
                         content = json.content.string()
                         isProtected = json.is_protected.bool()
@@ -438,34 +437,8 @@ final class AnandaTests: XCTestCase {
                     assert(json.toots[1].id.int == 2)
                     assert(json.toots[2].id.int == 88_888_888_888_888_888)
                     assert(json.toots[3].id.int == 99_999_999_999_999_999)
+                    assert(toots.map { $0.isProtected } == [false, true, false, true])
                 }
-            }
-
-            static var valueExtractor: AnandaValueExtractor {
-                .init(
-                    bool: {
-                        if let bool = $0.originalBool {
-                            return bool
-                        } else {
-                            if let int = $0.originalInt {
-                                return int != 0
-                            }
-
-                            if let string = $0.originalString {
-                                switch string {
-                                case "true":
-                                    return true
-                                case "false":
-                                    return false
-                                default:
-                                    break
-                                }
-                            }
-
-                            return nil
-                        }
-                    }
-                )
             }
 
             let id: Int

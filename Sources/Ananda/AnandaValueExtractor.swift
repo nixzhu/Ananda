@@ -50,13 +50,9 @@ public struct AnandaValueExtractor: Sendable {
             }
         },
         double: @Sendable @escaping (AnandaJSON) -> Double? = {
-            if let double = $0.originalDouble {
-                return double
+            if let number = $0.originalNumber {
+                return number
             } else {
-                if let int = $0.originalInt {
-                    return Double(int)
-                }
-
                 if let string = $0.originalString {
                     return Double(string)
                 }
