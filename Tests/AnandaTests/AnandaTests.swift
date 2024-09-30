@@ -715,6 +715,19 @@ final class AnandaTests: XCTestCase {
     }
 }
 
+#if $RetroactiveAttribute
+extension Bool: @retroactive AnandaModel {
+    public init(json: AnandaJSON) {
+        self = json.bool()
+    }
+}
+
+extension Int: @retroactive AnandaModel {
+    public init(json: AnandaJSON) {
+        self = json.int()
+    }
+}
+#else
 extension Bool: AnandaModel {
     public init(json: AnandaJSON) {
         self = json.bool()
@@ -726,3 +739,4 @@ extension Int: AnandaModel {
         self = json.int()
     }
 }
+#endif
