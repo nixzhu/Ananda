@@ -7,7 +7,7 @@ JSON model decoding based on [yyjson](https://github.com/ibireme/yyjson).
 
 ## Example
 
-We have JSON as follow:
+Consider the following JSON:
 
 ```json
 {
@@ -31,7 +31,7 @@ We have JSON as follow:
 }
 ```
 
-And we create models conforms to `AnandaModel` protocol as follow:
+We can create models conforming to the `AnandaModel` protocol as follows:
 
 ```swift
 import Foundation
@@ -76,7 +76,7 @@ extension Mastodon {
 }
 ```
 
-Then, we can decode a `Mastodon` as follow:
+To decode a `Mastodon` instance, use the following code:
 
 ```swift
 let mastodon = Mastodon.decode(from: jsonString)
@@ -88,13 +88,13 @@ Or
 let mastodon = Mastodon.decode(from: jsonData)
 ```
 
-If you only want to decode a part of the JSON, like `profile`, use the `path` to specify it as follow:
+If you only want to decode a specific part of the JSON, such as `profile`, specify the `path` as follows:
 
 ```swift
 let profile = Mastodon.Profile.decode(from: jsonData, path: ["profile"])
 ```
 
-How about just decode `toots`? It's an array, do it as follow:
+To decode an array of `toots`, use the following code:
 
 ```swift
 let toots = [Mastodon.Toot].decode(from: jsonData, path: ["toots"])
@@ -102,7 +102,7 @@ let toots = [Mastodon.Toot].decode(from: jsonData, path: ["toots"])
 
 ## Swift Macro
 
-With Swift 5.9 and [AnandaMacros](https://github.com/nixzhu/AnandaMacros), you can use macro to eliminate the initialization methods as follow:
+With [AnandaMacros](https://github.com/nixzhu/AnandaMacros), you can use macros to eliminate the need for initialization methods, as shown below:
 
 ```swift
 import Foundation
@@ -144,7 +144,7 @@ See [AnandaBenchmark](https://github.com/nixzhu/AnandaBenchmark).
 
 ## Tool
 
-You may use [Ducky Model Editor](https://apps.apple.com/us/app/ducky-model-editor/id1525505933) to generate AnandaModel from JSON to save your time.
+You can use [Ducky Model Editor](https://apps.apple.com/us/app/ducky-model-editor/id1525505933) to generate AnandaModel from JSON, saving you time.
 
 ![Ducky Model Editor](https://raw.githubusercontent.com/nixzhu/Ananda/main/ducky-model-editor-ananda.png)
 
