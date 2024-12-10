@@ -368,7 +368,7 @@ final class AnandaTests: XCTestCase {
         XCTAssertEqual(model.h.absoluteString, "https://zh.wikipedia.org/wiki/%E5%9B%B4%E6%A3%8B")
     }
 
-    func testObject() {
+    func testObject1() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
                 struct Profile: AnandaModel {
@@ -574,6 +574,40 @@ final class AnandaTests: XCTestCase {
             toots[1].createdAt,
             .init(timeIntervalSince1970: 1_234_567_890)
         )
+    }
+
+    func testObject2() {
+        let jsonString = """
+            {
+                "id": 10,
+                "contact_info": {
+                    "email": "test@test.com"
+                },
+                "preferences": {
+                    "contact": {
+                        "newsletter": true
+                    }
+                }
+            }
+            """
+
+        struct User: AnandaModel {
+            let id: Int
+            let email: String
+            let isSubscribedToNewsletter: Bool
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                email = json.contact_info.email.string()
+                isSubscribedToNewsletter = json.preferences.contact.newsletter.bool()
+            }
+        }
+
+        let user = User.decode(from: jsonString)
+
+        XCTAssertEqual(user.id, 10)
+        XCTAssertEqual(user.email, "test@test.com")
+        XCTAssertEqual(user.isSubscribedToNewsletter, true)
     }
 
     func testArray1() {
