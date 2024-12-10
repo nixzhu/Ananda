@@ -1,8 +1,9 @@
-import XCTest
+import Foundation
+import Testing
 @testable import Ananda
 
-final class AnandaTests: XCTestCase {
-    func testBool() {
+final class AnandaTests {
+    @Test func bool() {
         struct Model: AnandaModel {
             let a: Bool
             let b: Bool
@@ -51,21 +52,21 @@ final class AnandaTests: XCTestCase {
             """
 
         let model = Model.decode(from: jsonString)
-        XCTAssertEqual(model.a, true)
-        XCTAssertEqual(model.b, false)
-        XCTAssertEqual(model.c, false)
-        XCTAssertEqual(model.d, true)
-        XCTAssertEqual(model.e, true)
-        XCTAssertEqual(model.f, true)
-        XCTAssertEqual(model.g, false)
-        XCTAssertEqual(model.h, false)
-        XCTAssertEqual(model.i, false)
-        XCTAssertEqual(model.j, nil)
-        XCTAssertEqual(model.k, nil)
-        XCTAssertEqual(model.l, nil)
+        #expect(model.a == true)
+        #expect(model.b == false)
+        #expect(model.c == false)
+        #expect(model.d == true)
+        #expect(model.e == true)
+        #expect(model.f == true)
+        #expect(model.g == false)
+        #expect(model.h == false)
+        #expect(model.i == false)
+        #expect(model.j == nil)
+        #expect(model.k == nil)
+        #expect(model.l == nil)
     }
 
-    func testInt() {
+    @Test func int() {
         struct Model: AnandaModel {
             let a: Int
             let b: Int
@@ -120,23 +121,23 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
-        XCTAssertEqual(model.a, -1)
-        XCTAssertEqual(model.b, 0)
-        XCTAssertEqual(model.c, 1)
-        XCTAssertEqual(model.d, -1)
-        XCTAssertEqual(model.e, 0)
-        XCTAssertEqual(model.f, 1)
-        XCTAssertEqual(model.g, 0)
-        XCTAssertEqual(model.h, 0)
-        XCTAssertEqual(model.i, 0)
-        XCTAssertEqual(model.j, nil)
-        XCTAssertEqual(model.k, nil)
-        XCTAssertEqual(model.l, nil)
-        XCTAssertEqual(model.m, 0)
-        XCTAssertEqual(model.n, nil)
+        #expect(model.a == -1)
+        #expect(model.b == 0)
+        #expect(model.c == 1)
+        #expect(model.d == -1)
+        #expect(model.e == 0)
+        #expect(model.f == 1)
+        #expect(model.g == 0)
+        #expect(model.h == 0)
+        #expect(model.i == 0)
+        #expect(model.j == nil)
+        #expect(model.k == nil)
+        #expect(model.l == nil)
+        #expect(model.m == 0)
+        #expect(model.n == nil)
     }
 
-    func testDouble() {
+    @Test func double() {
         struct Model: AnandaModel {
             let a: Double
             let b: Double
@@ -191,23 +192,23 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
-        XCTAssertEqual(model.a, -1)
-        XCTAssertEqual(model.b, 0)
-        XCTAssertEqual(model.c, 1)
-        XCTAssertEqual(model.d, -1)
-        XCTAssertEqual(model.e, 0)
-        XCTAssertEqual(model.f, 1)
-        XCTAssertEqual(model.g, 0)
-        XCTAssertEqual(model.h, 2)
-        XCTAssertEqual(model.i, 5)
-        XCTAssertEqual(model.j, nil)
-        XCTAssertEqual(model.k, 2)
-        XCTAssertEqual(model.l, 5)
-        XCTAssertEqual(model.m, 0)
-        XCTAssertEqual(model.n, nil)
+        #expect(model.a == -1)
+        #expect(model.b == 0)
+        #expect(model.c == 1)
+        #expect(model.d == -1)
+        #expect(model.e == 0)
+        #expect(model.f == 1)
+        #expect(model.g == 0)
+        #expect(model.h == 2)
+        #expect(model.i == 5)
+        #expect(model.j == nil)
+        #expect(model.k == 2)
+        #expect(model.l == 5)
+        #expect(model.m == 0)
+        #expect(model.n == nil)
     }
 
-    func testString() {
+    @Test func string() {
         struct Model: AnandaModel {
             let a: String
             let b: String
@@ -250,19 +251,19 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
-        XCTAssertEqual(model.a, "")
-        XCTAssertEqual(model.b, "")
-        XCTAssertEqual(model.c, "")
-        XCTAssertEqual(model.d, "-1")
-        XCTAssertEqual(model.e, "0")
-        XCTAssertEqual(model.f, "1")
-        XCTAssertEqual(model.g, "")
-        XCTAssertEqual(model.h, "")
-        XCTAssertEqual(model.i, "")
-        XCTAssertEqual(model.j, "joke")
+        #expect(model.a == "")
+        #expect(model.b == "")
+        #expect(model.c == "")
+        #expect(model.d == "-1")
+        #expect(model.e == "0")
+        #expect(model.f == "1")
+        #expect(model.g == "")
+        #expect(model.h == "")
+        #expect(model.i == "")
+        #expect(model.j == "joke")
     }
 
-    func testDate() {
+    @Test func date() {
         struct Model: AnandaModel {
             let a: Date
             let b: Date
@@ -308,20 +309,20 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
-        XCTAssertEqual(model.a, .init(timeIntervalSince1970: -1))
-        XCTAssertEqual(model.b, .init(timeIntervalSince1970: 0))
-        XCTAssertEqual(model.c, .init(timeIntervalSince1970: 1))
-        XCTAssertEqual(model.d, .init(timeIntervalSince1970: -1))
-        XCTAssertEqual(model.e, .init(timeIntervalSince1970: 0))
-        XCTAssertEqual(model.f, .init(timeIntervalSince1970: 1))
-        XCTAssertEqual(model.g, .init(timeIntervalSince1970: 0))
-        XCTAssertEqual(model.h, .init(timeIntervalSince1970: 0))
-        XCTAssertEqual(model.i, .init(timeIntervalSince1970: 1_335_205_543.511))
-        XCTAssertEqual(model.j, .init(timeIntervalSince1970: 1_335_050_743))
-        XCTAssertEqual(model.k, .init(timeIntervalSince1970: 1_335_050_743.1))
+        #expect(model.a == .init(timeIntervalSince1970: -1))
+        #expect(model.b == .init(timeIntervalSince1970: 0))
+        #expect(model.c == .init(timeIntervalSince1970: 1))
+        #expect(model.d == .init(timeIntervalSince1970: -1))
+        #expect(model.e == .init(timeIntervalSince1970: 0))
+        #expect(model.f == .init(timeIntervalSince1970: 1))
+        #expect(model.g == .init(timeIntervalSince1970: 0))
+        #expect(model.h == .init(timeIntervalSince1970: 0))
+        #expect(model.i == .init(timeIntervalSince1970: 1_335_205_543.511))
+        #expect(model.j == .init(timeIntervalSince1970: 1_335_050_743))
+        #expect(model.k == .init(timeIntervalSince1970: 1_335_050_743.1))
     }
 
-    func testURL() {
+    @Test func url() {
         struct Model: AnandaModel {
             let a: URL?
             let b: URL?
@@ -358,17 +359,17 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
-        XCTAssertEqual(model.a, nil)
-        XCTAssertEqual(model.b, nil)
-        XCTAssertEqual(model.c, nil)
-        XCTAssertEqual(model.d, nil)
-        XCTAssertEqual(model.e?.absoluteString, ".")
-        XCTAssertEqual(model.f?.absoluteString, "https://github.com/nixzhu")
-        XCTAssertEqual(model.g.absoluteString, "apple%20juice")
-        XCTAssertEqual(model.h.absoluteString, "https://zh.wikipedia.org/wiki/%E5%9B%B4%E6%A3%8B")
+        #expect(model.a == nil)
+        #expect(model.b == nil)
+        #expect(model.c == nil)
+        #expect(model.d == nil)
+        #expect(model.e?.absoluteString == ".")
+        #expect(model.f?.absoluteString == "https://github.com/nixzhu")
+        #expect(model.g.absoluteString == "apple%20juice")
+        #expect(model.h.absoluteString == "https://zh.wikipedia.org/wiki/%E5%9B%B4%E6%A3%8B")
     }
 
-    func testObject1() {
+    @Test func object1() {
         struct User: AnandaModel {
             struct Mastodon: AnandaModel {
                 struct Profile: AnandaModel {
@@ -519,64 +520,60 @@ final class AnandaTests: XCTestCase {
 
         let model = User.decode(from: jsonString)
 
-        XCTAssertEqual(model.id, 42)
-        XCTAssertEqual(model.name, "NIX 👨‍👩‍👧‍👦/🐣")
-        XCTAssertEqual(model.int, 18)
-        XCTAssertEqual(model.mastodon.profile.username, "@nixzhu@mastodon.social")
+        #expect(model.id == 42)
+        #expect(model.name == "NIX 👨‍👩‍👧‍👦/🐣")
+        #expect(model.int == 18)
+        #expect(model.mastodon.profile.username == "@nixzhu@mastodon.social")
 
-        XCTAssertEqual(
-            model.mastodon.profile.avatarURL.absoluteString,
-            "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png"
-        )
-        XCTAssertEqual(
-            model.mastodon.profile.mp3URL.absoluteString,
-            "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2210/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701923104030.mp3"
+        #expect(
+            model.mastodon.profile.avatarURL.absoluteString ==
+                "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png"
         )
 
-        XCTAssertEqual(model.mastodon.toots[0].isProtected, false)
-        XCTAssertEqual(model.mastodon.toots[0].id, 1)
-
-        XCTAssertEqual(
-            model.mastodon.toots[0].createdAt,
-            .init(timeIntervalSince1970: 1_234_567_890)
+        #expect(
+            model.mastodon.profile.mp3URL.absoluteString ==
+                "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2210/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701923104030.mp3"
         )
 
-        XCTAssertEqual(model.mastodon.toots[1].isProtected, true)
-        XCTAssertEqual(model.mastodon.toots[1].id, 2)
+        #expect(model.mastodon.toots[0].isProtected == false)
+        #expect(model.mastodon.toots[0].id == 1)
 
-        XCTAssertEqual(
-            model.mastodon.toots[1].createdAt,
-            .init(timeIntervalSince1970: 1_234_567_890)
+        #expect(
+            model.mastodon.toots[0].createdAt == .init(timeIntervalSince1970: 1_234_567_890)
         )
 
-        XCTAssertEqual(model.mastodon.toots[2].isProtected, false)
-        XCTAssertEqual(model.mastodon.toots[2].id, 88_888_888_888_888_888)
+        #expect(model.mastodon.toots[1].isProtected == true)
+        #expect(model.mastodon.toots[1].id == 2)
 
-        XCTAssertEqual(
-            model.mastodon.toots[2].createdAt,
-            .init(timeIntervalSince1970: 8_888_888_888)
+        #expect(
+            model.mastodon.toots[1].createdAt == .init(timeIntervalSince1970: 1_234_567_890)
         )
 
-        XCTAssertEqual(model.mastodon.toots[3].isProtected, true)
-        XCTAssertEqual(model.mastodon.toots[3].id, 99_999_999_999_999_999)
+        #expect(model.mastodon.toots[2].isProtected == false)
+        #expect(model.mastodon.toots[2].id == 88_888_888_888_888_888)
 
-        XCTAssertEqual(
-            model.mastodon.toots[3].createdAt.timeIntervalSince1970,
-            1_335_205_543.511
+        #expect(
+            model.mastodon.toots[2].createdAt == .init(timeIntervalSince1970: 8_888_888_888)
+        )
+
+        #expect(model.mastodon.toots[3].isProtected == true)
+        #expect(model.mastodon.toots[3].id == 99_999_999_999_999_999)
+
+        #expect(
+            model.mastodon.toots[3].createdAt.timeIntervalSince1970 == 1_335_205_543.511
         )
 
         let toots = [User.Mastodon.Toot].decode(from: jsonString, path: ["mastodon", "toots"])
 
-        XCTAssertEqual(toots[1].isProtected, true)
-        XCTAssertEqual(toots[1].id, 2)
+        #expect(toots[1].isProtected == true)
+        #expect(toots[1].id == 2)
 
-        XCTAssertEqual(
-            toots[1].createdAt,
-            .init(timeIntervalSince1970: 1_234_567_890)
+        #expect(
+            toots[1].createdAt == .init(timeIntervalSince1970: 1_234_567_890)
         )
     }
 
-    func testObject2() {
+    @Test func object2() {
         let jsonString = """
             {
                 "id": 10,
@@ -605,12 +602,12 @@ final class AnandaTests: XCTestCase {
 
         let user = User.decode(from: jsonString)
 
-        XCTAssertEqual(user.id, 10)
-        XCTAssertEqual(user.email, "test@test.com")
-        XCTAssertEqual(user.isSubscribedToNewsletter, true)
+        #expect(user.id == 10)
+        #expect(user.email == "test@test.com")
+        #expect(user.isSubscribedToNewsletter == true)
     }
 
-    func testArray1() {
+    @Test func array1() {
         struct Model: AnandaModel {
             let list: [Item]
 
@@ -643,13 +640,13 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
-        XCTAssertEqual(model.list[0].id, 0)
-        XCTAssertEqual(model.list[0].name, "nix")
-        XCTAssertEqual(model.list[1].id, 1)
-        XCTAssertEqual(model.list[1].name, "zhu")
+        #expect(model.list[0].id == 0)
+        #expect(model.list[0].name == "nix")
+        #expect(model.list[1].id == 1)
+        #expect(model.list[1].name == "zhu")
     }
 
-    func testArray2() {
+    @Test func array2() {
         struct Item: AnandaModel {
             let id: Int
             let name: String
@@ -674,20 +671,20 @@ final class AnandaTests: XCTestCase {
             """.data(using: .utf8)!
 
         let items = [Item].decode(from: jsonData)
-        XCTAssertEqual(items[0].id, 0)
-        XCTAssertEqual(items[0].name, "nix")
-        XCTAssertEqual(items[1].id, 1)
-        XCTAssertEqual(items[1].name, "zhu")
+        #expect(items[0].id == 0)
+        #expect(items[0].name == "nix")
+        #expect(items[1].id == 1)
+        #expect(items[1].name == "zhu")
     }
 
-    func testArray3() {
+    @Test func array3() {
         do {
             let jsonString = """
                 [true, false, false]
                 """
 
             let items = [Bool].decode(from: jsonString)
-            XCTAssertEqual(items, [true, false, false])
+            #expect(items == [true, false, false])
         }
 
         do {
@@ -696,11 +693,11 @@ final class AnandaTests: XCTestCase {
                 """
 
             let items = [Int].decode(from: jsonString)
-            XCTAssertEqual(items, [1, 2, 3])
+            #expect(items == [1, 2, 3])
         }
     }
 
-    func testPath1() {
+    @Test func path1() {
         struct B: AnandaModel {
             let c: Int
 
@@ -720,10 +717,10 @@ final class AnandaTests: XCTestCase {
             """
 
         let model = B.decode(from: jsonString, path: ["a", "b"])
-        XCTAssertEqual(model.c, 42)
+        #expect(model.c == 42)
     }
 
-    func testPath2() {
+    @Test func path2() {
         struct B: AnandaModel {
             let c: Int
 
@@ -745,7 +742,7 @@ final class AnandaTests: XCTestCase {
             """
 
         let list = [B].decode(from: jsonString, path: ["a", "b"])
-        XCTAssertEqual(list[0].c, 42)
+        #expect(list[0].c == 42)
     }
 }
 
