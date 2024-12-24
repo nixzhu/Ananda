@@ -8,12 +8,21 @@ public protocol AnandaModel {
 
     /// Initialize with `json`.
     init(json: AnandaJSON)
+
+    /// Decode from `json`, using type's own `valueExtractor`.
+    static func decode(from json: AnandaJSON) -> Self
 }
 
 extension AnandaModel {
     /// AnandaValueExtractor defaults to `.standard`.
     public static var valueExtractor: AnandaValueExtractor {
         .standard
+    }
+
+    /// Decode from `json`, using type's own `valueExtractor`.
+    public static func decode(from json: AnandaJSON) -> Self {
+        let json = json.withValueExtractor(valueExtractor)
+        return Self(json: json)
     }
 }
 
@@ -43,8 +52,6 @@ extension AnandaModel {
 
             return Self(json: json)
         } else {
-            assertionFailure("Invalid JSON: \(String(data: jsonData, encoding: .utf8) ?? "")")
-
             return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
@@ -58,8 +65,6 @@ extension AnandaModel {
         if let jsonData = jsonString.data(using: encoding) {
             return decode(from: jsonData, path: path)
         } else {
-            assertionFailure("Invalid JSON: \(jsonString)")
-
             return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
     }
@@ -91,8 +96,6 @@ extension Array where Element: AnandaModel {
 
             return json.array().map { .init(json: $0) }
         } else {
-            assertionFailure("Invalid JSON: \(String(data: jsonData, encoding: .utf8) ?? "")")
-
             return []
         }
     }
@@ -106,8 +109,6 @@ extension Array where Element: AnandaModel {
         if let jsonData = jsonString.data(using: encoding) {
             return decode(from: jsonData, path: path)
         } else {
-            assertionFailure("Invalid JSON: \(jsonString)")
-
             return []
         }
     }

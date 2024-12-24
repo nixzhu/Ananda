@@ -418,7 +418,6 @@ final class AnandaTests {
                     let createdAt: Date
 
                     init(json: AnandaJSON) {
-                        let json = json.withValueExtractor(Self.valueExtractor)
                         id = json.id.int()
                         content = json.content.string()
                         isProtected = json.is_protected.bool()
@@ -431,7 +430,7 @@ final class AnandaTests {
 
                 init(json: AnandaJSON) {
                     profile = .init(json: json.profile)
-                    toots = json.toots.array().map { .init(json: $0) }
+                    toots = json.toots.array().map { .decode(from: $0) }
 
                     assert(json.toots[-1].id.int == nil)
                     assert(json.toots[0].id.int == 1)
