@@ -11,12 +11,12 @@ public struct AnandaValueExtractor: Sendable {
     /// Standard shared instance
     public static let standard = Self()
 
-    let bool: @Sendable (AnandaJSON) -> Bool?
-    let int: @Sendable (AnandaJSON) -> Int?
-    let double: @Sendable (AnandaJSON) -> Double?
-    let string: @Sendable (AnandaJSON) -> String?
-    let date: @Sendable (AnandaJSON) -> Date?
-    let url: @Sendable (AnandaJSON) -> URL?
+    var bool: @Sendable (AnandaJSON) -> Bool?
+    var int: @Sendable (AnandaJSON) -> Int?
+    var double: @Sendable (AnandaJSON) -> Double?
+    var string: @Sendable (AnandaJSON) -> String?
+    var date: @Sendable (AnandaJSON) -> Date?
+    var url: @Sendable (AnandaJSON) -> URL?
 
     /// Initializer
     /// - Parameters:
@@ -116,6 +116,50 @@ public struct AnandaValueExtractor: Sendable {
         self.string = string
         self.date = date
         self.url = url
+    }
+}
+
+extension AnandaValueExtractor {
+    /// Returns updated `Self` with new `bool` extractor.
+    public func updatingBool(_ bool: @Sendable @escaping (AnandaJSON) -> Bool?) -> Self {
+        var result = self
+        result.bool = bool
+        return result
+    }
+
+    /// Returns updated `Self` with new `int` extractor.
+    public func updatingInt(_ int: @Sendable @escaping (AnandaJSON) -> Int?) -> Self {
+        var result = self
+        result.int = int
+        return result
+    }
+
+    /// Returns updated `Self` with new `double` extractor.
+    public func updatingDouble(_ double: @Sendable @escaping (AnandaJSON) -> Double?) -> Self {
+        var result = self
+        result.double = double
+        return result
+    }
+
+    /// Returns updated `Self` with new `string` extractor.
+    public func updatingString(_ string: @Sendable @escaping (AnandaJSON) -> String?) -> Self {
+        var result = self
+        result.string = string
+        return result
+    }
+
+    /// Returns updated `Self` with new `date` extractor.
+    public func updatingDate(_ date: @Sendable @escaping (AnandaJSON) -> Date?) -> Self {
+        var result = self
+        result.date = date
+        return result
+    }
+
+    /// Returns updated `Self` with new `url` extractor.
+    public func updatingURL(_ url: @Sendable @escaping (AnandaJSON) -> URL?) -> Self {
+        var result = self
+        result.url = url
+        return result
     }
 }
 

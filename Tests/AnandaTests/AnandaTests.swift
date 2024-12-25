@@ -387,29 +387,25 @@ final class AnandaTests {
                 }
 
                 struct Toot: AnandaModel {
-                    static var valueExtractor: AnandaValueExtractor {
-                        .init(
-                            bool: {
-                                if let bool = $0.originalBool {
-                                    return bool
-                                } else {
-                                    if let int = $0.originalInt {
-                                        return int != 0
-                                    }
+                    static let valueExtractor: AnandaValueExtractor = .standard.updatingBool {
+                        if let bool = $0.originalBool {
+                            return bool
+                        } else {
+                            if let int = $0.originalInt {
+                                return int != 0
+                            }
 
-                                    if let string = $0.originalString {
-                                        switch string.lowercased() {
-                                        case "true":
-                                            return true
-                                        default:
-                                            break
-                                        }
-                                    }
-
-                                    return nil
+                            if let string = $0.originalString {
+                                switch string.lowercased() {
+                                case "true":
+                                    return true
+                                default:
+                                    break
                                 }
                             }
-                        )
+
+                            return nil
+                        }
                     }
 
                     let id: Int
