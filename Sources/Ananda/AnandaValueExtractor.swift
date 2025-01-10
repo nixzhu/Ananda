@@ -27,7 +27,7 @@ public struct AnandaValueExtractor: Sendable {
     ///   - date: Extract `Date` from `AnandaJSON`
     ///   - url: Extract `URL` from `AnandaJSON`
     public init(
-        bool: @Sendable @escaping (AnandaJSON) -> Bool? = {
+        bool: @escaping @Sendable (AnandaJSON) -> Bool? = {
             if let bool = $0.originalBool {
                 return bool
             } else {
@@ -38,7 +38,7 @@ public struct AnandaValueExtractor: Sendable {
                 return nil
             }
         },
-        int: @Sendable @escaping (AnandaJSON) -> Int? = {
+        int: @escaping @Sendable (AnandaJSON) -> Int? = {
             if let int = $0.originalInt {
                 return int
             } else {
@@ -49,7 +49,7 @@ public struct AnandaValueExtractor: Sendable {
                 return nil
             }
         },
-        double: @Sendable @escaping (AnandaJSON) -> Double? = {
+        double: @escaping @Sendable (AnandaJSON) -> Double? = {
             if let number = $0.originalNumber {
                 return number
             } else {
@@ -60,7 +60,7 @@ public struct AnandaValueExtractor: Sendable {
                 return nil
             }
         },
-        string: @Sendable @escaping (AnandaJSON) -> String? = {
+        string: @escaping @Sendable (AnandaJSON) -> String? = {
             if let string = $0.originalString {
                 return string
             } else {
@@ -71,7 +71,7 @@ public struct AnandaValueExtractor: Sendable {
                 return nil
             }
         },
-        date: @Sendable @escaping (AnandaJSON) -> Date? = {
+        date: @escaping @Sendable (AnandaJSON) -> Date? = {
             if let number = $0.originalNumber {
                 return .init(timeIntervalSince1970: number)
             }
@@ -94,7 +94,7 @@ public struct AnandaValueExtractor: Sendable {
 
             return nil
         },
-        url: @Sendable @escaping (AnandaJSON) -> URL? = {
+        url: @escaping @Sendable (AnandaJSON) -> URL? = {
             guard let string = $0.originalString else {
                 return nil
             }
@@ -121,42 +121,42 @@ public struct AnandaValueExtractor: Sendable {
 
 extension AnandaValueExtractor {
     /// Returns updated `Self` with new `bool` extractor.
-    public func updatingBool(_ bool: @Sendable @escaping (AnandaJSON) -> Bool?) -> Self {
+    public func updatingBool(_ bool: @escaping @Sendable (AnandaJSON) -> Bool?) -> Self {
         var result = self
         result.bool = bool
         return result
     }
 
     /// Returns updated `Self` with new `int` extractor.
-    public func updatingInt(_ int: @Sendable @escaping (AnandaJSON) -> Int?) -> Self {
+    public func updatingInt(_ int: @escaping @Sendable (AnandaJSON) -> Int?) -> Self {
         var result = self
         result.int = int
         return result
     }
 
     /// Returns updated `Self` with new `double` extractor.
-    public func updatingDouble(_ double: @Sendable @escaping (AnandaJSON) -> Double?) -> Self {
+    public func updatingDouble(_ double: @escaping @Sendable (AnandaJSON) -> Double?) -> Self {
         var result = self
         result.double = double
         return result
     }
 
     /// Returns updated `Self` with new `string` extractor.
-    public func updatingString(_ string: @Sendable @escaping (AnandaJSON) -> String?) -> Self {
+    public func updatingString(_ string: @escaping @Sendable (AnandaJSON) -> String?) -> Self {
         var result = self
         result.string = string
         return result
     }
 
     /// Returns updated `Self` with new `date` extractor.
-    public func updatingDate(_ date: @Sendable @escaping (AnandaJSON) -> Date?) -> Self {
+    public func updatingDate(_ date: @escaping @Sendable (AnandaJSON) -> Date?) -> Self {
         var result = self
         result.date = date
         return result
     }
 
     /// Returns updated `Self` with new `url` extractor.
-    public func updatingURL(_ url: @Sendable @escaping (AnandaJSON) -> URL?) -> Self {
+    public func updatingURL(_ url: @escaping @Sendable (AnandaJSON) -> URL?) -> Self {
         var result = self
         result.url = url
         return result
