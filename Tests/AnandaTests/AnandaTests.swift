@@ -425,7 +425,7 @@ final class AnandaTests {
                 let toots: [Toot]
 
                 init(json: AnandaJSON) {
-                    profile = .init(json: json.profile)
+                    profile = .decode(from: json.profile)
                     toots = json.toots.array().map { .decode(from: $0) }
 
                     assert(json.toots[-1].id.int == nil)
@@ -446,7 +446,7 @@ final class AnandaTests {
                 id = json.id.int()
                 name = json.name.string()
                 int = json["int"].int()
-                mastodon = .init(json: json.mastodon)
+                mastodon = .decode(from: json.mastodon)
 
                 assert(json.unknown.isNull)
                 assert(json["unknown"].isNull)
@@ -607,7 +607,7 @@ final class AnandaTests {
             let list: [Item]
 
             init(json: AnandaJSON) {
-                list = json.array().map { .init(json: $0) }
+                list = json.array().map { .decode(from: $0) }
             }
         }
 

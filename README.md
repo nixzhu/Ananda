@@ -42,8 +42,8 @@ struct Mastodon: AnandaModel {
     let toots: [Toot]
 
     init(json: AnandaJSON) {
-        profile = .init(json: json.profile)
-        toots = json.toots.array().map { .init(json: $0) }
+        profile = .decode(from: json.profile)
+        toots = json.toots.array().map { .decode(from: $0) }
     }
 }
 
