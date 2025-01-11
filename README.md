@@ -146,6 +146,6 @@ See [AnandaBenchmark](https://github.com/nixzhu/AnandaBenchmark).
 
 You can use [Ducky Model Editor](https://apps.apple.com/us/app/ducky-model-editor/id1525505933) to generate AnandaModel from JSON, saving you time.
 
-![Ducky Model Editor](https://raw.githubusercontent.com/nixzhu/Ananda/main/ducky-model-editor-ananda.png)
+![Ducky Model Editor](https://raw.githubusercontent.com/nixzhu/Ananda/main/images/ducky-ananda.png)
 
-![Ducky Model Editor](https://raw.githubusercontent.com/nixzhu/Ananda/main/ducky-model-editor-ananda-macros.png)
+![Ducky Model Editor](https://raw.githubusercontent.com/nixzhu/Ananda/main/images/ducky-ananda-macros.png)
