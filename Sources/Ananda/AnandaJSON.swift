@@ -15,14 +15,6 @@ import yyjson
         self.valueExtractor = valueExtractor
     }
 
-    /// `AnandaJSON` with new `valueExtractor`.
-    public func withValueExtractor(_ valueExtractor: AnandaValueExtractor) -> AnandaJSON {
-        .init(
-            pointer: pointer,
-            valueExtractor: valueExtractor
-        )
-    }
-
     /// Object's member value with`dynamicMember` as key
     public subscript(dynamicMember member: String) -> AnandaJSON {
         self[member]
@@ -40,6 +32,13 @@ import yyjson
     public subscript(index: Int) -> AnandaJSON {
         .init(
             pointer: yyjson_arr_get(pointer, index),
+            valueExtractor: valueExtractor
+        )
+    }
+
+    func updatingValueExtractor(_ valueExtractor: AnandaValueExtractor) -> AnandaJSON {
+        .init(
+            pointer: pointer,
             valueExtractor: valueExtractor
         )
     }

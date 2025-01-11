@@ -21,7 +21,7 @@ extension AnandaModel {
 
     /// Decode from `json`, using type's own `valueExtractor`.
     public static func decode(from json: AnandaJSON) -> Self {
-        let json = json.withValueExtractor(valueExtractor)
+        let json = json.updatingValueExtractor(valueExtractor)
         return Self(json: json)
     }
 }
