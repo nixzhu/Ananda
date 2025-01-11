@@ -16,12 +16,12 @@ import yyjson
     }
 
     /// Object's member value with`dynamicMember` as key
-    public subscript(dynamicMember member: String) -> AnandaJSON {
+    public subscript(dynamicMember member: String) -> Self {
         self[member]
     }
 
     /// Object's member value with `key`
-    public subscript(key: String) -> AnandaJSON {
+    public subscript(key: String) -> Self {
         .init(
             pointer: yyjson_obj_get(pointer, key),
             valueExtractor: valueExtractor
@@ -29,14 +29,14 @@ import yyjson
     }
 
     /// Array's member value at `index`
-    public subscript(index: Int) -> AnandaJSON {
+    public subscript(index: Int) -> Self {
         .init(
             pointer: yyjson_arr_get(pointer, index),
             valueExtractor: valueExtractor
         )
     }
 
-    func updatingValueExtractor(_ valueExtractor: AnandaValueExtractor) -> AnandaJSON {
+    func updatingValueExtractor(_ valueExtractor: AnandaValueExtractor) -> Self {
         .init(
             pointer: pointer,
             valueExtractor: valueExtractor
@@ -75,7 +75,7 @@ extension AnandaJSON {
     }
 
     /// `nil` if self is empty, otherwise `self`.
-    public var emptyAsNil: AnandaJSON? {
+    public var emptyAsNil: Self? {
         isEmpty ? nil : self
     }
 }
@@ -188,7 +188,7 @@ extension AnandaJSON {
 
 extension AnandaJSON {
     /// Dictionary if present, or `nil`.
-    public var dictionary: [String: AnandaJSON]? {
+    public var dictionary: [String: Self]? {
         guard yyjson_is_obj(pointer), yyjson_obj_size(pointer) > 0 else {
             return nil
         }
@@ -223,14 +223,14 @@ extension AnandaJSON {
     }
 
     /// Dictionary if present, or `defaultValue` defaults to empty dictionary.
-    public func dictionary(defaultValue: [String: AnandaJSON] = [:]) -> [String: AnandaJSON] {
+    public func dictionary(defaultValue: [String: Self] = [:]) -> [String: Self] {
         dictionary ?? defaultValue
     }
 }
 
 extension AnandaJSON {
     /// Array value if present, or `nil`.
-    public var array: [AnandaJSON]? {
+    public var array: [Self]? {
         guard yyjson_is_arr(pointer), yyjson_arr_size(pointer) > 0 else {
             return nil
         }
@@ -252,7 +252,7 @@ extension AnandaJSON {
     }
 
     /// Array value if present, or `defaultValue` defaults to empty array.
-    public func array(defaultValue: [AnandaJSON] = []) -> [AnandaJSON] {
+    public func array(defaultValue: [Self] = []) -> [Self] {
         array ?? defaultValue
     }
 }
