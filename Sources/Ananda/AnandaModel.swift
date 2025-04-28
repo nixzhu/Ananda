@@ -3,27 +3,8 @@ import yyjson
 
 /// AnandaModel can be created from AnandaJSON.
 public protocol AnandaModel {
-    /// AnandaValueExtractor
-    static var valueExtractor: AnandaValueExtractor { get }
-
     /// Initialize with `json`.
     init(json: AnandaJSON)
-
-    /// Decode from `json`, using type's own `valueExtractor`.
-    static func decode(from json: AnandaJSON) -> Self
-}
-
-extension AnandaModel {
-    /// AnandaValueExtractor defaults to `.standard`.
-    public static var valueExtractor: AnandaValueExtractor {
-        .standard
-    }
-
-    /// Decode from `json`, using type's own `valueExtractor`.
-    public static func decode(from json: AnandaJSON) -> Self {
-        let json = json.updatingValueExtractor(valueExtractor)
-        return Self(json: json)
-    }
 }
 
 extension AnandaModel {
@@ -42,8 +23,7 @@ extension AnandaModel {
             }
 
             var json = AnandaJSON(
-                pointer: yyjson_doc_get_root(doc),
-                valueExtractor: Self.valueExtractor
+                pointer: yyjson_doc_get_root(doc)
             )
 
             for key in path {
@@ -52,7 +32,7 @@ extension AnandaModel {
 
             return Self(json: json)
         } else {
-            return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
+            return Self(json: .init(pointer: nil))
         }
     }
 
@@ -65,7 +45,7 @@ extension AnandaModel {
         if let jsonData = jsonString.data(using: encoding) {
             return decode(from: jsonData, path: path)
         } else {
-            return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
+            return Self(json: .init(pointer: nil))
         }
     }
 }
@@ -86,8 +66,7 @@ extension Array where Element: AnandaModel {
             }
 
             var json = AnandaJSON(
-                pointer: yyjson_doc_get_root(doc),
-                valueExtractor: Element.valueExtractor
+                pointer: yyjson_doc_get_root(doc)
             )
 
             for key in path {

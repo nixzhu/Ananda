@@ -22,15 +22,15 @@ final class AnandaTests {
                 a = json.a.bool()
                 b = json.b.bool()
                 c = json.c.bool()
-                d = json.d.bool()
-                e = json.e.bool()
-                f = json.f.bool()
+                d = json.d.bool(.compatible)
+                e = json.e.bool(.compatible)
+                f = json.f.bool(.compatible)
                 g = json.g.bool()
                 h = json.h.bool()
                 i = json.i.bool()
-                j = json.j.bool
-                k = json.k.bool
-                l = json.l.bool
+                j = json.j.boolIfPresent()
+                k = json.k.boolIfPresent()
+                l = json.l.boolIfPresent()
             }
         }
 
@@ -87,17 +87,17 @@ final class AnandaTests {
                 a = json.a.int()
                 b = json.b.int()
                 c = json.c.int()
-                d = json.d.int()
+                d = json.d.int(.compatible)
                 e = json.e.int()
-                f = json.f.int()
+                f = json.f.int(.compatible)
                 g = json.g.int()
                 h = json.h.int()
                 i = json.i.int()
-                j = json.j.int
-                k = json.k.int
-                l = json.l.int
+                j = json.j.intIfPresent()
+                k = json.k.intIfPresent()
+                l = json.l.intIfPresent()
                 m = json.m.int()
-                n = json.n.int
+                n = json.n.intIfPresent()
             }
         }
 
@@ -158,17 +158,17 @@ final class AnandaTests {
                 a = json.a.double()
                 b = json.b.double()
                 c = json.c.double()
-                d = json.d.double()
+                d = json.d.double(.compatible)
                 e = json.e.double()
-                f = json.f.double()
+                f = json.f.double(.compatible)
                 g = json.g.double()
-                h = json.h.double()
+                h = json.h.double(.compatible)
                 i = json.i.double()
-                j = json.j.double
-                k = json.k.double
-                l = json.l.double
+                j = json.j.doubleIfPresent()
+                k = json.k.double(.compatible)
+                l = json.l.double()
                 m = json.m.double()
-                n = json.n.double
+                n = json.n.doubleIfPresent()
             }
         }
 
@@ -213,10 +213,10 @@ final class AnandaTests {
             let a: String
             let b: String
             let c: String
-            let d: String
+            let d: String?
             let e: String
             let f: String
-            let g: String
+            let g: String?
             let h: String
             let i: String
             let j: String
@@ -225,10 +225,10 @@ final class AnandaTests {
                 a = json.a.string()
                 b = json.b.string()
                 c = json.c.string()
-                d = json.d.string()
-                e = json.e.string()
-                f = json.f.string()
-                g = json.g.string()
+                d = json.d.stringIfPresent(.compatible)
+                e = json.e.string(.compatible)
+                f = json.f.string(.compatible)
+                g = json.g.stringIfPresent()
                 h = json.h.string()
                 i = json.i.string()
                 j = json.j.string()
@@ -257,7 +257,7 @@ final class AnandaTests {
         #expect(model.d == "-1")
         #expect(model.e == "0")
         #expect(model.f == "1")
-        #expect(model.g == "")
+        #expect(model.g == nil)
         #expect(model.h == "")
         #expect(model.i == "")
         #expect(model.j == "joke")
@@ -288,7 +288,16 @@ final class AnandaTests {
                 h = json.h.date()
                 i = json.i.date()
                 j = json.j.date()
-                k = json.k.date()
+
+                k = json.k.date(.custom { json in
+                    if let string = json.rawString() {
+                        if let milliseconds = TimeInterval(string) {
+                            return .init(timeIntervalSince1970: milliseconds / 1000)
+                        }
+                    }
+
+                    return nil
+                })
             }
         }
 
@@ -304,7 +313,7 @@ final class AnandaTests {
                 "h": false,
                 "i": "2012-04-23T18:25:43.511Z",
                 "j": "1335050743",
-                "k": "1335050743.1"
+                "k": "1335050743000"
             }
             """.data(using: .utf8)!
 
@@ -319,7 +328,7 @@ final class AnandaTests {
         #expect(model.h == .init(timeIntervalSince1970: 0))
         #expect(model.i == .init(timeIntervalSince1970: 1_335_205_543.511))
         #expect(model.j == .init(timeIntervalSince1970: 1_335_050_743))
-        #expect(model.k == .init(timeIntervalSince1970: 1_335_050_743.1))
+        #expect(model.k == .init(timeIntervalSince1970: 1_335_050_743))
     }
 
     @Test func url() {
@@ -334,12 +343,12 @@ final class AnandaTests {
             let h: URL
 
             init(json: AnandaJSON) {
-                a = json.a.url
-                b = json.b.url
-                c = json.c.url
-                d = json.d.url
-                e = json.e.url
-                f = json.f.url
+                a = json.a.urlIfPresent()
+                b = json.b.urlIfPresent()
+                c = json.c.urlIfPresent()
+                d = json.d.urlIfPresent()
+                e = json.e.urlIfPresent()
+                f = json.f.urlIfPresent()
                 g = json.g.url()
                 h = json.h.url()
             }
@@ -387,36 +396,15 @@ final class AnandaTests {
                 }
 
                 struct Toot: AnandaModel {
-                    static let valueExtractor: AnandaValueExtractor = .standard.updatingBool {
-                        if let bool = $0.originalBool {
-                            return bool
-                        } else {
-                            if let int = $0.originalInt {
-                                return int != 0
-                            }
-
-                            if let string = $0.originalString {
-                                switch string.lowercased() {
-                                case "true":
-                                    return true
-                                default:
-                                    break
-                                }
-                            }
-
-                            return nil
-                        }
-                    }
-
                     let id: Int
                     let content: String
                     let isProtected: Bool
                     let createdAt: Date
 
                     init(json: AnandaJSON) {
-                        id = json.id.int()
+                        id = json.id.int(.compatible)
                         content = json.content.string()
-                        isProtected = json.is_protected.bool()
+                        isProtected = json.is_protected.bool(.custom(parseBool))
                         createdAt = json.created_at.date()
                     }
                 }
@@ -425,47 +413,29 @@ final class AnandaTests {
                 let toots: [Toot]
 
                 init(json: AnandaJSON) {
-                    profile = .decode(from: json.profile)
-                    toots = json.toots.array().map { .decode(from: $0) }
+                    profile = .init(json: json.profile)
+                    toots = json.toots.array().map { .init(json: $0) }
 
-                    assert(json.toots[-1].id.int == nil)
-                    assert(json.toots[0].id.int == 1)
-                    assert(json.toots[1].id.int == 2)
-                    assert(json.toots[2].id.int == 88_888_888_888_888_888)
-                    assert(json.toots[3].id.int == 99_999_999_999_999_999)
-                    assert(toots.map { $0.isProtected } == [false, true, false, true])
+                    #expect(json.toots[-1].id.intIfPresent() == nil)
+                    #expect(toots[0].id == 1)
+                    #expect(toots[1].id == 2)
+                    #expect(toots[2].id == 88_888_888_888_888_888)
+                    #expect(toots[3].id == 99_999_999_999_999_999)
+                    #expect(toots.map { $0.isProtected } == [false, true, false, true])
                 }
             }
 
             let id: Int
             let name: String
-            let int: Int
             let mastodon: Mastodon
 
             init(json: AnandaJSON) {
                 id = json.id.int()
                 name = json.name.string()
-                int = json["int"].int()
-                mastodon = .decode(from: json.mastodon)
-
-                assert(json.unknown.isNull)
-                assert(json["unknown"].isNull)
-                assert(!json.name.isNull)
-                assert(!json.mastodon.isNull)
-                assert(!json.mastodon.profile.isNull)
-                assert(!json.mastodon.profile.extra_info.isNull)
-                assert(!json.mastodon.profile.extra_list.isNull)
-
-                assert(json.unknown.isEmpty)
-                assert(json["unknown"].isEmpty)
-                assert(!json.name.isEmpty)
-                assert(!json.mastodon.isEmpty)
-                assert(!json.mastodon.profile.isEmpty)
-                assert(json.mastodon.profile.extra_info.isEmpty)
-                assert(json.mastodon.profile.extra_list.isEmpty)
+                mastodon = .init(json: json.mastodon)
 
                 let mastodonInfo = json.mastodon.dictionary()
-                assert(mastodonInfo["profile"]?.username.string == "@nixzhu@mastodon.social")
+                #expect(mastodonInfo["profile"]?.username.string() == "@nixzhu@mastodon.social")
             }
         }
 
@@ -517,7 +487,6 @@ final class AnandaTests {
 
         #expect(model.id == 42)
         #expect(model.name == "NIX 👨‍👩‍👧‍👦/🐣")
-        #expect(model.int == 18)
         #expect(model.mastodon.profile.username == "@nixzhu@mastodon.social")
 
         #expect(
@@ -607,7 +576,7 @@ final class AnandaTests {
             let list: [Item]
 
             init(json: AnandaJSON) {
-                list = json.array().map { .decode(from: $0) }
+                list = json.array().map { .init(json: $0) }
             }
         }
 
@@ -741,19 +710,6 @@ final class AnandaTests {
     }
 }
 
-#if $RetroactiveAttribute
-extension Bool: @retroactive AnandaModel {
-    public init(json: AnandaJSON) {
-        self = json.bool()
-    }
-}
-
-extension Int: @retroactive AnandaModel {
-    public init(json: AnandaJSON) {
-        self = json.int()
-    }
-}
-#else
 extension Bool: AnandaModel {
     public init(json: AnandaJSON) {
         self = json.bool()
@@ -765,4 +721,26 @@ extension Int: AnandaModel {
         self = json.int()
     }
 }
-#endif
+
+private func parseBool(json: AnandaJSON) -> Bool? {
+    if let value = json.rawBool() {
+        return value
+    }
+
+    if let value = json.rawInt() {
+        return value != 0
+    }
+
+    if let value = json.rawString() {
+        switch value.lowercased() {
+        case "true":
+            return true
+        case "false":
+            return false
+        default:
+            break
+        }
+    }
+
+    return nil
+}
