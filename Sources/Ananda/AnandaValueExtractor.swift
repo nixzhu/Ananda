@@ -164,7 +164,6 @@ extension AnandaValueExtractor {
 }
 
 #if os(Linux)
-#if $RetroactiveAttribute
 extension ISO8601DateFormatter: @retroactive @unchecked Sendable {
     public static func ananda_date(from string: String) -> Date? {
         if let date = ananda_iso8601A.date(from: string) {
@@ -200,43 +199,6 @@ extension ISO8601DateFormatter: @retroactive @unchecked Sendable {
     }()
 }
 #else
-extension ISO8601DateFormatter: @unchecked Sendable {
-    public static func ananda_date(from string: String) -> Date? {
-        if let date = ananda_iso8601A.date(from: string) {
-            return date
-        }
-
-        if let date = ananda_iso8601B.date(from: string) {
-            return date
-        }
-
-        return nil
-    }
-
-    private static let ananda_iso8601A: ISO8601DateFormatter = {
-        let dateFormatter = ISO8601DateFormatter()
-
-        dateFormatter.formatOptions = [
-            .withInternetDateTime,
-            .withFractionalSeconds,
-        ]
-
-        return dateFormatter
-    }()
-
-    private static let ananda_iso8601B: ISO8601DateFormatter = {
-        let dateFormatter = ISO8601DateFormatter()
-
-        dateFormatter.formatOptions = [
-            .withInternetDateTime,
-        ]
-
-        return dateFormatter
-    }()
-}
-#endif
-#else
-#if $RetroactiveAttribute
 extension JJLISO8601DateFormatter: @retroactive @unchecked Sendable {
     public static func ananda_date(from string: String) -> Date? {
         if let date = ananda_iso8601A.date(from: string) {
@@ -271,45 +233,8 @@ extension JJLISO8601DateFormatter: @retroactive @unchecked Sendable {
         return dateFormatter
     }()
 }
-#else
-extension JJLISO8601DateFormatter: @unchecked Sendable {
-    public static func ananda_date(from string: String) -> Date? {
-        if let date = ananda_iso8601A.date(from: string) {
-            return date
-        }
-
-        if let date = ananda_iso8601B.date(from: string) {
-            return date
-        }
-
-        return nil
-    }
-
-    private static let ananda_iso8601A: JJLISO8601DateFormatter = {
-        let dateFormatter = JJLISO8601DateFormatter()
-
-        dateFormatter.formatOptions = [
-            .withInternetDateTime,
-            .withFractionalSeconds,
-        ]
-
-        return dateFormatter
-    }()
-
-    private static let ananda_iso8601B: JJLISO8601DateFormatter = {
-        let dateFormatter = JJLISO8601DateFormatter()
-
-        dateFormatter.formatOptions = [
-            .withInternetDateTime,
-        ]
-
-        return dateFormatter
-    }()
-}
-#endif
 #endif
 
-#if $RetroactiveAttribute
 extension CharacterSet: @retroactive @unchecked Sendable {
     public static let ananda_url: Self = {
         var set = CharacterSet.urlQueryAllowed
@@ -319,14 +244,3 @@ extension CharacterSet: @retroactive @unchecked Sendable {
         return set
     }()
 }
-#else
-extension CharacterSet: @unchecked Sendable {
-    public static let ananda_url: Self = {
-        var set = CharacterSet.urlQueryAllowed
-        set.insert("#")
-        set.formUnion(.urlPathAllowed)
-
-        return set
-    }()
-}
-#endif
