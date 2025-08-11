@@ -30,7 +30,7 @@ extension AnandaModel {
     /// Decode from `jsonData`, with `path` defaults to `[]`.
     public static func decode(
         from jsonData: Data,
-        path: [String] = []
+        path: [AnandaPathItem] = []
     ) -> Self {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
@@ -46,8 +46,13 @@ extension AnandaModel {
                 valueExtractor: Self.valueExtractor
             )
 
-            for key in path {
-                json = json[key]
+            for item in path {
+                switch item {
+                case let .key(key):
+                    json = json[key]
+                case let .index(index):
+                    json = json[index]
+                }
             }
 
             return Self(json: json)
@@ -59,13 +64,62 @@ extension AnandaModel {
     /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
     public static func decode(
         from jsonString: String,
-        path: [String] = [],
+        path: [AnandaPathItem] = [],
         encoding: String.Encoding = .utf8
     ) -> Self {
         if let jsonData = jsonString.data(using: encoding) {
-            return decode(from: jsonData, path: path)
+            decode(from: jsonData, path: path)
         } else {
-            return Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
+            Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
+        }
+    }
+}
+
+extension Dictionary where Key == String, Value: AnandaModel {
+    /// Decode from `jsonData`, with `path` defaults to `[]`.
+    public static func decode(
+        from jsonData: Data,
+        path: [AnandaPathItem] = []
+    ) -> Self {
+        let doc = jsonData.withUnsafeBytes {
+            yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
+        }
+
+        if let doc {
+            defer {
+                yyjson_doc_free(doc)
+            }
+
+            var json = AnandaJSON(
+                pointer: yyjson_doc_get_root(doc),
+                valueExtractor: Value.valueExtractor
+            )
+
+            for item in path {
+                switch item {
+                case let .key(key):
+                    json = json[key]
+                case let .index(index):
+                    json = json[index]
+                }
+            }
+
+            return json.dictionary().mapValues { .init(json: $0) }
+        } else {
+            return [:]
+        }
+    }
+
+    /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
+    public static func decode(
+        from jsonString: String,
+        path: [AnandaPathItem] = [],
+        encoding: String.Encoding = .utf8
+    ) -> Self {
+        if let jsonData = jsonString.data(using: encoding) {
+            decode(from: jsonData, path: path)
+        } else {
+            [:]
         }
     }
 }
@@ -74,7 +128,7 @@ extension Array where Element: AnandaModel {
     /// Decode from `jsonData`, with `path` defaults to `[]`.
     public static func decode(
         from jsonData: Data,
-        path: [String] = []
+        path: [AnandaPathItem] = []
     ) -> Self {
         let doc = jsonData.withUnsafeBytes {
             yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
@@ -90,8 +144,13 @@ extension Array where Element: AnandaModel {
                 valueExtractor: Element.valueExtractor
             )
 
-            for key in path {
-                json = json[key]
+            for item in path {
+                switch item {
+                case let .key(key):
+                    json = json[key]
+                case let .index(index):
+                    json = json[index]
+                }
             }
 
             return json.array().map { .init(json: $0) }
@@ -103,13 +162,13 @@ extension Array where Element: AnandaModel {
     /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
     public static func decode(
         from jsonString: String,
-        path: [String] = [],
+        path: [AnandaPathItem] = [],
         encoding: String.Encoding = .utf8
     ) -> Self {
         if let jsonData = jsonString.data(using: encoding) {
-            return decode(from: jsonData, path: path)
+            decode(from: jsonData, path: path)
         } else {
-            return []
+            []
         }
     }
 }

@@ -35,21 +35,21 @@ final class AnandaTests {
         }
 
         let jsonString = """
-            {
-                "a": true,
-                "b": false,
-                "c": 0,
-                "d": 1,
-                "e": -1,
-                "f": 100,
-                "g": "true",
-                "h": "false",
-                "i": "",
-                "j": "true",
-                "k": "false",
-                "l": ""
-            }
-            """
+        {
+            "a": true,
+            "b": false,
+            "c": 0,
+            "d": 1,
+            "e": -1,
+            "f": 100,
+            "g": "true",
+            "h": "false",
+            "i": "",
+            "j": "true",
+            "k": "false",
+            "l": ""
+        }
+        """
 
         let model = Model.decode(from: jsonString)
         #expect(model.a == true)
@@ -102,23 +102,23 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            {
-                "a": -1,
-                "b": 0,
-                "c": 1,
-                "d": "-1",
-                "e": "0",
-                "f": "1",
-                "g": "",
-                "h": "1.2",
-                "i": 4.5,
-                "j": "",
-                "k": "1.2",
-                "l": 4.5,
-                "m": true,
-                "n": false
-            }
-            """.data(using: .utf8)!
+        {
+            "a": -1,
+            "b": 0,
+            "c": 1,
+            "d": "-1",
+            "e": "0",
+            "f": "1",
+            "g": "",
+            "h": "1.2",
+            "i": 4.5,
+            "j": "",
+            "k": "1.2",
+            "l": 4.5,
+            "m": true,
+            "n": false
+        }
+        """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
         #expect(model.a == -1)
@@ -173,23 +173,23 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            {
-                "a": -1.0,
-                "b": 0.0,
-                "c": 1.0,
-                "d": "-1.0",
-                "e": "0.0",
-                "f": "1.0",
-                "g": "",
-                "h": "2",
-                "i": 5,
-                "j": "",
-                "k": "2",
-                "l": 5,
-                "m": true,
-                "n": false
-            }
-            """.data(using: .utf8)!
+        {
+            "a": -1.0,
+            "b": 0.0,
+            "c": 1.0,
+            "d": "-1.0",
+            "e": "0.0",
+            "f": "1.0",
+            "g": "",
+            "h": "2",
+            "i": 5,
+            "j": "",
+            "k": "2",
+            "l": 5,
+            "m": true,
+            "n": false
+        }
+        """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
         #expect(model.a == -1)
@@ -236,19 +236,19 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            {
-                "a": -1.0,
-                "b": 0.0,
-                "c": 1.0,
-                "d": -1,
-                "e": 0,
-                "f": 1,
-                "g": true,
-                "h": false,
-                "i": "",
-                "j": "joke"
-            }
-            """.data(using: .utf8)!
+        {
+            "a": -1.0,
+            "b": 0.0,
+            "c": 1.0,
+            "d": -1,
+            "e": 0,
+            "f": 1,
+            "g": true,
+            "h": false,
+            "i": "",
+            "j": "joke"
+        }
+        """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
         #expect(model.a == "")
@@ -293,20 +293,20 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            {
-                "a": -1.0,
-                "b": 0.0,
-                "c": 1.0,
-                "d": -1,
-                "e": 0,
-                "f": 1,
-                "g": true,
-                "h": false,
-                "i": "2012-04-23T18:25:43.511Z",
-                "j": "1335050743",
-                "k": "1335050743.1"
-            }
-            """.data(using: .utf8)!
+        {
+            "a": -1.0,
+            "b": 0.0,
+            "c": 1.0,
+            "d": -1,
+            "e": 0,
+            "f": 1,
+            "g": true,
+            "h": false,
+            "i": "2012-04-23T18:25:43.511Z",
+            "j": "1335050743",
+            "k": "1335050743.1"
+        }
+        """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
         #expect(model.a == .init(timeIntervalSince1970: -1))
@@ -346,17 +346,17 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            {
-                "a": -1.0,
-                "b": 1,
-                "c": true,
-                "d": "",
-                "e": ".",
-                "f": "https://github.com/nixzhu",
-                "g": "apple juice",
-                "h": "https://zh.wikipedia.org/wiki/围棋"
-            }
-            """.data(using: .utf8)!
+        {
+            "a": -1.0,
+            "b": 1,
+            "c": true,
+            "d": "",
+            "e": ".",
+            "f": "https://github.com/nixzhu",
+            "g": "apple juice",
+            "h": "https://zh.wikipedia.org/wiki/围棋"
+        }
+        """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
         #expect(model.a == nil)
@@ -470,48 +470,48 @@ final class AnandaTests {
         }
 
         let jsonString = """
-            {
-                "id": 42,
-                "name": "NIX 👨‍👩‍👧‍👦/🐣",
-                "int": 18,
-                "mastodon": {
-                    "profile": {
-                        "username": "@nixzhu@mastodon.social",
-                        "nickname": "NIX",
-                        "avatar_url": "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png",
-                        "mp3_url": "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2210/2009年06月26日博尔普斯/标清高清/MP3_320_16_Stero/60054701923104030.mp3",
-                        "extra_info": {},
-                        "extra_list": []
+        {
+            "id": 42,
+            "name": "NIX 👨‍👩‍👧‍👦/🐣",
+            "int": 18,
+            "mastodon": {
+                "profile": {
+                    "username": "@nixzhu@mastodon.social",
+                    "nickname": "NIX",
+                    "avatar_url": "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png",
+                    "mp3_url": "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2210/2009年06月26日博尔普斯/标清高清/MP3_320_16_Stero/60054701923104030.mp3",
+                    "extra_info": {},
+                    "extra_list": []
+                },
+                "toots": [
+                    {
+                        "id": 1,
+                        "content": "Hello World!",
+                        "is_protected": false,
+                        "created_at": "1234567890"
                     },
-                    "toots": [
-                        {
-                            "id": 1,
-                            "content": "Hello World!",
-                            "is_protected": false,
-                            "created_at": "1234567890"
-                        },
-                        {
-                            "id": 2,
-                            "content": "How do you do?",
-                            "is_protected": "true",
-                            "created_at": 1234567890
-                        },
-                        {
-                            "id": "88888888888888888",
-                            "content": "A4纸不发货了",
-                            "is_protected": 0,
-                            "created_at": "8888888888"
-                        },
-                        {
-                            "id": "99999999999999999",
-                            "content": "春季快乐！",
-                            "is_protected": 1,
-                            "created_at": "2012-04-23T18:25:43.511Z"
-                        }
-                    ]
-                }
+                    {
+                        "id": 2,
+                        "content": "How do you do?",
+                        "is_protected": "true",
+                        "created_at": 1234567890
+                    },
+                    {
+                        "id": "88888888888888888",
+                        "content": "A4纸不发货了",
+                        "is_protected": 0,
+                        "created_at": "8888888888"
+                    },
+                    {
+                        "id": "99999999999999999",
+                        "content": "春季快乐！",
+                        "is_protected": 1,
+                        "created_at": "2012-04-23T18:25:43.511Z"
+                    }
+                ]
             }
-            """
+        }
+        """
 
         let model = User.decode(from: jsonString)
 
@@ -570,18 +570,18 @@ final class AnandaTests {
 
     @Test func object2() {
         let jsonString = """
-            {
-                "id": 10,
-                "contact_info": {
-                    "email": "test@test.com"
-                },
-                "preferences": {
-                    "contact": {
-                        "newsletter": true
-                    }
+        {
+            "id": 10,
+            "contact_info": {
+                "email": "test@test.com"
+            },
+            "preferences": {
+                "contact": {
+                    "newsletter": true
                 }
             }
-            """
+        }
+        """
 
         struct User: AnandaModel {
             let id: Int
@@ -600,6 +600,70 @@ final class AnandaTests {
         #expect(user.id == 10)
         #expect(user.email == "test@test.com")
         #expect(user.isSubscribedToNewsletter == true)
+    }
+
+    @Test func dictionary1() {
+        struct Item: AnandaModel {
+            let id: Int
+            let name: String
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                name = json.name.string()
+            }
+        }
+
+        let jsonData = """
+        {
+            "a": {
+                "id": 0,
+                "name": "nix"
+            },
+            "b": {
+                "id": 1,
+                "name": "zhu"
+            }
+        }
+        """.data(using: .utf8)!
+
+        let info = [String: Item].decode(from: jsonData)
+        #expect(info["a"]?.id == 0)
+        #expect(info["a"]?.name == "nix")
+        #expect(info["b"]?.id == 1)
+        #expect(info["b"]?.name == "zhu")
+    }
+
+    @Test func dictionary2() {
+        struct Item: AnandaModel {
+            let id: Int
+            let name: String
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                name = json.name.string()
+            }
+        }
+
+        let jsonData = """
+        {
+            "x": {
+                "a": {
+                    "id": 0,
+                    "name": "nix"
+                },
+                "b": {
+                    "id": 1,
+                    "name": "zhu"
+                }
+            }
+        }
+        """.data(using: .utf8)!
+
+        let info = [String: Item].decode(from: jsonData, path: ["x"])
+        #expect(info["a"]?.id == 0)
+        #expect(info["a"]?.name == "nix")
+        #expect(info["b"]?.id == 1)
+        #expect(info["b"]?.name == "zhu")
     }
 
     @Test func array1() {
@@ -622,17 +686,17 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            [
-                {
-                    "id": 0,
-                    "name": "nix"
-                },
-                {
-                    "id": 1,
-                    "name": "zhu"
-                }
-            ]
-            """.data(using: .utf8)!
+        [
+            {
+                "id": 0,
+                "name": "nix"
+            },
+            {
+                "id": 1,
+                "name": "zhu"
+            }
+        ]
+        """.data(using: .utf8)!
 
         let model = Model.decode(from: jsonData)
         #expect(model.list[0].id == 0)
@@ -653,17 +717,17 @@ final class AnandaTests {
         }
 
         let jsonData = """
-            [
-                {
-                    "id": 0,
-                    "name": "nix"
-                },
-                {
-                    "id": 1,
-                    "name": "zhu"
-                }
-            ]
-            """.data(using: .utf8)!
+        [
+            {
+                "id": 0,
+                "name": "nix"
+            },
+            {
+                "id": 1,
+                "name": "zhu"
+            }
+        ]
+        """.data(using: .utf8)!
 
         let items = [Item].decode(from: jsonData)
         #expect(items[0].id == 0)
@@ -675,8 +739,8 @@ final class AnandaTests {
     @Test func array3() {
         do {
             let jsonString = """
-                [true, false, false]
-                """
+            [true, false, false]
+            """
 
             let items = [Bool].decode(from: jsonString)
             #expect(items == [true, false, false])
@@ -684,8 +748,8 @@ final class AnandaTests {
 
         do {
             let jsonString = """
-                [1, 2, 3]
-                """
+            [1, 2, 3]
+            """
 
             let items = [Int].decode(from: jsonString)
             #expect(items == [1, 2, 3])
@@ -702,14 +766,14 @@ final class AnandaTests {
         }
 
         let jsonString = """
-            {
-                "a": {
-                    "b": {
-                        "c": 42
-                    }
+        {
+            "a": {
+                "b": {
+                    "c": 42
                 }
             }
-            """
+        }
+        """
 
         let model = B.decode(from: jsonString, path: ["a", "b"])
         #expect(model.c == 42)
@@ -725,35 +789,49 @@ final class AnandaTests {
         }
 
         let jsonString = """
-            {
-                "a": {
-                    "b": [
-                        {
-                            "c": 42
-                        }
-                    ]
-                }
+        {
+            "a": {
+                "b": [
+                    {
+                        "c": 42
+                    }
+                ]
             }
-            """
+        }
+        """
 
         let list = [B].decode(from: jsonString, path: ["a", "b"])
         #expect(list[0].c == 42)
     }
-}
 
-#if $RetroactiveAttribute
-extension Bool: @retroactive AnandaModel {
-    public init(json: AnandaJSON) {
-        self = json.bool()
+    @Test func path3() {
+        struct D: AnandaModel {
+            let d: Int
+
+            init(json: AnandaJSON) {
+                d = json.d.int()
+            }
+        }
+
+        let jsonString = """
+        {
+            "a": {
+                "b": [
+                    {
+                        "c": {
+                            "d": 42
+                        }
+                    }
+                ]
+            }
+        }
+        """
+
+        let d = D.decode(from: jsonString, path: ["a", "b", 0, "c"])
+        #expect(d.d == 42)
     }
 }
 
-extension Int: @retroactive AnandaModel {
-    public init(json: AnandaJSON) {
-        self = json.int()
-    }
-}
-#else
 extension Bool: AnandaModel {
     public init(json: AnandaJSON) {
         self = json.bool()
@@ -765,4 +843,3 @@ extension Int: AnandaModel {
         self = json.int()
     }
 }
-#endif

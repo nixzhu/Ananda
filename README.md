@@ -11,23 +11,27 @@ Consider the following JSON:
 
 ```json
 {
-  "profile": {
-    "nickname": "NIX",
-    "username": "@nixzhu@mastodon.social",
-    "avatar_url": "https://files.mastodon.social/accounts/avatars/109/329/064/034/222/219/original/371901c6daa01207.png"
-  },
-  "toots": [
-    {
-      "id": 1,
-      "content": "Hello World!",
-      "created_at": "1674127714"
+    "profile": {
+        "nickname": "NIX",
+        "username": "@nixzhu@mastodon.social",
+        "avatar": {
+            "url": "https://example.com/nixzhu.png",
+            "width": 200,
+            "height": 200
+        }
     },
-    {
-      "id": 2,
-      "content": "How do you do?",
-      "created_at": "1674127720"
-    }
-  ]
+    "toots": [
+        {
+            "id": 1,
+            "content": "Hello World!",
+            "created_at": "2024-10-05T09:41:00.789Z"
+        },
+        {
+            "id": 2,
+            "content": "How do you do?",
+            "created_at": "2025-04-29T22:23:24.567Z"
+        }
+    ]
 }
 ```
 
@@ -51,12 +55,26 @@ extension Mastodon {
     struct Profile: AnandaModel {
         let nickname: String
         let username: String
-        let avatarURL: URL
+        let avatar: Avatar
 
         init(json: AnandaJSON) {
-            username = json.username.string()
             nickname = json.nickname.string()
-            avatarURL = json.avatar_url.url()
+            username = json.username.string()
+            avatar = .decode(from: json.avatar)
+        }
+    }
+}
+
+extension Mastodon.Profile {
+    struct Avatar: AnandaModel {
+        let url: URL
+        let width: Double
+        let height: Double
+
+        init(json: AnandaJSON) {
+            url = json["url"].url()
+            width = json.width.double()
+            height = json.height.double()
         }
     }
 }
@@ -76,28 +94,34 @@ extension Mastodon {
 }
 ```
 
-To decode a `Mastodon` instance, use the following code:
+To decode a `Mastodon` instance from a JSON string:
 
 ```swift
 let mastodon = Mastodon.decode(from: jsonString)
 ```
 
-Or
+Or, if you already have JSON data:
 
 ```swift
 let mastodon = Mastodon.decode(from: jsonData)
 ```
 
-If you only want to decode a specific part of the JSON, such as `profile`, specify the `path` as follows:
+To decode a specific JSON branch, for example `profile.avatar`, specify its path:
 
 ```swift
-let profile = Mastodon.Profile.decode(from: jsonData, path: ["profile"])
+let avatar = Mastodon.Profile.Avatar.decode(from: jsonData, path: ["profile", "avatar"])
 ```
 
-To decode an array of `toots`, use the following code:
+To decode an array (e.g., `toots`):
 
 ```swift
 let toots = [Mastodon.Toot].decode(from: jsonData, path: ["toots"])
+```
+
+Or decode only the first toot:
+
+```swift
+let toot = Mastodon.Toot.decode(from: jsonData, path: ["toots", 0])
 ```
 
 ## Swift Macro
@@ -120,8 +144,16 @@ extension Mastodon {
     struct Profile: AnandaModel {
         let nickname: String
         let username: String
-        @AnandaKey("avatar_url")
-        let avatarURL: URL
+        let avatar: Avatar
+    }
+}
+
+extension Mastodon.Profile {
+    @AnandaInit
+    struct Avatar: AnandaModel {
+        let url: URL
+        let width: Double
+        let height: Double
     }
 }
 
