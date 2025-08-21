@@ -602,6 +602,58 @@ final class AnandaTests {
         #expect(user.isSubscribedToNewsletter == true)
     }
 
+    @Test func object3() {
+        struct Model: AnandaModel {
+            let unquoted: String
+            let singleQuotes: String
+            let lineBreaks: String
+            let hexadecimal: Int
+            let leadingDecimalPoint: Double
+            let andTrailing: Double
+            let positiveSign: Int
+            let backwardsCompatible: String
+            let trailingComma: String
+
+            init(json: AnandaJSON) {
+                unquoted = json.unquoted.string()
+                singleQuotes = json.singleQuotes.string()
+                lineBreaks = json.lineBreaks.string()
+                hexadecimal = json.hexadecimal.int()
+                leadingDecimalPoint = json.leadingDecimalPoint.double()
+                andTrailing = json.andTrailing.double()
+                positiveSign = json.positiveSign.int()
+                trailingComma = json.trailingComma.string()
+                backwardsCompatible = json.backwardsCompatible.string()
+            }
+        }
+
+        let json5String = """
+        {
+            // Comments
+            unquoted: 'and you can quote me on that',
+            singleQuotes: 'I can use "double quotes" here',
+            lineBreaks: "Look, Mom! \\
+        No \\\\n's!",
+            hexadecimal: 0xDECaf,
+            leadingDecimalPoint: .8675309, andTrailing: 8675309.,
+            positiveSign: +1,
+            trailingComma: 'in objects',
+            "backwardsCompatible": "with JSON",
+        }
+        """
+
+        let model = Model.decode(from: json5String, allowingJSON5: true)
+        #expect(model.unquoted == "and you can quote me on that")
+        #expect(model.singleQuotes == "I can use \"double quotes\" here")
+        #expect(model.lineBreaks == "Look, Mom! No \\n's!")
+        #expect(model.hexadecimal == 0xDECAF)
+        #expect(model.leadingDecimalPoint == 0.8675309)
+        #expect(model.andTrailing == 8_675_309.0)
+        #expect(model.positiveSign == 1)
+        #expect(model.trailingComma == "in objects")
+        #expect(model.backwardsCompatible == "with JSON")
+    }
+
     @Test func dictionary1() {
         struct Item: AnandaModel {
             let id: Int
@@ -664,6 +716,47 @@ final class AnandaTests {
         #expect(info["a"]?.name == "nix")
         #expect(info["b"]?.id == 1)
         #expect(info["b"]?.name == "zhu")
+
+        let item = Item.decode(from: jsonData, path: ["x", "a"])
+        #expect(item.id == 0)
+        #expect(item.name == "nix")
+    }
+
+    @Test func dictionary3() {
+        struct Item: AnandaModel {
+            let id: Int
+            let name: String
+
+            init(json: AnandaJSON) {
+                id = json.id.int()
+                name = json.name.string()
+            }
+        }
+
+        let jsonData = """
+        {
+            x: {
+                "a": {
+                    id: 0,
+                    "name": 'nix',
+                },
+                b: {
+                    "id": 1,
+                    name: "zhu",
+                },
+            },
+        }
+        """.data(using: .utf8)!
+
+        let info = [String: Item].decode(from: jsonData, path: ["x"], allowingJSON5: true)
+        #expect(info["a"]?.id == 0)
+        #expect(info["a"]?.name == "nix")
+        #expect(info["b"]?.id == 1)
+        #expect(info["b"]?.name == "zhu")
+
+        let item = Item.decode(from: jsonData, path: ["x", "b"], allowingJSON5: true)
+        #expect(item.id == 1)
+        #expect(item.name == "zhu")
     }
 
     @Test func array1() {
@@ -734,9 +827,37 @@ final class AnandaTests {
         #expect(items[0].name == "nix")
         #expect(items[1].id == 1)
         #expect(items[1].name == "zhu")
+
+        let item = Item.decode(from: jsonData, path: [0])
+        #expect(item.id == 0)
+        #expect(item.name == "nix")
     }
 
     @Test func array3() {
+        struct Item: AnandaModel {
+            let name: String
+            let age: Int
+
+            init(json: AnandaJSON) {
+                name = json.name.string()
+                age = json.age.int()
+            }
+        }
+
+        let json5String = "[{name:'nix',age:18,}, {name:'zhu',age:20,}]"
+
+        let items = [Item].decode(from: json5String, allowingJSON5: true)
+        #expect(items[0].name == "nix")
+        #expect(items[0].age == 18)
+        #expect(items[1].name == "zhu")
+        #expect(items[1].age == 20)
+
+        let item = Item.decode(from: json5String, path: [1], allowingJSON5: true)
+        #expect(item.name == "zhu")
+        #expect(item.age == 20)
+    }
+
+    @Test func array4() {
         do {
             let jsonString = """
             [true, false, false]

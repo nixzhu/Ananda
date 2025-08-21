@@ -6,14 +6,14 @@ import PackageDescription
 let packageDependencies: [Package.Dependency] = [
     .package(
         url: "https://github.com/ibireme/yyjson.git",
-        from: "0.11.1"
+        from: "0.12.0"
     ),
 ]
 #else
 let packageDependencies: [Package.Dependency] = [
     .package(
         url: "https://github.com/ibireme/yyjson.git",
-        from: "0.11.1"
+        from: "0.12.0"
     ),
     .package(
         url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",

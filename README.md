@@ -124,6 +124,30 @@ Or decode only the first toot:
 let toot = Mastodon.Toot.decode(from: jsonData, path: ["toots", 0])
 ```
 
+## Installation
+
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
+
+Once you have a Swift package set up, add Ananda as a dependency in your `Package.swift` file:
+
+```swift
+// In Package.swift
+
+dependencies: [
+    .package(url: "https://github.com/nixzhu/Ananda.git", from: "1.2.0"),
+]
+```
+
+Typically, you will want to depend on the `Ananda` product:
+
+```swift
+// In a target's dependencies
+
+.product(name: "Ananda", package: "Ananda")
+```
+
 ## Swift Macro
 
 With [AnandaMacros](https://github.com/nixzhu/AnandaMacros), you can use macros to eliminate the need for initialization methods, as shown below:

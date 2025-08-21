@@ -27,13 +27,23 @@ extension AnandaModel {
 }
 
 extension AnandaModel {
-    /// Decode from `jsonData`, with `path` defaults to `[]`.
+    /// Decode from `Data`.
+    /// - Parameters:
+    ///   - data: The `Data` to decode from.
+    ///   - path: The path to the value to decode, defaults to `[]`.
+    ///   - allowingJSON5: Whether to allow JSON5 format, defaults to `false`.
+    /// - Returns: A decoded model.
     public static func decode(
-        from jsonData: Data,
-        path: [AnandaPathItem] = []
+        from data: Data,
+        path: [AnandaPathItem] = [],
+        allowingJSON5: Bool = false
     ) -> Self {
-        let doc = jsonData.withUnsafeBytes {
-            yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
+        let doc = data.withUnsafeBytes {
+            yyjson_read(
+                $0.bindMemory(to: CChar.self).baseAddress,
+                data.count,
+                allowingJSON5 ? YYJSON_READ_JSON5 : YYJSON_READ_NOFLAG
+            )
         }
 
         if let doc {
@@ -61,14 +71,21 @@ extension AnandaModel {
         }
     }
 
-    /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
+    /// Decode from `String`.
+    /// - Parameters:
+    ///   - string: The `String` to decode from.
+    ///   - path: The path to the value to decode, defaults to `[]`.
+    ///   - allowingJSON5: Whether to allow JSON5 format, defaults to `false`.
+    ///   - encoding: The `String.Encoding` to use, defaults to `.utf8`.
+    /// - Returns: A decoded model.
     public static func decode(
-        from jsonString: String,
+        from string: String,
         path: [AnandaPathItem] = [],
+        allowingJSON5: Bool = false,
         encoding: String.Encoding = .utf8
     ) -> Self {
-        if let jsonData = jsonString.data(using: encoding) {
-            decode(from: jsonData, path: path)
+        if let data = string.data(using: encoding) {
+            decode(from: data, path: path, allowingJSON5: allowingJSON5)
         } else {
             Self(json: .init(pointer: nil, valueExtractor: Self.valueExtractor))
         }
@@ -76,13 +93,23 @@ extension AnandaModel {
 }
 
 extension Dictionary where Key == String, Value: AnandaModel {
-    /// Decode from `jsonData`, with `path` defaults to `[]`.
+    /// Decode from `Data`.
+    /// - Parameters:
+    ///   - data: The `Data` to decode from.
+    ///   - path: The path to the value to decode, defaults to `[]`.
+    ///   - allowingJSON5: Whether to allow JSON5 format, defaults to `false`.
+    /// - Returns: A decoded dictionary.
     public static func decode(
-        from jsonData: Data,
-        path: [AnandaPathItem] = []
+        from data: Data,
+        path: [AnandaPathItem] = [],
+        allowingJSON5: Bool = false
     ) -> Self {
-        let doc = jsonData.withUnsafeBytes {
-            yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
+        let doc = data.withUnsafeBytes {
+            yyjson_read(
+                $0.bindMemory(to: CChar.self).baseAddress,
+                data.count,
+                allowingJSON5 ? YYJSON_READ_JSON5 : YYJSON_READ_NOFLAG
+            )
         }
 
         if let doc {
@@ -110,14 +137,21 @@ extension Dictionary where Key == String, Value: AnandaModel {
         }
     }
 
-    /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
+    /// Decode from `String`.
+    /// - Parameters:
+    ///   - string: The `String` to decode from.
+    ///   - path: The path to the value to decode, defaults to `[]`.
+    ///   - allowingJSON5: Whether to allow JSON5 format, defaults to `false`.
+    ///   - encoding: The `String.Encoding` to use, defaults to `.utf8`.
+    /// - Returns: A decoded dictionary.
     public static func decode(
-        from jsonString: String,
+        from string: String,
         path: [AnandaPathItem] = [],
+        allowingJSON5: Bool = false,
         encoding: String.Encoding = .utf8
     ) -> Self {
-        if let jsonData = jsonString.data(using: encoding) {
-            decode(from: jsonData, path: path)
+        if let data = string.data(using: encoding) {
+            decode(from: data, path: path, allowingJSON5: allowingJSON5)
         } else {
             [:]
         }
@@ -125,13 +159,23 @@ extension Dictionary where Key == String, Value: AnandaModel {
 }
 
 extension Array where Element: AnandaModel {
-    /// Decode from `jsonData`, with `path` defaults to `[]`.
+    /// Decode from `Data`.
+    /// - Parameters:
+    ///   - data: The `Data` to decode from.
+    ///   - path: The path to the value to decode, defaults to `[]`.
+    ///   - allowingJSON5: Whether to allow JSON5 format, defaults to `false`.
+    /// - Returns: A decoded array.
     public static func decode(
-        from jsonData: Data,
-        path: [AnandaPathItem] = []
+        from data: Data,
+        path: [AnandaPathItem] = [],
+        allowingJSON5: Bool = false
     ) -> Self {
-        let doc = jsonData.withUnsafeBytes {
-            yyjson_read($0.bindMemory(to: CChar.self).baseAddress, jsonData.count, 0)
+        let doc = data.withUnsafeBytes {
+            yyjson_read(
+                $0.bindMemory(to: CChar.self).baseAddress,
+                data.count,
+                allowingJSON5 ? YYJSON_READ_JSON5 : YYJSON_READ_NOFLAG
+            )
         }
 
         if let doc {
@@ -159,14 +203,21 @@ extension Array where Element: AnandaModel {
         }
     }
 
-    /// Decode from `jsonString`, with `path` defaults to `[]`, `encoding` defaults to `.utf8`.
+    /// Decode from `String`.
+    /// - Parameters:
+    ///   - string: The `String` to decode from.
+    ///   - path: The path to the value to decode, defaults to `[]`.
+    ///   - allowingJSON5: Whether to allow JSON5 format, defaults to `false`.
+    ///   - encoding: The `String.Encoding` to use, defaults to `.utf8`.
+    /// - Returns: A decoded array.
     public static func decode(
-        from jsonString: String,
+        from string: String,
         path: [AnandaPathItem] = [],
+        allowingJSON5: Bool = false,
         encoding: String.Encoding = .utf8
     ) -> Self {
-        if let jsonData = jsonString.data(using: encoding) {
-            decode(from: jsonData, path: path)
+        if let data = string.data(using: encoding) {
+            decode(from: data, path: path, allowingJSON5: allowingJSON5)
         } else {
             []
         }
