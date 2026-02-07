@@ -17,7 +17,7 @@ let packageDependencies: [Package.Dependency] = [
     ),
     .package(
         url: "https://github.com/michaeleisel/JJLISO8601DateFormatter.git",
-        from: "0.1.8"
+        from: "0.2.0"
     ),
 ]
 #endif
